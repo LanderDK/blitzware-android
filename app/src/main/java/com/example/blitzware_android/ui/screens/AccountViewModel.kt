@@ -28,25 +28,36 @@ class AccountViewModel(private val accountRepository: AccountRepository) : ViewM
     var accountUiState: AccountUiState by mutableStateOf(AccountUiState.Loading)
         private set
 
+    private val _account = mutableStateOf<Account?>(null)
+    val account: Account?
+        get() = _account.value
+
+    private val _isAuthed = mutableStateOf(false)
+    val isAuthed: Boolean
+        get() = _isAuthed.value
+
     fun login(username: String, password: String) {
         viewModelScope.launch {
             accountUiState = AccountUiState.Loading
-            accountUiState = try {
+             try {
                 val body = mapOf(
                     "username" to username,
                     "password" to password
                 )
-                AccountUiState.Success(accountRepository.login(body))
+                 val account = accountRepository.login(body)
+                 _account.value = account
+                 accountUiState = AccountUiState.Success(account)
+                 _isAuthed.value = true
             } catch (e: IOException) {
-                Log.d("ViewModel", "IOException")
-                Log.d("ViewModel", e.message.toString())
-                AccountUiState.Error
+                Log.d("AccountViewModel", "IOException")
+                Log.d("AccountViewModel", e.message.toString())
+                 accountUiState = AccountUiState.Error
             } catch (e: HttpException) {
-                Log.d("ViewModel", "HttpException")
-                Log.d("ViewModel", e.message.toString())
-                AccountUiState.Error
+                Log.d("AccountViewModel", "HttpException")
+                Log.d("AccountViewModel", e.message.toString())
+                 accountUiState = AccountUiState.Error
             }
-            Log.d("ViewModel", accountUiState.toString())
+            Log.d("AccountViewModel", accountUiState.toString())
         }
     }
 

@@ -1,6 +1,7 @@
 package com.example.blitzware_android.data
 
 import com.example.blitzware_android.network.AccountApiService
+import com.example.blitzware_android.network.ApplicationApiService
 import retrofit2.Retrofit
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import kotlinx.serialization.json.Json
@@ -11,6 +12,7 @@ import okhttp3.MediaType.Companion.toMediaType
  */
 interface AppContainer {
     val accountRepository: AccountRepository
+    val applicationRepository: ApplicationRepository
 }
 
 /**
@@ -19,7 +21,7 @@ interface AppContainer {
  * Variables are initialized lazily and the same instance is shared across the whole app.
  */
 class DefaultAppContainer : AppContainer {
-    private val baseUrl = "http://192.168.0.108:9000/api/"
+    private val baseUrl = "http://192.168.0.227:9000/api/"
 
     /**
      * Use the Retrofit builder to build a retrofit object using a kotlinx.serialization converter
@@ -40,6 +42,13 @@ class DefaultAppContainer : AppContainer {
      * DI implementation for Account repository
      */
     override val accountRepository: AccountRepository by lazy {
-        NetworkAccountRepository(retrofitService)
+        NetworkAccountRepository(retrofit.create(AccountApiService::class.java))
+    }
+
+    /**
+     * DI implementation for Application repository
+     */
+    override val applicationRepository: ApplicationRepository by lazy {
+        NetworkApplicationRepository(retrofit.create(ApplicationApiService::class.java))
     }
 }

@@ -9,32 +9,38 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.ViewModelProvider
+import com.example.blitzware_android.navigation.MainBottomNavigation
 import com.example.blitzware_android.ui.screens.AccountViewModel
+import com.example.blitzware_android.ui.screens.ApplicationViewModel
 import com.example.blitzware_android.ui.screens.LoginScreen
 import com.example.blitzware_android.ui.theme.BlitzWareTheme
 
 class MainActivity : ComponentActivity() {
 
-    private lateinit var viewModel: AccountViewModel
+    private lateinit var accountViewModel: AccountViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
-        viewModel = ViewModelProvider(this, AccountViewModel.Factory).get(AccountViewModel::class.java)
+        accountViewModel = ViewModelProvider(this, AccountViewModel.Factory).get(AccountViewModel::class.java)
 
         setContent {
             BlitzWareTheme {
-                // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    LoginScreen(onLoginClick = { username, password ->
-                        viewModel.login(username, password)
-                    },
-                        viewModel = viewModel
+                    if (accountViewModel.isAuthed) {
+                        MainBottomNavigation(accountViewModel = accountViewModel)
+                    } else {
+                        LoginScreen(
+                            onLoginClick = { username, password ->
+                                accountViewModel.login(username, password)
+                            },
+                            accountViewModel = accountViewModel
                         )
+                    }
                 }
             }
         }
