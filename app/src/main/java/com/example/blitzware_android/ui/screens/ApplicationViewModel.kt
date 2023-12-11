@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.blitzware_android.data.ApplicationRepository
 import com.example.blitzware_android.data.DefaultAppContainer
 import com.example.blitzware_android.model.Application
+import com.example.blitzware_android.network.CreateApplicationBody
 import com.example.blitzware_android.network.UpdateApplicationBody
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -56,7 +57,6 @@ class ApplicationViewModel(private val accountViewModel: AccountViewModel) : Vie
                 Log.d("ApplicationViewModel", e.message.toString())
                 applicationUiState = ApplicationUiState.Error
             }
-            Log.d("ApplicationViewModel", applicationUiState.toString())
         }
     }
 
@@ -108,6 +108,36 @@ class ApplicationViewModel(private val accountViewModel: AccountViewModel) : Vie
                 DefaultAppContainer().applicationRepository.deleteApplicationById(token, application.id)
                 val apps = _applications.value.toMutableList()
                 apps.remove(application)
+                _applications.value = apps
+                applicationUiState = ApplicationUiState.Success(apps)
+            } catch (e: IOException) {
+                Log.d("ApplicationViewModel", "IOException")
+                Log.d("ApplicationViewModel", e.message.toString())
+                applicationUiState = ApplicationUiState.Error
+            } catch (e: HttpException) {
+                Log.d("ApplicationViewModel", "HttpException")
+                Log.d("ApplicationViewModel", e.message.toString())
+                applicationUiState = ApplicationUiState.Error
+            } catch (e: Exception) {
+                Log.d("ApplicationViewModel", "Exception")
+                Log.d("ApplicationViewModel", e.message.toString())
+                applicationUiState = ApplicationUiState.Error
+            }
+        }
+    }
+
+    fun createApplication(name: String) {
+        viewModelScope.launch {
+            try {
+                val token = accountViewModel.account?.token ?: throw Exception("Token is null")
+                val accountId = accountViewModel.account?.account?.id ?: throw Exception("Account is null")
+                val body = CreateApplicationBody(
+                    name = name,
+                    accountId = accountId
+                )
+                val application = DefaultAppContainer().applicationRepository.createApplication(token, body)
+                val apps = _applications.value.toMutableList()
+                apps.add(application)
                 _applications.value = apps
                 applicationUiState = ApplicationUiState.Success(apps)
             } catch (e: IOException) {

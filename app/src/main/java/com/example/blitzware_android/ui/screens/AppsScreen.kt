@@ -16,9 +16,12 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Dangerous
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -39,6 +42,8 @@ fun AppsScreen(
     applicationViewModel: ApplicationViewModel
 ) {
     val applications by applicationViewModel.applications.collectAsState()
+    var isDialogVisible by remember { mutableStateOf(false) }
+    var newAppName by remember { mutableStateOf("") }
 
     Column {
         Row(
@@ -57,7 +62,7 @@ fun AppsScreen(
             Spacer(modifier = Modifier.weight(1f))
 
             IconButton(
-                onClick = { /*TODO*/ },
+                onClick = { isDialogVisible = true },
                 modifier = Modifier.padding(8.dp),
                 content = {
                     Icon(
@@ -86,6 +91,45 @@ fun AppsScreen(
                 is ApplicationUiState.Error -> {
                     Text(text = "Error loading applications!")
                 }
+            }
+            if (isDialogVisible) {
+                AlertDialog(
+                    onDismissRequest = {
+                        newAppName = ""
+                        isDialogVisible = false },
+                    title = { Text("Create an application") },
+                    text = {
+                        TextField(
+                            value = newAppName,
+                            onValueChange = { newAppName = it },
+                            label = { Text("Application name") },
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    },
+                    confirmButton = {
+                        Button(
+                            onClick = {
+                                if (newAppName.isNotEmpty() && newAppName.isNotBlank()) {
+                                    isDialogVisible = false
+                                    applicationViewModel.createApplication(newAppName)
+                                    newAppName = ""
+                                }
+                            }
+                        ) {
+                            Text("Create")
+                        }
+                    },
+                    dismissButton = {
+                        Button(
+                            onClick = {
+                                isDialogVisible = false
+                                newAppName = ""
+                            }
+                        ) {
+                            Text("Cancel")
+                        }
+                    }
+                )
             }
         }
     }

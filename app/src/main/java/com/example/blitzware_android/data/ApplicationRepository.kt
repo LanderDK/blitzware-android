@@ -2,6 +2,7 @@ package com.example.blitzware_android.data
 
 import com.example.blitzware_android.model.Application
 import com.example.blitzware_android.network.ApplicationApiService
+import com.example.blitzware_android.network.CreateApplicationBody
 import com.example.blitzware_android.network.UpdateApplicationBody
 
 interface ApplicationRepository {
@@ -14,6 +15,8 @@ interface ApplicationRepository {
     ): Application
 
     suspend fun deleteApplicationById(token: String, id: String)
+
+    suspend fun createApplication(token: String, body: CreateApplicationBody): Application
 }
 
 class NetworkApplicationRepository(
@@ -36,5 +39,12 @@ class NetworkApplicationRepository(
     override suspend fun deleteApplicationById(token: String, id: String) {
         val authorizationHeader = "Bearer $token"
         applicationApiService.deleteApplicationById(authorizationHeader, id)
+    }
+
+    override suspend fun createApplication(
+        token: String,
+        body: CreateApplicationBody
+    ): Application {
+        return applicationApiService.createApplication("Bearer $token", body)
     }
 }

@@ -8,6 +8,7 @@ import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Header
+import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
 @Serializable
@@ -23,6 +24,11 @@ data class UpdateApplicationBody(
     @SerialName(value = "downloadLink") val downloadLink: String?,
     @SerialName(value = "accountId") val accountId: String,
     @SerialName(value = "subscription") val subscription: Int?
+)
+@Serializable
+data class CreateApplicationBody(
+    @SerialName(value = "name") val name: String,
+    @SerialName(value = "accountId") val accountId: String,
 )
 
 interface ApplicationApiService {
@@ -44,4 +50,10 @@ interface ApplicationApiService {
         @Header("Authorization") authorizationHeader: String,
         @Path("id") id: String
     ): Response<Unit>
+
+    @POST("applications")
+    suspend fun createApplication(
+        @Header("Authorization") authorizationHeader: String,
+        @Body body: CreateApplicationBody
+    ): Application
 }

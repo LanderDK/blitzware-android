@@ -19,6 +19,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.blitzware_android.ui.screens.AccountViewModel
 import com.example.blitzware_android.ui.screens.ApplicationViewModel
 import com.example.blitzware_android.ui.screens.AppsScreen
+import com.example.blitzware_android.ui.screens.ResourcesScreen
 
 @Composable
 fun MainBottomNavigation(accountViewModel: AccountViewModel) {
@@ -39,7 +40,7 @@ fun MainBottomNavigation(accountViewModel: AccountViewModel) {
                 AppsScreen(accountViewModel = accountViewModel, applicationViewModel = applicationViewModel)
             }
             composable(route = Screens.ResourcesScreen.name) {
-                //ResourcesScreen()
+                ResourcesScreen()
             }
             composable(route = Screens.CommunityScreen.name) {
                 //CommunityScreen()
