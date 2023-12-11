@@ -5,16 +5,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.blitzware_android.BlitzWareApplication
 import com.example.blitzware_android.data.ApplicationRepository
 import com.example.blitzware_android.data.DefaultAppContainer
 import com.example.blitzware_android.model.Application
-import com.example.blitzware_android.network.ApplicationApiService
+import com.example.blitzware_android.network.UpdateApplicationBody
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -56,8 +51,78 @@ class ApplicationViewModel(private val accountViewModel: AccountViewModel) : Vie
                 Log.d("ApplicationViewModel", "HttpException")
                 Log.d("ApplicationViewModel", e.message.toString())
                 applicationUiState = ApplicationUiState.Error
+            } catch (e: Exception) {
+                Log.d("ApplicationViewModel", "Exception")
+                Log.d("ApplicationViewModel", e.message.toString())
+                applicationUiState = ApplicationUiState.Error
             }
             Log.d("ApplicationViewModel", applicationUiState.toString())
+        }
+    }
+
+    fun updateApplicationById(application: Application) {
+        viewModelScope.launch {
+            try {
+                val body = UpdateApplicationBody(
+                    status = application.status,
+                    hwidCheck = application.hwidCheck,
+                    developerMode = application.developerMode,
+                    integrityCheck = application.integrityCheck,
+                    freeMode = application.freeMode,
+                    twoFactorAuth = application.twoFactorAuth,
+                    programHash = application.programHash,
+                    version = application.version,
+                    downloadLink = application.downloadLink,
+                    accountId = requireNotNull(application.account.id),
+                    subscription = application.adminRoleId
+                )
+                val token = accountViewModel.account?.token ?: throw Exception("Token is null")
+                val updatedApplication = DefaultAppContainer().applicationRepository.updateApplicationById(
+                    token, application.id, body
+                )
+                val apps = _applications.value.toMutableList()
+                val index = apps.indexOfFirst { it.id == application.id }
+                apps[index] = updatedApplication
+                _applications.value = apps
+                applicationUiState = ApplicationUiState.Success(apps)
+            } catch (e: IOException) {
+                Log.d("ApplicationViewModel", "IOException")
+                Log.d("ApplicationViewModel", e.message.toString())
+                applicationUiState = ApplicationUiState.Error
+            } catch (e: HttpException) {
+                Log.d("ApplicationViewModel", "HttpException")
+                Log.d("ApplicationViewModel", e.message.toString())
+                applicationUiState = ApplicationUiState.Error
+            } catch (e: Exception) {
+                Log.d("ApplicationViewModel", "Exception")
+                Log.d("ApplicationViewModel", e.message.toString())
+                applicationUiState = ApplicationUiState.Error
+            }
+        }
+    }
+
+    fun deleteApplicationById(application: Application) {
+        viewModelScope.launch {
+            try {
+                val token = accountViewModel.account?.token ?: throw Exception("Token is null")
+                DefaultAppContainer().applicationRepository.deleteApplicationById(token, application.id)
+                val apps = _applications.value.toMutableList()
+                apps.remove(application)
+                _applications.value = apps
+                applicationUiState = ApplicationUiState.Success(apps)
+            } catch (e: IOException) {
+                Log.d("ApplicationViewModel", "IOException")
+                Log.d("ApplicationViewModel", e.message.toString())
+                applicationUiState = ApplicationUiState.Error
+            } catch (e: HttpException) {
+                Log.d("ApplicationViewModel", "HttpException")
+                Log.d("ApplicationViewModel", e.message.toString())
+                applicationUiState = ApplicationUiState.Error
+            } catch (e: Exception) {
+                Log.d("ApplicationViewModel", "Exception")
+                Log.d("ApplicationViewModel", e.message.toString())
+                applicationUiState = ApplicationUiState.Error
+            }
         }
     }
 

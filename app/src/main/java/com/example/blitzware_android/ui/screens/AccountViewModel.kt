@@ -56,7 +56,11 @@ class AccountViewModel(private val accountRepository: AccountRepository) : ViewM
                 Log.d("AccountViewModel", "HttpException")
                 Log.d("AccountViewModel", e.message.toString())
                  accountUiState = AccountUiState.Error
-            }
+            } catch (e: Exception) {
+                 Log.d("AccountViewModel", "Exception")
+                 Log.d("AccountViewModel", e.message.toString())
+                 accountUiState = AccountUiState.Error
+             }
             Log.d("AccountViewModel", accountUiState.toString())
         }
     }
