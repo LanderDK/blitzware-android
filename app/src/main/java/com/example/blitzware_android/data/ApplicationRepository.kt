@@ -12,7 +12,7 @@ interface ApplicationRepository {
         token: String,
         id: String,
         body: UpdateApplicationBody
-    ): Application
+    )
 
     suspend fun deleteApplicationById(token: String, id: String)
 
@@ -31,9 +31,9 @@ class NetworkApplicationRepository(
         token: String,
         id: String,
         body: UpdateApplicationBody
-    ): Application {
+    ) {
         val authorizationHeader = "Bearer $token"
-        return applicationApiService.updateApplicationById(authorizationHeader, id, body)
+        applicationApiService.updateApplicationById(authorizationHeader, id, body)
     }
 
     override suspend fun deleteApplicationById(token: String, id: String) {

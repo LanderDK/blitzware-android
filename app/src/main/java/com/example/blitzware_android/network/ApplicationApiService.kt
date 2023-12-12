@@ -43,7 +43,7 @@ interface ApplicationApiService {
         @Header("Authorization") authorizationHeader: String,
         @Path("id") id: String,
         @Body body: UpdateApplicationBody
-    ): Application
+    ): Response<Unit>
 
     @DELETE("applications/{id}")
     suspend fun deleteApplicationById(

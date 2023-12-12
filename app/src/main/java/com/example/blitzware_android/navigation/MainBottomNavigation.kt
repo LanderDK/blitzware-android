@@ -19,12 +19,15 @@ import androidx.navigation.compose.rememberNavController
 import com.example.blitzware_android.ui.screens.AccountViewModel
 import com.example.blitzware_android.ui.screens.ApplicationViewModel
 import com.example.blitzware_android.ui.screens.AppsScreen
+import com.example.blitzware_android.ui.screens.ChatMessageViewModel
 import com.example.blitzware_android.ui.screens.ResourcesScreen
+import com.example.blitzware_android.ui.screens.CommunityScreen
 
 @Composable
 fun MainBottomNavigation(accountViewModel: AccountViewModel) {
     val navController: NavHostController = rememberNavController()
     val applicationViewModel = ApplicationViewModel(accountViewModel)
+    val chatMessageViewModel = ChatMessageViewModel(accountViewModel)
 
     Scaffold(
         bottomBar = {
@@ -43,7 +46,7 @@ fun MainBottomNavigation(accountViewModel: AccountViewModel) {
                 ResourcesScreen()
             }
             composable(route = Screens.CommunityScreen.name) {
-                //CommunityScreen()
+                CommunityScreen(accountViewModel = accountViewModel, chatMessageViewModel = chatMessageViewModel)
             }
             composable(route = Screens.AccountMenuScreen.name) {
                 //AccountMenuScreen()

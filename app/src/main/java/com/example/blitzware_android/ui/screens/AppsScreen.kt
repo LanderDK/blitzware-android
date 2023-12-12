@@ -58,9 +58,7 @@ fun AppsScreen(
                 fontSize = 20.sp,
                 modifier = Modifier.padding(8.dp)
             )
-
             Spacer(modifier = Modifier.weight(1f))
-
             IconButton(
                 onClick = { isDialogVisible = true },
                 modifier = Modifier.padding(8.dp),
@@ -210,6 +208,5 @@ fun ApplicationItem(application: Application, applicationViewModel: ApplicationV
                 Text("Delete")
             }
         }
-
     }
 }

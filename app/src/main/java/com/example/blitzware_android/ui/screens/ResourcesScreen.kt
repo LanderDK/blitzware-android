@@ -1,6 +1,8 @@
 package com.example.blitzware_android.ui.screens
 
+import android.util.Log
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -8,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDownward
 import androidx.compose.material.icons.filled.ArrowForward
@@ -19,8 +20,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.Gray
 import androidx.compose.ui.graphics.Color.Companion.White
@@ -29,46 +28,54 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 @Composable
 fun ResourcesScreen() {
-    LazyColumn {
-        item {
-            ResourceItem(
-                name = "API Documentation",
-                link = "https://docs.blitzware.xyz/",
-                iconName = "arrowshape.forward.fill"
-            )
-            ResourceItem(
-                name = "Video Tutorials",
-                link = "https://youtube.com/playlist?list=PLdX34hqAHqx8eia7qY4XE8R68t769vA-j&si=2fGZaEvYzm8x-byx",
-                iconName = "arrowshape.forward.fill"
-            )
-            ResourceItem(
-                name = "C# Example",
-                link = "https://github.com/LanderDK/BlitzWare-CSHARP-Example",
-                iconName = "arrow.down.to.line"
-            )
-            ResourceItem(
-                name = "C++ Example",
-                link = "https://github.com/LanderDK/BlitzWare-CPP-Example",
-                iconName = "arrow.down.to.line"
-            )
-            ResourceItem(
-                name = "Python Example",
-                link = "https://github.com/LanderDK/BlitzWare-Python-Example",
-                iconName = "arrow.down.to.line"
-            )
-            ResourceItem(
-                name = "Java Example",
-                link = "https://github.com/LanderDK/ApiTestJava",
-                iconName = "arrow.down.to.line"
-            )
-            ResourceItem(
-                name = "ReactJS Example",
-                link = "https://github.com/LanderDK/ApiTestReact",
-                iconName = "arrow.down.to.line"
-            )
+    Column {
+        Text(
+            text = "Available Resources",
+            fontSize = 20.sp,
+            modifier = Modifier.padding(8.dp)
+        )
+        LazyColumn {
+            item {
+                ResourceItem(
+                    name = "API Documentation",
+                    link = "https://docs.blitzware.xyz/",
+                    iconName = "arrowshape.forward.fill"
+                )
+                ResourceItem(
+                    name = "Video Tutorials",
+                    link = "https://youtube.com/playlist?list=PLdX34hqAHqx8eia7qY4XE8R68t769vA-j&si=2fGZaEvYzm8x-byx",
+                    iconName = "arrowshape.forward.fill"
+                )
+                ResourceItem(
+                    name = "C# Example",
+                    link = "https://github.com/LanderDK/BlitzWare-CSHARP-Example",
+                    iconName = "arrow.down.to.line"
+                )
+                ResourceItem(
+                    name = "C++ Example",
+                    link = "https://github.com/LanderDK/BlitzWare-CPP-Example",
+                    iconName = "arrow.down.to.line"
+                )
+                ResourceItem(
+                    name = "Python Example",
+                    link = "https://github.com/LanderDK/BlitzWare-Python-Example",
+                    iconName = "arrow.down.to.line"
+                )
+                ResourceItem(
+                    name = "Java Example",
+                    link = "https://github.com/LanderDK/ApiTestJava",
+                    iconName = "arrow.down.to.line"
+                )
+                ResourceItem(
+                    name = "ReactJS Example",
+                    link = "https://github.com/LanderDK/ApiTestReact",
+                    iconName = "arrow.down.to.line"
+                )
+            }
         }
     }
 }
@@ -81,9 +88,8 @@ fun ResourceItem(name: String, link: String, iconName: String) {
     Column(
         modifier = Modifier
             .padding(8.dp)
-            .clip(RoundedCornerShape(10.dp))
             .background(White)
-            .shadow(5.dp, shape = RoundedCornerShape(10.dp))
+            .border(1.dp, Color.Black)
     ) {
         Row(
             modifier = Modifier
@@ -109,7 +115,11 @@ fun ResourceItem(name: String, link: String, iconName: String) {
 
             IconButton(
                 onClick = {
-                    uriHandler.openUri(link)
+                    try {
+                        uriHandler.openUri(link)
+                    } catch (e: Exception) {
+                        Log.d("ResourcesScreen", e.message.toString())
+                    }
                 },
                 modifier = Modifier
                     .size((20 * density).dp)

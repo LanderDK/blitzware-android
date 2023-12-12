@@ -77,12 +77,12 @@ class ApplicationViewModel(private val accountViewModel: AccountViewModel) : Vie
                     subscription = application.adminRoleId
                 )
                 val token = accountViewModel.account?.token ?: throw Exception("Token is null")
-                val updatedApplication = DefaultAppContainer().applicationRepository.updateApplicationById(
+                DefaultAppContainer().applicationRepository.updateApplicationById(
                     token, application.id, body
                 )
                 val apps = _applications.value.toMutableList()
                 val index = apps.indexOfFirst { it.id == application.id }
-                apps[index] = updatedApplication
+                apps[index] = application
                 _applications.value = apps
                 applicationUiState = ApplicationUiState.Success(apps)
             } catch (e: IOException) {
