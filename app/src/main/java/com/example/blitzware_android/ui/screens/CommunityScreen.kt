@@ -92,9 +92,10 @@ fun CommunityScreen(
                     LazyColumn(
                         modifier = Modifier
                             .fillMaxSize()
-                            .padding(horizontal = 16.dp)
+                            .padding(horizontal = 16.dp),
+                        reverseLayout = true,
                     ) {
-                        items(chatMsgs) { chatMsg ->
+                        items(chatMsgs.reversed()) { chatMsg ->
                             val date = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault()).parse(chatMsg.date)
                             ChatMsg(username = chatMsg.username, message = chatMsg.message, date = date, onDelete = {
                                 chatMessageViewModel.deleteChatMessageById(chatMsg)
