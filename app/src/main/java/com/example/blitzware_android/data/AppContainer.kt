@@ -3,6 +3,7 @@ package com.example.blitzware_android.data
 import com.example.blitzware_android.network.AccountApiService
 import com.example.blitzware_android.network.ApplicationApiService
 import com.example.blitzware_android.network.ChatMessageApiService
+import com.example.blitzware_android.network.LogApiService
 import retrofit2.Retrofit
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import kotlinx.serialization.json.Json
@@ -15,6 +16,7 @@ interface AppContainer {
     val accountRepository: AccountRepository
     val applicationRepository: ApplicationRepository
     val chatMessageRepository: ChatMessageRepository
+    val logRepository: LogRepository
 }
 
 /**
@@ -23,7 +25,7 @@ interface AppContainer {
  * Variables are initialized lazily and the same instance is shared across the whole app.
  */
 class DefaultAppContainer : AppContainer {
-    private val baseUrl = "http://192.168.1.62:9000/api/"
+    private val baseUrl = "http://192.168.0.227:9000/api/"
 
     /**
      * Use the Retrofit builder to build a retrofit object using a kotlinx.serialization converter
@@ -59,5 +61,12 @@ class DefaultAppContainer : AppContainer {
      */
     override val chatMessageRepository: ChatMessageRepository by lazy {
         NetworkChatMessageRepository(retrofit.create(ChatMessageApiService::class.java))
+    }
+
+    /**
+     * DI implementation for Log repository
+     */
+    override val logRepository: LogRepository by lazy {
+        NetworkLogRepository(retrofit.create(LogApiService::class.java))
     }
 }

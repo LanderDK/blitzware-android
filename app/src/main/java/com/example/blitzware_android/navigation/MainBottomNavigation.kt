@@ -16,18 +16,22 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.blitzware_android.ui.screens.AccountLogsScreen
+import com.example.blitzware_android.ui.screens.AccountMenuScreen
 import com.example.blitzware_android.ui.screens.AccountViewModel
 import com.example.blitzware_android.ui.screens.ApplicationViewModel
 import com.example.blitzware_android.ui.screens.AppsScreen
 import com.example.blitzware_android.ui.screens.ChatMessageViewModel
 import com.example.blitzware_android.ui.screens.ResourcesScreen
 import com.example.blitzware_android.ui.screens.CommunityScreen
+import com.example.blitzware_android.ui.screens.LogViewModel
 
 @Composable
 fun MainBottomNavigation(accountViewModel: AccountViewModel) {
     val navController: NavHostController = rememberNavController()
     val applicationViewModel = ApplicationViewModel(accountViewModel)
     val chatMessageViewModel = ChatMessageViewModel(accountViewModel)
+    val logViewModel = LogViewModel(accountViewModel)
 
     Scaffold(
         bottomBar = {
@@ -49,7 +53,13 @@ fun MainBottomNavigation(accountViewModel: AccountViewModel) {
                 CommunityScreen(accountViewModel = accountViewModel, chatMessageViewModel = chatMessageViewModel)
             }
             composable(route = Screens.AccountMenuScreen.name) {
-                //AccountMenuScreen()
+                AccountMenuScreen(navController = navController)
+            }
+            composable(route = Screens.AccountLogsScreen.name) {
+                AccountLogsScreen(accountViewModel = accountViewModel, logViewModel = logViewModel, navController = navController)
+            }
+            composable(route = Screens.AccountDetailScreen.name) {
+                Text(text = "Account Details")
             }
         }
     }
