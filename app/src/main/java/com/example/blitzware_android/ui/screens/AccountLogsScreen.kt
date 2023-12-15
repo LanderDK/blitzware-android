@@ -27,6 +27,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.blitzware_android.model.Log
+import com.example.blitzware_android.ui.viewmodels.AccountViewModel
+import com.example.blitzware_android.ui.viewmodels.LogUiState
+import com.example.blitzware_android.ui.viewmodels.LogViewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
 

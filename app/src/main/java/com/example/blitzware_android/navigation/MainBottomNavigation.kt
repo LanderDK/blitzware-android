@@ -18,13 +18,13 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.blitzware_android.ui.screens.AccountLogsScreen
 import com.example.blitzware_android.ui.screens.AccountMenuScreen
-import com.example.blitzware_android.ui.screens.AccountViewModel
-import com.example.blitzware_android.ui.screens.ApplicationViewModel
+import com.example.blitzware_android.ui.viewmodels.AccountViewModel
+import com.example.blitzware_android.ui.viewmodels.ApplicationViewModel
 import com.example.blitzware_android.ui.screens.AppsScreen
-import com.example.blitzware_android.ui.screens.ChatMessageViewModel
+import com.example.blitzware_android.ui.viewmodels.ChatMessageViewModel
 import com.example.blitzware_android.ui.screens.ResourcesScreen
 import com.example.blitzware_android.ui.screens.CommunityScreen
-import com.example.blitzware_android.ui.screens.LogViewModel
+import com.example.blitzware_android.ui.viewmodels.LogViewModel
 
 @Composable
 fun MainBottomNavigation(accountViewModel: AccountViewModel) {

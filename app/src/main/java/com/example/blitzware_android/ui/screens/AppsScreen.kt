@@ -35,6 +35,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.blitzware_android.model.Application
+import com.example.blitzware_android.ui.viewmodels.AccountViewModel
+import com.example.blitzware_android.ui.viewmodels.ApplicationUiState
+import com.example.blitzware_android.ui.viewmodels.ApplicationViewModel
 
 @Composable
 fun AppsScreen(

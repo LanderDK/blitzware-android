@@ -1,4 +1,4 @@
-package com.example.blitzware_android.ui.screens
+package com.example.blitzware_android.ui.viewmodels
 
 import android.util.Log
 import androidx.compose.runtime.getValue
@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.blitzware_android.data.DefaultAppContainer
 import com.example.blitzware_android.model.ChatMessage
-import com.example.blitzware_android.network.CreateChatMessageBody
+import com.example.blitzware_android.model.CreateChatMessageBody
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch

@@ -44,3 +44,24 @@ data class AccountOfApp(
     @SerialName(value = "name")
     val name: String
 )
+
+@Serializable
+data class UpdateApplicationBody(
+    @SerialName(value = "status") val status: Int,
+    @SerialName(value = "hwidCheck") val hwidCheck: Int,
+    @SerialName(value = "developerMode") val developerMode: Int,
+    @SerialName(value = "integrityCheck") val integrityCheck: Int,
+    @SerialName(value = "freeMode") val freeMode: Int,
+    @SerialName(value = "twoFactorAuth") val twoFactorAuth: Int,
+    @SerialName(value = "programHash") val programHash: String?,
+    @SerialName(value = "version") val version: String,
+    @SerialName(value = "downloadLink") val downloadLink: String?,
+    @SerialName(value = "accountId") val accountId: String,
+    @SerialName(value = "subscription") val subscription: Int?
+)
+
+@Serializable
+data class CreateApplicationBody(
+    @SerialName(value = "name") val name: String,
+    @SerialName(value = "accountId") val accountId: String,
+)

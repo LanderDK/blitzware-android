@@ -16,3 +16,11 @@ data class ChatMessage(
     @SerialName(value = "chatId")
     val chatId: Int
 )
+
+@Serializable
+data class CreateChatMessageBody(
+    @SerialName(value = "username") val username: String,
+    @SerialName(value = "message") val message: String,
+    @SerialName(value = "date") val date: String,
+    @SerialName(value = "chatId") val chatId: Int,
+)

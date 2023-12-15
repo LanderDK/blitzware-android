@@ -1,4 +1,4 @@
-package com.example.blitzware_android.ui.screens
+package com.example.blitzware_android.ui.viewmodels
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf

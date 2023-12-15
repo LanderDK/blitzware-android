@@ -17,6 +17,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import com.example.blitzware_android.ui.viewmodels.AccountUiState
+import com.example.blitzware_android.ui.viewmodels.AccountViewModel
 
 @Composable
 fun LoginScreen(onLoginClick: (String, String) -> Unit, accountViewModel: AccountViewModel) {

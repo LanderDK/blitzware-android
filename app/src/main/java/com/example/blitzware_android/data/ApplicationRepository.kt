@@ -1,12 +1,14 @@
 package com.example.blitzware_android.data
 
 import com.example.blitzware_android.model.Application
+import com.example.blitzware_android.model.CreateApplicationBody
+import com.example.blitzware_android.model.UpdateApplicationBody
 import com.example.blitzware_android.network.ApplicationApiService
-import com.example.blitzware_android.network.CreateApplicationBody
-import com.example.blitzware_android.network.UpdateApplicationBody
 
 interface ApplicationRepository {
     suspend fun getApplicationsOfAccount(token: String, accountId: String): List<Application>
+
+    suspend fun getApplicationById(token: String, id: String): Application
 
     suspend fun updateApplicationById(
         token: String,
@@ -27,6 +29,11 @@ class NetworkApplicationRepository(
         return applicationApiService.getApplicationsOfAccount(authorizationHeader, accountId)
     }
 
+    override suspend fun getApplicationById(token: String, id: String): Application {
+        val authorizationHeader = "Bearer $token"
+        return applicationApiService.getApplicationById(authorizationHeader, id)
+    }
+
     override suspend fun updateApplicationById(
         token: String,
         id: String,
@@ -45,6 +52,7 @@ class NetworkApplicationRepository(
         token: String,
         body: CreateApplicationBody
     ): Application {
-        return applicationApiService.createApplication("Bearer $token", body)
+        val authorizationHeader = "Bearer $token"
+        return applicationApiService.createApplication(authorizationHeader, body)
     }
 }

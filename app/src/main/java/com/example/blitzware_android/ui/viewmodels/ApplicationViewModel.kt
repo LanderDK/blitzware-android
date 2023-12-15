@@ -1,4 +1,4 @@
-package com.example.blitzware_android.ui.screens
+package com.example.blitzware_android.ui.viewmodels
 
 import android.util.Log
 import androidx.compose.runtime.getValue
@@ -9,8 +9,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.blitzware_android.data.ApplicationRepository
 import com.example.blitzware_android.data.DefaultAppContainer
 import com.example.blitzware_android.model.Application
-import com.example.blitzware_android.network.CreateApplicationBody
-import com.example.blitzware_android.network.UpdateApplicationBody
+import com.example.blitzware_android.model.CreateApplicationBody
+import com.example.blitzware_android.model.UpdateApplicationBody
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -31,6 +31,11 @@ class ApplicationViewModel(private val accountViewModel: AccountViewModel) : Vie
     private val _applications = MutableStateFlow<List<Application>>(emptyList())
     val applications: StateFlow<List<Application>> get() = _applications
 
+
+    private val _application = mutableStateOf<Application?>(null)
+    val application: Application?
+        get() = _application.value
+
     init {
         getApplicationsOfAccount()
     }
@@ -44,6 +49,30 @@ class ApplicationViewModel(private val accountViewModel: AccountViewModel) : Vie
                 val apps = DefaultAppContainer().applicationRepository.getApplicationsOfAccount(token, accountId)
                 _applications.value = apps
                 applicationUiState = ApplicationUiState.Success(apps)
+            } catch (e: IOException) {
+                Log.d("ApplicationViewModel", "IOException")
+                Log.d("ApplicationViewModel", e.message.toString())
+                applicationUiState = ApplicationUiState.Error
+            } catch (e: HttpException) {
+                Log.d("ApplicationViewModel", "HttpException")
+                Log.d("ApplicationViewModel", e.message.toString())
+                applicationUiState = ApplicationUiState.Error
+            } catch (e: Exception) {
+                Log.d("ApplicationViewModel", "Exception")
+                Log.d("ApplicationViewModel", e.message.toString())
+                applicationUiState = ApplicationUiState.Error
+            }
+        }
+    }
+
+    fun getApplicationById(application: Application) {
+        viewModelScope.launch {
+            applicationUiState = ApplicationUiState.Loading
+            try {
+                val token = accountViewModel.account?.token ?: throw Exception("Token is null")
+                val app = DefaultAppContainer().applicationRepository.getApplicationById(token, application.id)
+                _application.value = app
+                applicationUiState = ApplicationUiState.Success(_applications.value)
             } catch (e: IOException) {
                 Log.d("ApplicationViewModel", "IOException")
                 Log.d("ApplicationViewModel", e.message.toString())

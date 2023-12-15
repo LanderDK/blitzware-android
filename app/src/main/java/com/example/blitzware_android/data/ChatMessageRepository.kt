@@ -1,8 +1,8 @@
 package com.example.blitzware_android.data
 
 import com.example.blitzware_android.model.ChatMessage
+import com.example.blitzware_android.model.CreateChatMessageBody
 import com.example.blitzware_android.network.ChatMessageApiService
-import com.example.blitzware_android.network.CreateChatMessageBody
 
 interface ChatMessageRepository {
     suspend fun getChatMsgsByChatId(

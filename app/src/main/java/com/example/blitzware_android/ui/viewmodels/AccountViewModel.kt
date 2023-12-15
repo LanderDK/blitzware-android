@@ -1,4 +1,4 @@
-package com.example.blitzware_android.ui.screens
+package com.example.blitzware_android.ui.viewmodels
 
 import android.util.Log
 import androidx.compose.runtime.getValue
@@ -61,7 +61,31 @@ class AccountViewModel(private val accountRepository: AccountRepository) : ViewM
                  Log.d("AccountViewModel", e.message.toString())
                  accountUiState = AccountUiState.Error
              }
-            Log.d("AccountViewModel", accountUiState.toString())
+        }
+    }
+
+    fun getAccountById() {
+        viewModelScope.launch {
+            accountUiState = AccountUiState.Loading
+            try {
+                val accountId = account?.account?.id ?: throw Exception("Account is null")
+                val token = account?.token ?: throw Exception("Token is null")
+                val account = accountRepository.getAccountById(token, accountId)
+                _account.value = account
+                accountUiState = AccountUiState.Success(account)
+            } catch (e: IOException) {
+                Log.d("AccountViewModel", "IOException")
+                Log.d("AccountViewModel", e.message.toString())
+                accountUiState = AccountUiState.Error
+            } catch (e: HttpException) {
+                Log.d("AccountViewModel", "HttpException")
+                Log.d("AccountViewModel", e.message.toString())
+                accountUiState = AccountUiState.Error
+            } catch (e: Exception) {
+                Log.d("AccountViewModel", "Exception")
+                Log.d("AccountViewModel", e.message.toString())
+                accountUiState = AccountUiState.Error
+            }
         }
     }
 
