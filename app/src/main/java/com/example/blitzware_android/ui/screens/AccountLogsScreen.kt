@@ -68,7 +68,7 @@ fun AccountLogsScreen(
         }
         when (logViewModel.logUiState) {
             is LogUiState.Loading -> {
-                Text(text = "Loading messages...")
+                Text(text = "Loading logs...")
             }
             is LogUiState.Success -> {
                 LazyColumn(
@@ -84,7 +84,7 @@ fun AccountLogsScreen(
                 }
             }
             is LogUiState.Error -> {
-                Text(text = "Error loading messages!")
+                Text(text = "Error loading logs!")
             }
         }
     }

@@ -16,6 +16,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.blitzware_android.ui.screens.AccountDetailsScreen
 import com.example.blitzware_android.ui.screens.AccountLogsScreen
 import com.example.blitzware_android.ui.screens.AccountMenuScreen
 import com.example.blitzware_android.ui.viewmodels.AccountViewModel
@@ -59,7 +60,7 @@ fun MainBottomNavigation(accountViewModel: AccountViewModel) {
                 AccountLogsScreen(accountViewModel = accountViewModel, logViewModel = logViewModel, navController = navController)
             }
             composable(route = Screens.AccountDetailScreen.name) {
-                Text(text = "Account Details")
+                AccountDetailsScreen(accountViewModel = accountViewModel, navController = navController)
             }
         }
     }

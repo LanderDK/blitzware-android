@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Account(
     @SerialName(value = "account")
-    val account: AccountData,
+    var account: AccountData,
     @SerialName(value = "token")
     val token: String
 )
@@ -32,3 +32,27 @@ data class AccountData(
     @SerialName(value = "enabled")
     var enabled: Int
 )
+
+@Serializable
+data class UpdateAccountPicBody(
+    @SerialName(value = "profilePicture") val profilePicture: ProfilePicture,
+)
+
+@Serializable
+data class ProfilePicture(
+    @SerialName(value = "name") val name: String,
+    @SerialName(value = "type") val type: String,
+    @SerialName(value = "size") val size: Int,
+    @SerialName(value = "dataURL") val dataURL: String,
+)
+
+fun UpdateAccountPicBody.toFormattedString(): String {
+    return buildString {
+        appendLine("{")
+        appendLine("""  "name": "${profilePicture.name}",""")
+        appendLine("""  "type": "${profilePicture.type}",""")
+        appendLine("""  "size": ${profilePicture.size},""")
+        appendLine("""  "dataURL": "${profilePicture.dataURL}" """)
+        appendLine("}")
+    }
+}

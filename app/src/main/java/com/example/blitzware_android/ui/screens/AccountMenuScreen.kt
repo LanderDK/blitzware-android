@@ -62,7 +62,7 @@ fun AccountMenuScreen(navController: NavHostController) {
                 AccountMenuItem(
                     icon = Icons.Default.AdminPanelSettings,
                     text = "Admin Panel",
-                    onClick = { navController.navigate("adminPanel") }
+                    onClick = { /*navController.navigate("adminPanel")*/ }
                 )
 
                 Spacer(modifier = Modifier.weight(1f))
