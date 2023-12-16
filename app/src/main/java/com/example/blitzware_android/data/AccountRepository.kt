@@ -1,5 +1,8 @@
 package com.example.blitzware_android.data
 
+import com.example.blitzware_android.data.database.AccountDao
+import com.example.blitzware_android.data.database.asDbAccount
+import com.example.blitzware_android.data.database.asDomainAccount
 import com.example.blitzware_android.model.Account
 import com.example.blitzware_android.model.AccountData
 import com.example.blitzware_android.model.UpdateAccountPicBody
@@ -15,9 +18,30 @@ interface AccountRepository {
         id: String,
         body: UpdateAccountPicBody
     )
+
+    /**
+     * Retrieve an account (only one will exist) from the given data source.
+     */
+    fun getAccountStream(): Account
+
+    /**
+     * Insert account in the data source
+     */
+    suspend fun insertAccount(account: Account)
+
+    /**
+     * Delete account from the data source
+     */
+    suspend fun deleteAccount(account: Account)
+
+    /**
+     * Update account in the data source
+     */
+    suspend fun updateAccount(account: Account)
 }
 
 class NetworkAccountRepository(
+    private val accountDao: AccountDao,
     private val accountApiService: AccountApiService
 ) : AccountRepository {
     override suspend fun login(body: Map<String, String>): Account {
@@ -36,5 +60,21 @@ class NetworkAccountRepository(
     ) {
         val authorizationHeader = "Bearer $token"
         accountApiService.updateAccountProfilePictureById(authorizationHeader, id, body)
+    }
+
+    override fun getAccountStream(): Account {
+        return accountDao.getAccount().asDomainAccount()
+    }
+
+    override suspend fun insertAccount(account: Account) {
+        accountDao.insert(account.asDbAccount())
+    }
+
+    override suspend fun deleteAccount(account: Account) {
+        accountDao.delete(account.asDbAccount())
+    }
+
+    override suspend fun updateAccount(account: Account) {
+        accountDao.update(account.asDbAccount())
     }
 }

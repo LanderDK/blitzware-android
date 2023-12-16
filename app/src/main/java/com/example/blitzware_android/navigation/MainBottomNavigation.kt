@@ -19,20 +19,13 @@ import androidx.navigation.compose.rememberNavController
 import com.example.blitzware_android.ui.screens.AccountDetailsScreen
 import com.example.blitzware_android.ui.screens.AccountLogsScreen
 import com.example.blitzware_android.ui.screens.AccountMenuScreen
-import com.example.blitzware_android.ui.viewmodels.AccountViewModel
-import com.example.blitzware_android.ui.viewmodels.ApplicationViewModel
 import com.example.blitzware_android.ui.screens.AppsScreen
-import com.example.blitzware_android.ui.viewmodels.ChatMessageViewModel
-import com.example.blitzware_android.ui.screens.ResourcesScreen
 import com.example.blitzware_android.ui.screens.CommunityScreen
-import com.example.blitzware_android.ui.viewmodels.LogViewModel
+import com.example.blitzware_android.ui.screens.ResourcesScreen
 
 @Composable
-fun MainBottomNavigation(accountViewModel: AccountViewModel) {
+fun MainBottomNavigation() {
     val navController: NavHostController = rememberNavController()
-    val applicationViewModel = ApplicationViewModel(accountViewModel)
-    val chatMessageViewModel = ChatMessageViewModel(accountViewModel)
-    val logViewModel = LogViewModel(accountViewModel)
 
     Scaffold(
         bottomBar = {
@@ -45,22 +38,22 @@ fun MainBottomNavigation(accountViewModel: AccountViewModel) {
             modifier = Modifier.padding(paddingValues)
         ) {
             composable(route = Screens.AppsScreen.name) {
-                AppsScreen(accountViewModel = accountViewModel, applicationViewModel = applicationViewModel)
+                AppsScreen()
             }
             composable(route = Screens.ResourcesScreen.name) {
                 ResourcesScreen()
             }
             composable(route = Screens.CommunityScreen.name) {
-                CommunityScreen(accountViewModel = accountViewModel, chatMessageViewModel = chatMessageViewModel)
+                CommunityScreen()
             }
             composable(route = Screens.AccountMenuScreen.name) {
                 AccountMenuScreen(navController = navController)
             }
             composable(route = Screens.AccountLogsScreen.name) {
-                AccountLogsScreen(accountViewModel = accountViewModel, logViewModel = logViewModel, navController = navController)
+                AccountLogsScreen(navController = navController)
             }
             composable(route = Screens.AccountDetailScreen.name) {
-                AccountDetailsScreen(accountViewModel = accountViewModel, navController = navController)
+                AccountDetailsScreen(navController = navController)
             }
         }
     }

@@ -5,13 +5,21 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.example.blitzware_android.data.DefaultAppContainer
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
+import com.example.blitzware_android.BlitzWareApplication
+import com.example.blitzware_android.data.AccountRepository
+import com.example.blitzware_android.data.ChatMessageRepository
+import com.example.blitzware_android.model.Account
 import com.example.blitzware_android.model.ChatMessage
 import com.example.blitzware_android.model.CreateChatMessageBody
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 import java.io.IOException
 import java.time.LocalDateTime
@@ -22,7 +30,10 @@ sealed interface ChatMessageUiState {
     object Loading : ChatMessageUiState
 }
 
-class ChatMessageViewModel(private val accountViewModel: AccountViewModel) : ViewModel() {
+class ChatMessageViewModel(
+    private val chatMessageRepository: ChatMessageRepository,
+    private val accountRepository: AccountRepository
+) : ViewModel() {
     /** The mutable State that stores the status of the most recent request */
     var chatMessageUiState: ChatMessageUiState by mutableStateOf(ChatMessageUiState.Loading)
         private set
@@ -30,16 +41,26 @@ class ChatMessageViewModel(private val accountViewModel: AccountViewModel) : Vie
     private val _chatMsgs = MutableStateFlow<List<ChatMessage>>(emptyList())
     val chatMsgs: StateFlow<List<ChatMessage>> get() = _chatMsgs
 
+    private val _account = mutableStateOf<Account?>(null)
+    val account: Account?
+        get() = _account.value
+
     init {
-        getChatMsgsByChatId(1)
+        viewModelScope.launch {
+            val account = withContext(Dispatchers.IO) {
+                accountRepository.getAccountStream()
+            }
+            _account.value = account
+            getChatMsgsByChatId(1)
+        }
     }
 
     fun getChatMsgsByChatId(chatId: Int) {
         viewModelScope.launch {
             chatMessageUiState = ChatMessageUiState.Loading
             try {
-                val token = accountViewModel.account?.token ?: throw Exception("Token is null")
-                val chatMsgs = DefaultAppContainer().chatMessageRepository.getChatMsgsByChatId(token, chatId)
+                val token = account?.token ?: throw Exception("Token is null")
+                val chatMsgs = chatMessageRepository.getChatMsgsByChatId(token, chatId)
                 _chatMsgs.value = chatMsgs
                 chatMessageUiState = ChatMessageUiState.Success(chatMsgs)
             } catch (e: IOException) {
@@ -61,8 +82,8 @@ class ChatMessageViewModel(private val accountViewModel: AccountViewModel) : Vie
     fun deleteChatMessageById(chatMsg: ChatMessage) {
         viewModelScope.launch {
             try {
-                val token = accountViewModel.account?.token ?: throw Exception("Token is null")
-                DefaultAppContainer().chatMessageRepository.deleteChatMessageById(token, chatMsg.id)
+                val token = account?.token ?: throw Exception("Token is null")
+                chatMessageRepository.deleteChatMessageById(token, chatMsg.id)
                 val chatMsgs = _chatMsgs.value.toMutableList()
                 chatMsgs.remove(chatMsg)
                 _chatMsgs.value = chatMsgs
@@ -86,16 +107,16 @@ class ChatMessageViewModel(private val accountViewModel: AccountViewModel) : Vie
     fun createChatMessage(msg: String, chatId: Int) {
         viewModelScope.launch {
             try {
-                val token = accountViewModel.account?.token ?: throw Exception("Token is null")
+                val token = account?.token ?: throw Exception("Token is null")
                 val currentDateTime = LocalDateTime.now()
                 val currentDateTimeString = currentDateTime.toString()
                 val body = CreateChatMessageBody(
-                    username = accountViewModel.account?.account?.username ?: throw Exception("Username is null"),
+                    username = account?.account?.username ?: throw Exception("Username is null"),
                     message = msg,
                     date = currentDateTimeString,
                     chatId = chatId
                 )
-                val chatMsg = DefaultAppContainer().chatMessageRepository.createChatMessage(token, body)
+                val chatMsg = chatMessageRepository.createChatMessage(token, body)
                 val chatMsgs = _chatMsgs.value.toMutableList()
                 chatMsgs.add(chatMsg)
                 _chatMsgs.value = chatMsgs
@@ -112,6 +133,23 @@ class ChatMessageViewModel(private val accountViewModel: AccountViewModel) : Vie
                 Log.d("ChatMessageViewModel", "Exception")
                 Log.d("ChatMessageViewModel", e.message.toString())
                 chatMessageUiState = ChatMessageUiState.Error
+            }
+        }
+    }
+
+    /**
+     * Factory for [ChatMessageViewModel] that takes [ChatMessageRepository] as a dependency
+     */
+    companion object {
+        val Factory: ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                val application = (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as BlitzWareApplication)
+                val chatMessageRepository = application.container.chatMessageRepository
+                val accountRepository = application.container.accountRepository
+                ChatMessageViewModel(
+                    chatMessageRepository = chatMessageRepository,
+                    accountRepository = accountRepository
+                )
             }
         }
     }

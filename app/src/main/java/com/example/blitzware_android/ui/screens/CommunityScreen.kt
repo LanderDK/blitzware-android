@@ -40,7 +40,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.blitzware_android.ui.viewmodels.AccountViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.blitzware_android.model.Account
 import com.example.blitzware_android.ui.viewmodels.ChatMessageUiState
 import com.example.blitzware_android.ui.viewmodels.ChatMessageViewModel
 import java.text.SimpleDateFormat
@@ -49,8 +50,7 @@ import java.util.Locale
 
 @Composable
 fun CommunityScreen(
-    accountViewModel: AccountViewModel,
-    chatMessageViewModel: ChatMessageViewModel
+    chatMessageViewModel: ChatMessageViewModel = viewModel(factory = ChatMessageViewModel.Factory)
 ) {
     val chatMsgs by chatMessageViewModel.chatMsgs.collectAsState()
     var msg by remember { mutableStateOf("") }
@@ -100,9 +100,9 @@ fun CommunityScreen(
                     ) {
                         items(chatMsgs.reversed()) { chatMsg ->
                             val date = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault()).parse(chatMsg.date)
-                            ChatMsg(username = chatMsg.username, message = chatMsg.message, date = date, onDelete = {
+                            ChatMsg(username = chatMsg.username, message = chatMsg.message, date = date!!, onDelete = {
                                 chatMessageViewModel.deleteChatMessageById(chatMsg)
-                            }, accountViewModel = accountViewModel)
+                            }, account = chatMessageViewModel.account ?: throw Exception("Account is null"))
                         }
                     }
                 }
@@ -118,7 +118,7 @@ fun CommunityScreen(
                 .padding(16.dp)
                 .fillMaxWidth(),
             placeholder = {
-                Text("Type here, ${accountViewModel.account?.account?.username}...")
+                Text("Type here, ${chatMessageViewModel.account?.account?.username}...")
             },
             singleLine = true,
             keyboardOptions = KeyboardOptions.Default.copy(
@@ -164,7 +164,7 @@ fun CommunityScreen(
 }
 
 @Composable
-fun ChatMsg(username: String, message: String, date: Date, onDelete: () -> Unit, accountViewModel: AccountViewModel) {
+fun ChatMsg(username: String, message: String, date: Date, onDelete: () -> Unit, account: Account) {
     var expanded by remember { mutableStateOf(false) }
 
     Column(
@@ -183,7 +183,7 @@ fun ChatMsg(username: String, message: String, date: Date, onDelete: () -> Unit,
         ) {
             Text(
                 text = username,
-                color = if (username == accountViewModel.account?.account?.username) {
+                color = if (username == account.account.username) {
                     Color(28, 155, 239)
                 } else {
                     Color(61, 83, 101)
@@ -199,7 +199,7 @@ fun ChatMsg(username: String, message: String, date: Date, onDelete: () -> Unit,
             modifier = Modifier
                 .padding(10.dp)
                 .background(
-                    color = if (username == accountViewModel.account?.account?.username) {
+                    color = if (username == account.account.username) {
                         Color(28, 155, 239)
                     } else {
                         Color(61, 83, 101)

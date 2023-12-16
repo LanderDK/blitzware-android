@@ -34,15 +34,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.blitzware_android.model.Application
-import com.example.blitzware_android.ui.viewmodels.AccountViewModel
 import com.example.blitzware_android.ui.viewmodels.ApplicationUiState
 import com.example.blitzware_android.ui.viewmodels.ApplicationViewModel
 
 @Composable
 fun AppsScreen(
-    accountViewModel: AccountViewModel,
-    applicationViewModel: ApplicationViewModel
+    applicationViewModel: ApplicationViewModel = viewModel(factory = ApplicationViewModel.Factory),
 ) {
     val applications by applicationViewModel.applications.collectAsState()
     var isDialogVisible by remember { mutableStateOf(false) }
@@ -57,7 +56,7 @@ fun AppsScreen(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "Welcome back, ${accountViewModel.account!!.account.username}!",
+                text = "Welcome back, ${applicationViewModel.account?.account?.username}!",
                 fontSize = 20.sp,
                 modifier = Modifier.padding(8.dp)
             )

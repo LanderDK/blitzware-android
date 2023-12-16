@@ -25,9 +25,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.blitzware_android.model.Log
-import com.example.blitzware_android.ui.viewmodels.AccountViewModel
 import com.example.blitzware_android.ui.viewmodels.LogUiState
 import com.example.blitzware_android.ui.viewmodels.LogViewModel
 import java.text.SimpleDateFormat
@@ -35,8 +35,7 @@ import java.util.Locale
 
 @Composable
 fun AccountLogsScreen(
-    accountViewModel: AccountViewModel,
-    logViewModel: LogViewModel,
+    logViewModel: LogViewModel = viewModel(factory = LogViewModel.Factory),
     navController: NavHostController
 ) {
     val logs by logViewModel.logs.collectAsState()
@@ -108,7 +107,7 @@ fun Log(log: Log, onDelete: () -> Unit) {
                 text = "${log.action}: ${log.message}"
             )
             Text(
-                text = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(date),
+                text = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(date!!),
                 color = Color.Gray
             )
         }

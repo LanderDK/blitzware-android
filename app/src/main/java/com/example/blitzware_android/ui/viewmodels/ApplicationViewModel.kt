@@ -5,15 +5,23 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
+import com.example.blitzware_android.BlitzWareApplication
+import com.example.blitzware_android.data.AccountRepository
 import com.example.blitzware_android.data.ApplicationRepository
-import com.example.blitzware_android.data.DefaultAppContainer
+import com.example.blitzware_android.model.Account
 import com.example.blitzware_android.model.Application
 import com.example.blitzware_android.model.CreateApplicationBody
 import com.example.blitzware_android.model.UpdateApplicationBody
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 import java.io.IOException
 
@@ -23,7 +31,10 @@ sealed interface ApplicationUiState {
     object Loading : ApplicationUiState
 }
 
-class ApplicationViewModel(private val accountViewModel: AccountViewModel) : ViewModel() {
+class ApplicationViewModel(
+    private val applicationRepository: ApplicationRepository,
+    private val accountRepository: AccountRepository
+) : ViewModel() {
     /** The mutable State that stores the status of the most recent request */
     var applicationUiState: ApplicationUiState by mutableStateOf(ApplicationUiState.Loading)
         private set
@@ -36,30 +47,44 @@ class ApplicationViewModel(private val accountViewModel: AccountViewModel) : Vie
     val application: Application?
         get() = _application.value
 
+    private val _account = mutableStateOf<Account?>(null)
+    val account: Account?
+        get() = _account.value
+
     init {
-        getApplicationsOfAccount()
+        viewModelScope.launch {
+            val account = withContext(Dispatchers.IO) {
+                accountRepository.getAccountStream()
+            }
+            Log.d("ApplicationViewModel", account.toString())
+            _account.value = account
+            getApplicationsOfAccount()
+        }
     }
 
     private fun getApplicationsOfAccount() {
         viewModelScope.launch {
             applicationUiState = ApplicationUiState.Loading
             try {
-                val accountId = accountViewModel.account?.account?.id ?: throw Exception("Account is null")
-                val token = accountViewModel.account?.token ?: throw Exception("Token is null")
-                val apps = DefaultAppContainer().applicationRepository.getApplicationsOfAccount(token, accountId)
+                val token = account?.token ?: throw Exception("Token is null")
+                val accountId = account?.account?.id ?: throw Exception("Account id is null")
+                val apps = applicationRepository.getApplicationsOfAccount(token, accountId)
                 _applications.value = apps
                 applicationUiState = ApplicationUiState.Success(apps)
             } catch (e: IOException) {
                 Log.d("ApplicationViewModel", "IOException")
                 Log.d("ApplicationViewModel", e.message.toString())
+                Log.d("ApplicationViewModel", e.stackTraceToString())
                 applicationUiState = ApplicationUiState.Error
             } catch (e: HttpException) {
                 Log.d("ApplicationViewModel", "HttpException")
                 Log.d("ApplicationViewModel", e.message.toString())
+                Log.d("ApplicationViewModel", e.stackTraceToString())
                 applicationUiState = ApplicationUiState.Error
             } catch (e: Exception) {
                 Log.d("ApplicationViewModel", "Exception")
                 Log.d("ApplicationViewModel", e.message.toString())
+                Log.d("ApplicationViewModel", e.stackTraceToString())
                 applicationUiState = ApplicationUiState.Error
             }
         }
@@ -69,8 +94,11 @@ class ApplicationViewModel(private val accountViewModel: AccountViewModel) : Vie
         viewModelScope.launch {
             applicationUiState = ApplicationUiState.Loading
             try {
-                val token = accountViewModel.account?.token ?: throw Exception("Token is null")
-                val app = DefaultAppContainer().applicationRepository.getApplicationById(token, application.id)
+                val token = account?.token ?: throw Exception("Token is null")
+                val app = applicationRepository.getApplicationById(
+                    token,
+                    application.id
+                )
                 _application.value = app
                 applicationUiState = ApplicationUiState.Success(_applications.value)
             } catch (e: IOException) {
@@ -105,8 +133,8 @@ class ApplicationViewModel(private val accountViewModel: AccountViewModel) : Vie
                     accountId = requireNotNull(application.account.id),
                     subscription = application.adminRoleId
                 )
-                val token = accountViewModel.account?.token ?: throw Exception("Token is null")
-                DefaultAppContainer().applicationRepository.updateApplicationById(
+                val token = account?.token ?: throw Exception("Token is null")
+                applicationRepository.updateApplicationById(
                     token, application.id, body
                 )
                 val apps = _applications.value.toMutableList()
@@ -133,8 +161,8 @@ class ApplicationViewModel(private val accountViewModel: AccountViewModel) : Vie
     fun deleteApplicationById(application: Application) {
         viewModelScope.launch {
             try {
-                val token = accountViewModel.account?.token ?: throw Exception("Token is null")
-                DefaultAppContainer().applicationRepository.deleteApplicationById(token, application.id)
+                val token = account?.token ?: throw Exception("Token is null")
+                applicationRepository.deleteApplicationById(token, application.id)
                 val apps = _applications.value.toMutableList()
                 apps.remove(application)
                 _applications.value = apps
@@ -158,13 +186,13 @@ class ApplicationViewModel(private val accountViewModel: AccountViewModel) : Vie
     fun createApplication(name: String) {
         viewModelScope.launch {
             try {
-                val token = accountViewModel.account?.token ?: throw Exception("Token is null")
-                val accountId = accountViewModel.account?.account?.id ?: throw Exception("Account is null")
+                val token = account?.token ?: throw Exception("Token is null")
+                val accountId = account?.account?.id ?: throw Exception("Account id is null")
                 val body = CreateApplicationBody(
                     name = name,
                     accountId = accountId
                 )
-                val application = DefaultAppContainer().applicationRepository.createApplication(token, body)
+                val application = applicationRepository.createApplication(token, body)
                 val apps = _applications.value.toMutableList()
                 apps.add(application)
                 _applications.value = apps
@@ -186,15 +214,19 @@ class ApplicationViewModel(private val accountViewModel: AccountViewModel) : Vie
     }
 
     /**
-     * Factory for [ApplicationViewModel] that takes [ApplicationRepository] and [AccountViewModel] as a dependency
+     * Factory for [ApplicationViewModel] that takes [ApplicationRepository] as a dependency
      */
-//    companion object {
-//        val Factory: ViewModelProvider.Factory = viewModelFactory {
-//            initializer {
-//                val application = (this[APPLICATION_KEY] as BlitzWareApplication)
-//                val applicationRepository = application.container.applicationRepository
-//                ApplicationViewModel(applicationRepository = applicationRepository)
-//            }
-//        }
-//    }
+    companion object {
+        val Factory: ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                val application = (this[APPLICATION_KEY] as BlitzWareApplication)
+                val applicationRepository = application.container.applicationRepository
+                val accountRepository = application.container.accountRepository
+                ApplicationViewModel(
+                    applicationRepository = applicationRepository,
+                    accountRepository = accountRepository
+                )
+            }
+        }
+    }
 }

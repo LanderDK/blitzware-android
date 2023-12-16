@@ -31,7 +31,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     if (accountViewModel.isAuthed) {
-                        MainBottomNavigation(accountViewModel = accountViewModel)
+                        MainBottomNavigation()
                     } else {
                         LoginScreen(
                             onLoginClick = { username, password ->

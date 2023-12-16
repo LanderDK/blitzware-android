@@ -1,5 +1,7 @@
 package com.example.blitzware_android.data
 
+import android.content.Context
+import com.example.blitzware_android.data.database.AccountDb
 import com.example.blitzware_android.network.AccountApiService
 import com.example.blitzware_android.network.AppLogApiService
 import com.example.blitzware_android.network.ApplicationApiService
@@ -34,8 +36,8 @@ interface AppContainer {
  *
  * Variables are initialized lazily and the same instance is shared across the whole app.
  */
-class DefaultAppContainer : AppContainer {
-    private val baseUrl = "http://192.168.0.227:9000/api/"
+class DefaultAppContainer(private val context: Context): AppContainer {
+    private val baseUrl = "http://192.168.0.108:9000/api/"
 
     /**
      * Use the Retrofit builder to build a retrofit object using a kotlinx.serialization converter
@@ -48,15 +50,18 @@ class DefaultAppContainer : AppContainer {
     /**
      * Retrofit service object for creating api calls
      */
-    private val retrofitService: AccountApiService by lazy {
+    /*private val retrofitService: AccountApiService by lazy {
         retrofit.create(AccountApiService::class.java)
-    }
+    }*/
 
     /**
      * DI implementation for Account repository
      */
     override val accountRepository: AccountRepository by lazy {
-        NetworkAccountRepository(retrofit.create(AccountApiService::class.java))
+        NetworkAccountRepository(
+            AccountDb.getDatabase(context = context).accountDao(),
+            retrofit.create(AccountApiService::class.java)
+        )
     }
 
     /**

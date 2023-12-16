@@ -15,7 +15,9 @@ import com.example.blitzware_android.data.AccountRepository
 import com.example.blitzware_android.model.Account
 import com.example.blitzware_android.model.UpdateAccountPicBody
 import com.example.blitzware_android.model.toFormattedString
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 import java.io.IOException
 
@@ -49,6 +51,7 @@ class AccountViewModel(private val accountRepository: AccountRepository) : ViewM
                  val account = accountRepository.login(body)
                  _account.value = account
                  accountUiState = AccountUiState.Success(account)
+                 accountRepository.insertAccount(account)
                  _isAuthed.value = true
             } catch (e: IOException) {
                 Log.d("AccountViewModel", "IOException")
@@ -70,11 +73,15 @@ class AccountViewModel(private val accountRepository: AccountRepository) : ViewM
         viewModelScope.launch {
             accountUiState = AccountUiState.Loading
             try {
-                val accountId = account?.account?.id ?: throw Exception("Account is null")
-                val token = account?.token ?: throw Exception("Token is null")
-                val account = accountRepository.getAccountById(token, accountId)
-                _account.value?.account = account
-                accountUiState = AccountUiState.Success(_account.value!!)
+                withContext(Dispatchers.IO) {
+                    _account.value = accountRepository.getAccountStream()
+                    val accountId = account?.account?.id ?: throw Exception("Account is null")
+                    val token = account?.token ?: throw Exception("Token is null")
+                    val account = accountRepository.getAccountById(token, accountId)
+                    _account.value?.account = account
+                    accountRepository.updateAccount(_account.value!!)
+                    accountUiState = AccountUiState.Success(_account.value!!)
+                }
             } catch (e: IOException) {
                 Log.d("AccountViewModel", "IOException")
                 Log.d("AccountViewModel", e.message.toString())
@@ -95,11 +102,15 @@ class AccountViewModel(private val accountRepository: AccountRepository) : ViewM
         viewModelScope.launch {
             accountUiState = AccountUiState.Loading
             try {
-                val accountId = account?.account?.id ?: throw Exception("Account is null")
-                val token = account?.token ?: throw Exception("Token is null")
-                accountRepository.updateAccountProfilePictureById(token, accountId, body)
-                _account.value?.account?.profilePicture = body.toFormattedString()
-                accountUiState = AccountUiState.Success(_account.value!!)
+                withContext(Dispatchers.IO) {
+                    _account.value = accountRepository.getAccountStream()
+                    val accountId = account?.account?.id ?: throw Exception("Account is null")
+                    val token = account?.token ?: throw Exception("Token is null")
+                    accountRepository.updateAccountProfilePictureById(token, accountId, body)
+                    _account.value?.account?.profilePicture = body.toFormattedString()
+                    accountRepository.updateAccount(_account.value!!)
+                    accountUiState = AccountUiState.Success(_account.value!!)
+                }
             } catch (e: IOException) {
                 Log.d("AccountViewModel", "IOException")
                 Log.d("AccountViewModel", e.message.toString())
