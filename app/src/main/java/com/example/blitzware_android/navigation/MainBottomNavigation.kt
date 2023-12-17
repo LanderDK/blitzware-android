@@ -8,6 +8,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -19,17 +22,20 @@ import androidx.navigation.compose.rememberNavController
 import com.example.blitzware_android.ui.screens.AccountDetailsScreen
 import com.example.blitzware_android.ui.screens.AccountLogsScreen
 import com.example.blitzware_android.ui.screens.AccountMenuScreen
+import com.example.blitzware_android.ui.screens.AppDetailScreen
 import com.example.blitzware_android.ui.screens.AppsScreen
 import com.example.blitzware_android.ui.screens.CommunityScreen
 import com.example.blitzware_android.ui.screens.ResourcesScreen
+import com.example.blitzware_android.ui.screens.UsersScreen
 
 @Composable
 fun MainBottomNavigation() {
     val navController: NavHostController = rememberNavController()
+    var selectedScreen by remember { mutableStateOf(Screens.AppDetailScreen) }
 
     Scaffold(
         bottomBar = {
-            GetNavigationBar(navController = navController)
+            GetMainNavigationBar(navController = navController)
         }
     ) { paddingValues ->
         NavHost(
@@ -38,7 +44,7 @@ fun MainBottomNavigation() {
             modifier = Modifier.padding(paddingValues)
         ) {
             composable(route = Screens.AppsScreen.name) {
-                AppsScreen()
+                AppsScreen(navController = navController)
             }
             composable(route = Screens.ResourcesScreen.name) {
                 ResourcesScreen()
@@ -55,13 +61,37 @@ fun MainBottomNavigation() {
             composable(route = Screens.AccountDetailScreen.name) {
                 AccountDetailsScreen(navController = navController)
             }
+            composable(route = Screens.AppDetailScreen.name) {
+                AppDetailBottomNavigation(navController = navController, selectedScreen = selectedScreen)
+                AppDetailScreen(navController = navController)
+            }
+            composable(route = Screens.UsersScreen.name) {
+                AppDetailBottomNavigation(navController = navController, selectedScreen = selectedScreen)
+                UsersScreen()
+            }
+            composable(route = Screens.LicensesScreen.name) {
+                AppDetailBottomNavigation(navController = navController, selectedScreen = selectedScreen)
+                Text(text = "LicensesScreen") //LicensesScreen()
+            }
+            composable(route = Screens.UserSubsScreen.name) {
+                AppDetailBottomNavigation(navController = navController, selectedScreen = selectedScreen)
+                Text(text = "UserSubsScreen") //UserSubsScreen()
+            }
+            composable(route = Screens.FilesScreen.name) {
+                AppDetailBottomNavigation(navController = navController, selectedScreen = selectedScreen)
+                Text(text = "FilesScreen") //FilesScreen()
+            }
+            composable(route = Screens.AppLogsScreen.name) {
+                AppDetailBottomNavigation(navController = navController, selectedScreen = selectedScreen)
+                Text(text = "AppLogsScreen") //AppLogsScreen()
+            }
         }
     }
 
 }
 
 @Composable
-fun GetNavigationBar(navController: NavHostController) {
+fun GetMainNavigationBar(navController: NavHostController) {
     NavigationBar {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentDestination = navBackStackEntry?.destination

@@ -13,6 +13,8 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.blitzware_android.BlitzWareApplication
 import com.example.blitzware_android.data.AccountRepository
 import com.example.blitzware_android.data.ApplicationRepository
+import com.example.blitzware_android.data.database.asApplication
+import com.example.blitzware_android.data.database.asDbSelectedApplication
 import com.example.blitzware_android.model.Account
 import com.example.blitzware_android.model.Application
 import com.example.blitzware_android.model.CreateApplicationBody
@@ -43,9 +45,8 @@ class ApplicationViewModel(
     val applications: StateFlow<List<Application>> get() = _applications
 
 
-    private val _application = mutableStateOf<Application?>(null)
-    val application: Application?
-        get() = _application.value
+    private val _application = MutableStateFlow<Application?>(null)
+    val application: StateFlow<Application?> get() = _application
 
     private val _account = mutableStateOf<Account?>(null)
     val account: Account?
@@ -56,7 +57,6 @@ class ApplicationViewModel(
             val account = withContext(Dispatchers.IO) {
                 accountRepository.getAccountStream()
             }
-            Log.d("ApplicationViewModel", account.toString())
             _account.value = account
             getApplicationsOfAccount()
         }
@@ -99,19 +99,42 @@ class ApplicationViewModel(
                     token,
                     application.id
                 )
-                _application.value = app
+                //applicationRepository.deleteSelectedApplicationEntry()
+                applicationRepository.insertSelectedApplication(app.asDbSelectedApplication())
                 applicationUiState = ApplicationUiState.Success(_applications.value)
             } catch (e: IOException) {
                 Log.d("ApplicationViewModel", "IOException")
                 Log.d("ApplicationViewModel", e.message.toString())
+                Log.d("ApplicationViewModel", e.stackTraceToString())
                 applicationUiState = ApplicationUiState.Error
             } catch (e: HttpException) {
                 Log.d("ApplicationViewModel", "HttpException")
                 Log.d("ApplicationViewModel", e.message.toString())
+                Log.d("ApplicationViewModel", e.stackTraceToString())
                 applicationUiState = ApplicationUiState.Error
             } catch (e: Exception) {
                 Log.d("ApplicationViewModel", "Exception")
                 Log.d("ApplicationViewModel", e.message.toString())
+                Log.d("ApplicationViewModel", e.stackTraceToString())
+                applicationUiState = ApplicationUiState.Error
+            }
+        }
+    }
+
+    fun getSelectedApplication() {
+        viewModelScope.launch {
+            applicationUiState = ApplicationUiState.Loading
+            _application.value = null
+            try {
+                val app = withContext(Dispatchers.IO) {
+                    applicationRepository.getSelectedApplicationStream()
+                }
+                _application.value = app.asApplication(account!!)
+                applicationUiState = ApplicationUiState.Success(_applications.value)
+            } catch (e: Exception) {
+                Log.d("ApplicationViewModel", "Exception")
+                Log.d("ApplicationViewModel", e.message.toString())
+                Log.d("ApplicationViewModel", e.stackTraceToString())
                 applicationUiState = ApplicationUiState.Error
             }
         }
@@ -119,6 +142,7 @@ class ApplicationViewModel(
 
     fun updateApplicationById(application: Application) {
         viewModelScope.launch {
+            applicationUiState = ApplicationUiState.Loading
             try {
                 val body = UpdateApplicationBody(
                     status = application.status,
@@ -145,14 +169,17 @@ class ApplicationViewModel(
             } catch (e: IOException) {
                 Log.d("ApplicationViewModel", "IOException")
                 Log.d("ApplicationViewModel", e.message.toString())
+                Log.d("ApplicationViewModel", e.stackTraceToString())
                 applicationUiState = ApplicationUiState.Error
             } catch (e: HttpException) {
                 Log.d("ApplicationViewModel", "HttpException")
                 Log.d("ApplicationViewModel", e.message.toString())
+                Log.d("ApplicationViewModel", e.stackTraceToString())
                 applicationUiState = ApplicationUiState.Error
             } catch (e: Exception) {
                 Log.d("ApplicationViewModel", "Exception")
                 Log.d("ApplicationViewModel", e.message.toString())
+                Log.d("ApplicationViewModel", e.stackTraceToString())
                 applicationUiState = ApplicationUiState.Error
             }
         }
@@ -160,6 +187,7 @@ class ApplicationViewModel(
 
     fun deleteApplicationById(application: Application) {
         viewModelScope.launch {
+            applicationUiState = ApplicationUiState.Loading
             try {
                 val token = account?.token ?: throw Exception("Token is null")
                 applicationRepository.deleteApplicationById(token, application.id)
@@ -170,14 +198,35 @@ class ApplicationViewModel(
             } catch (e: IOException) {
                 Log.d("ApplicationViewModel", "IOException")
                 Log.d("ApplicationViewModel", e.message.toString())
+                Log.d("ApplicationViewModel", e.stackTraceToString())
                 applicationUiState = ApplicationUiState.Error
             } catch (e: HttpException) {
                 Log.d("ApplicationViewModel", "HttpException")
                 Log.d("ApplicationViewModel", e.message.toString())
+                Log.d("ApplicationViewModel", e.stackTraceToString())
                 applicationUiState = ApplicationUiState.Error
             } catch (e: Exception) {
                 Log.d("ApplicationViewModel", "Exception")
                 Log.d("ApplicationViewModel", e.message.toString())
+                Log.d("ApplicationViewModel", e.stackTraceToString())
+                applicationUiState = ApplicationUiState.Error
+            }
+        }
+    }
+
+    fun deleteSelectedApplicationEntry() {
+        viewModelScope.launch {
+            applicationUiState = ApplicationUiState.Loading
+            try {
+                withContext(Dispatchers.IO) {
+                    applicationRepository.deleteSelectedApplicationEntry()
+                }
+                _application.value = null
+                applicationUiState = ApplicationUiState.Success(_applications.value)
+            } catch (e: Exception) {
+                Log.d("ApplicationViewModel", "Exception")
+                Log.d("ApplicationViewModel", e.message.toString())
+                Log.d("ApplicationViewModel", e.stackTraceToString())
                 applicationUiState = ApplicationUiState.Error
             }
         }
@@ -200,14 +249,17 @@ class ApplicationViewModel(
             } catch (e: IOException) {
                 Log.d("ApplicationViewModel", "IOException")
                 Log.d("ApplicationViewModel", e.message.toString())
+                Log.d("ApplicationViewModel", e.stackTraceToString())
                 applicationUiState = ApplicationUiState.Error
             } catch (e: HttpException) {
                 Log.d("ApplicationViewModel", "HttpException")
                 Log.d("ApplicationViewModel", e.message.toString())
+                Log.d("ApplicationViewModel", e.stackTraceToString())
                 applicationUiState = ApplicationUiState.Error
             } catch (e: Exception) {
                 Log.d("ApplicationViewModel", "Exception")
                 Log.d("ApplicationViewModel", e.message.toString())
+                Log.d("ApplicationViewModel", e.stackTraceToString())
                 applicationUiState = ApplicationUiState.Error
             }
         }

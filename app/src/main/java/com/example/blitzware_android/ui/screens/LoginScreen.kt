@@ -95,7 +95,7 @@ fun LoginScreen(onLoginClick: (String, String) -> Unit, accountViewModel: Accoun
 
             Text(
                 text = message,
-                color = if (result is AccountUiState.Success) Color.Green else Color.Red,
+                color = if (result is AccountUiState.Error) Color.Red else Color.Green,
                 modifier = Modifier.padding(16.dp)
             )
         }

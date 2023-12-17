@@ -1,5 +1,7 @@
 package com.example.blitzware_android.data
 
+import com.example.blitzware_android.data.database.ApplicationDao
+import com.example.blitzware_android.data.database.dbSelectedApplication
 import com.example.blitzware_android.model.Application
 import com.example.blitzware_android.model.CreateApplicationBody
 import com.example.blitzware_android.model.UpdateApplicationBody
@@ -19,9 +21,31 @@ interface ApplicationRepository {
     suspend fun deleteApplicationById(token: String, id: String)
 
     suspend fun createApplication(token: String, body: CreateApplicationBody): Application
+
+
+    /**
+     * Retrieve the selected application (only one will exist) from the given data source.
+     */
+    fun getSelectedApplicationStream(): dbSelectedApplication
+
+    /**
+     * Insert account in the data source
+     */
+    suspend fun insertSelectedApplication(application: dbSelectedApplication)
+
+    /**
+     * Delete account from the data source
+     */
+    suspend fun deleteSelectedApplicationEntry()
+
+    /**
+     * Update account in the data source
+     */
+    suspend fun updateSelectedApplication(application: dbSelectedApplication)
 }
 
 class NetworkApplicationRepository(
+    private val applicationDao: ApplicationDao,
     private val applicationApiService: ApplicationApiService
 ) : ApplicationRepository {
     override suspend fun getApplicationsOfAccount(token: String, accountId: String): List<Application> {
@@ -54,5 +78,21 @@ class NetworkApplicationRepository(
     ): Application {
         val authorizationHeader = "Bearer $token"
         return applicationApiService.createApplication(authorizationHeader, body)
+    }
+
+    override fun getSelectedApplicationStream(): dbSelectedApplication {
+        return applicationDao.getSelectedApplication()
+    }
+
+    override suspend fun insertSelectedApplication(application: dbSelectedApplication) {
+        applicationDao.insert(application)
+    }
+
+    override suspend fun deleteSelectedApplicationEntry() {
+        applicationDao.deleteAll()
+    }
+
+    override suspend fun updateSelectedApplication(application: dbSelectedApplication) {
+        applicationDao.update(application)
     }
 }

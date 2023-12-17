@@ -35,13 +35,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import com.example.blitzware_android.model.Application
+import com.example.blitzware_android.navigation.Screens
 import com.example.blitzware_android.ui.viewmodels.ApplicationUiState
 import com.example.blitzware_android.ui.viewmodels.ApplicationViewModel
 
 @Composable
 fun AppsScreen(
     applicationViewModel: ApplicationViewModel = viewModel(factory = ApplicationViewModel.Factory),
+    navController: NavHostController
 ) {
     val applications by applicationViewModel.applications.collectAsState()
     var isDialogVisible by remember { mutableStateOf(false) }
@@ -84,7 +87,11 @@ fun AppsScreen(
                             .fillMaxSize()
                     ) {
                         items(applications) { application ->
-                            ApplicationItem(application = application, applicationViewModel = applicationViewModel)
+                            ApplicationItem(
+                                application = application,
+                                applicationViewModel = applicationViewModel,
+                                navController = navController
+                            )
                         }
                     }
                 }
@@ -136,7 +143,11 @@ fun AppsScreen(
 }
 
 @Composable
-fun ApplicationItem(application: Application, applicationViewModel: ApplicationViewModel) {
+fun ApplicationItem(
+    application: Application,
+    applicationViewModel: ApplicationViewModel,
+    navController: NavHostController
+) {
     var expanded by remember { mutableStateOf(false) }
 
     Column(
@@ -181,11 +192,10 @@ fun ApplicationItem(application: Application, applicationViewModel: ApplicationV
         ) {
             DropdownMenuItem(onClick = {
                 expanded = false
+                applicationViewModel.getApplicationById(application)
+                navController.navigate(Screens.AppDetailScreen.name)
             }) {
                 Text("App-Panel")
-//                Text("App-Panel", modifier = Modifier.clickable {
-//                    expanded = false
-//                })
             }
             if (application.status == 1) {
                 DropdownMenuItem(onClick = {

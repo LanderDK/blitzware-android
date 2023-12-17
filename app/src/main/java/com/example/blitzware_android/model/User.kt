@@ -25,8 +25,12 @@ data class User(
     var enabled: Int,
     @SerialName(value = "twoFactorAuth")
     var twoFactorAuth: Int,
+    @SerialName(value = "twoFactorAuthSecret")
+    var twoFactorAuthSecret: String?,
     @SerialName(value = "userSubId")
     var userSubId: Int?,
+    @SerialName(value = "userSubLevel")
+    var userSubLevel: Int?,
     @SerialName(value = "application")
     var application: ApplicationUser
 )
@@ -51,7 +55,6 @@ data class CreateUserBody(
 
 @Serializable
 data class UpdateUserBody(
-    @SerialName(value = "id") val id: String,
     @SerialName(value = "username") val username: String,
     @SerialName(value = "email") val email: String,
     @SerialName(value = "expiryDate") val expiryDate: String,

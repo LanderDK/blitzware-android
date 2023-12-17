@@ -2,6 +2,7 @@ package com.example.blitzware_android.data
 
 import android.content.Context
 import com.example.blitzware_android.data.database.AccountDb
+import com.example.blitzware_android.data.database.ApplicationDb
 import com.example.blitzware_android.network.AccountApiService
 import com.example.blitzware_android.network.AppLogApiService
 import com.example.blitzware_android.network.ApplicationApiService
@@ -68,7 +69,10 @@ class DefaultAppContainer(private val context: Context): AppContainer {
      * DI implementation for Application repository
      */
     override val applicationRepository: ApplicationRepository by lazy {
-        NetworkApplicationRepository(retrofit.create(ApplicationApiService::class.java))
+        NetworkApplicationRepository(
+            ApplicationDb.getDatabase(context = context).applicationDao(),
+            retrofit.create(ApplicationApiService::class.java)
+        )
     }
 
     /**
