@@ -130,6 +130,7 @@ fun UsersScreen(
                 Text(text = "Error loading users!")
             }
         }
+
         if (isAddDialogVisible) {
             AlertDialog(
                 onDismissRequest = {
@@ -224,7 +225,7 @@ fun UsersScreen(
                     updateUserTwoFactorAuth = ""
                     updateUserEnabled = ""
                     updateUserSubscription = -1 },
-                title = { Text("Edit an user") },
+                title = { Text("Edit user") },
                 text = {
                     Column {
                         TextField(

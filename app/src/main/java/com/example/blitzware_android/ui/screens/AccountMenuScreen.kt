@@ -1,6 +1,8 @@
 package com.example.blitzware_android.ui.screens
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.content.Intent
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -27,14 +29,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.blitzware_android.MainActivity
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun AccountMenuScreen(navController: NavHostController) {
     var showingLogoutAlert by remember { mutableStateOf(false) }
+    val context = LocalContext.current
 
     Scaffold(
         content = {
@@ -76,7 +81,7 @@ fun AccountMenuScreen(navController: NavHostController) {
         LogoutAlert(
             onConfirm = {
                 showingLogoutAlert = false
-                // Handle logout logic here
+                resetApp(context = context)
             },
             onDismiss = {
                 showingLogoutAlert = false
@@ -141,4 +146,11 @@ fun LogoutAlert(onConfirm: () -> Unit, onDismiss: () -> Unit) {
             }
         }
     )
+}
+
+
+fun resetApp(context: Context) {
+    val intent = Intent(context, MainActivity::class.java)
+    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+    context.startActivity(intent)
 }

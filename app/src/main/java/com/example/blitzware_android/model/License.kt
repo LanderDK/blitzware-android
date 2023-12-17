@@ -21,6 +21,8 @@ data class License(
     var enabled: Int,
     @SerialName(value = "userSubId")
     var userSubId: Int?,
+    @SerialName(value = "userSubLevel")
+    var userSubLevel: Int?,
     @SerialName(value = "application")
     var application: ApplicationLicense
 )
@@ -44,7 +46,6 @@ data class CreateLicenseBody(
 
 @Serializable
 data class UpdateLicenseBody(
-    @SerialName(value = "id") val id: String,
     @SerialName(value = "license") val license: String,
     @SerialName(value = "days") val days: Int,
     @SerialName(value = "used") val used: Int,

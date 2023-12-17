@@ -17,6 +17,7 @@ import com.example.blitzware_android.data.database.asApplication
 import com.example.blitzware_android.model.Account
 import com.example.blitzware_android.model.Application
 import com.example.blitzware_android.model.UserSub
+import com.example.blitzware_android.model.UserSubBody
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -99,7 +100,74 @@ class UserSubViewModel(
             try {
                 val token = account.value?.token ?: throw Exception("Token is null")
                 val applicationId = application.value?.id ?: throw Exception("Application id is null")
+                val body = UserSubBody(name, level, applicationId)
+                val userSub = userSubRepository.createUserSub(token, body)
+                val userSubs = _userSubs.value.toMutableList()
+                userSubs.add(userSub)
+                _userSubs.value = userSubs
+                userSubUiState = UserSubUiState.Success(userSubs)
+            } catch (e: IOException) {
+                Log.d("UserSubViewModel", "IOException")
+                Log.d("UserSubViewModel", e.message.toString())
+                Log.d("UserSubViewModel", e.stackTraceToString())
+                userSubUiState = UserSubUiState.Error
+            } catch (e: HttpException) {
+                Log.d("UserSubViewModel", "HttpException")
+                Log.d("UserSubViewModel", e.message.toString())
+                Log.d("UserSubViewModel", e.stackTraceToString())
+                userSubUiState = UserSubUiState.Error
+            } catch (e: Exception) {
+                Log.d("UserSubViewModel", "Exception")
+                Log.d("UserSubViewModel", e.message.toString())
+                Log.d("UserSubViewModel", e.stackTraceToString())
+                userSubUiState = UserSubUiState.Error
+            }
+        }
+    }
 
+    fun updateUserSubById(id: Int, name: String, level: Int) {
+        viewModelScope.launch {
+            userSubUiState = UserSubUiState.Loading
+            try {
+                val token = account.value?.token ?: throw Exception("Token is null")
+                val appId = application.value?.id ?: throw Exception("Application id is null")
+                val body = UserSubBody(name, level, appId)
+                userSubRepository.updateUserSubById(token, id, body)
+                val userSubs = _userSubs.value.toMutableList()
+                val userSub = userSubs.find { it.id == id } ?: throw Exception("UserSub not found")
+                userSub.name = name
+                userSub.level = level
+                _userSubs.value = userSubs
+                userSubUiState = UserSubUiState.Success(userSubs)
+            } catch (e: IOException) {
+                Log.d("UserSubViewModel", "IOException")
+                Log.d("UserSubViewModel", e.message.toString())
+                Log.d("UserSubViewModel", e.stackTraceToString())
+                userSubUiState = UserSubUiState.Error
+            } catch (e: HttpException) {
+                Log.d("UserSubViewModel", "HttpException")
+                Log.d("UserSubViewModel", e.message.toString())
+                Log.d("UserSubViewModel", e.stackTraceToString())
+                userSubUiState = UserSubUiState.Error
+            } catch (e: Exception) {
+                Log.d("UserSubViewModel", "Exception")
+                Log.d("UserSubViewModel", e.message.toString())
+                Log.d("UserSubViewModel", e.stackTraceToString())
+                userSubUiState = UserSubUiState.Error
+            }
+        }
+    }
+
+    fun deleteUserSubById(userSub: UserSub) {
+        viewModelScope.launch {
+            userSubUiState = UserSubUiState.Loading
+            try {
+                val token = account.value?.token ?: throw Exception("Token is null")
+                userSubRepository.deleteUserSubById(token, userSub.id)
+                val userSubs = _userSubs.value.toMutableList()
+                userSubs.remove(userSub)
+                _userSubs.value = userSubs
+                userSubUiState = UserSubUiState.Success(userSubs)
             } catch (e: IOException) {
                 Log.d("UserSubViewModel", "IOException")
                 Log.d("UserSubViewModel", e.message.toString())

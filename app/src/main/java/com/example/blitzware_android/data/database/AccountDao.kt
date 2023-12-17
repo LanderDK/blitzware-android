@@ -18,6 +18,9 @@ interface AccountDao {
     @Delete
     suspend fun delete(account: dbAccount)
 
+    @Query("DELETE FROM accounts")
+    suspend fun deleteAll()
+
     @Query("SELECT * from accounts LIMIT 1")
     fun getAccount(): dbAccount
 }

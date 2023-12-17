@@ -27,13 +27,13 @@ interface UserSubApiService {
     @PUT("userSubs/{id}")
     suspend fun updateUserSubById(
         @Header("Authorization") authorizationHeader: String,
-        @Path("id") id: String,
+        @Path("id") id: Int,
         @Body body: UserSubBody
     ): Response<Unit>
 
     @DELETE("userSubs/{id}")
     suspend fun deleteUserSubById(
         @Header("Authorization") authorizationHeader: String,
-        @Path("id") id: String
+        @Path("id") id: Int
     ): Response<Unit>
 }

@@ -17,13 +17,13 @@ interface UserSubRepository {
 
     suspend fun updateUserSubById(
         token: String,
-        id: String,
+        id: Int,
         body: UserSubBody
     )
 
     suspend fun deleteUserSubById(
         token: String,
-        id: String
+        id: Int
     )
 }
 
@@ -40,12 +40,12 @@ class NetworkUserSubRepository(
         return userSubApiService.createUserSub(authorizationHeader, body)
     }
 
-    override suspend fun updateUserSubById(token: String, id: String, body: UserSubBody) {
+    override suspend fun updateUserSubById(token: String, id: Int, body: UserSubBody) {
         val authorizationHeader = "Bearer $token"
         userSubApiService.updateUserSubById(authorizationHeader, id, body)
     }
 
-    override suspend fun deleteUserSubById(token: String, id: String) {
+    override suspend fun deleteUserSubById(token: String, id: Int) {
         val authorizationHeader = "Bearer $token"
         userSubApiService.deleteUserSubById(authorizationHeader, id)
     }

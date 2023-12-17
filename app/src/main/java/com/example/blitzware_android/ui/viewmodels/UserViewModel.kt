@@ -190,7 +190,7 @@ class UserViewModel(
         }
     }
 
-    fun updateUserById2(user: User){
+    fun updateUserById2(user: User) {
         viewModelScope.launch {
             userUiState = UserUiState.Loading
             try {
@@ -241,8 +241,8 @@ class UserViewModel(
                 userUiState = UserUiState.Success(users)
             } catch (e: IOException) {
                 Log.d("UserViewModel", "IOException")
-                Log.d("ApplicationViewModel", e.message.toString())
-                Log.d("ApplicationViewModel", e.stackTraceToString())
+                Log.d("UserViewModel", e.message.toString())
+                Log.d("UserViewModel", e.stackTraceToString())
                 userUiState = UserUiState.Error
             } catch (e: HttpException) {
                 Log.d("UserViewModel", "HttpException")

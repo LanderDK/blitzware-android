@@ -44,6 +44,9 @@ class AccountViewModel(private val accountRepository: AccountRepository) : ViewM
         viewModelScope.launch {
             accountUiState = AccountUiState.Loading
              try {
+                 withContext(Dispatchers.IO) {
+                        accountRepository.deleteAccountEntry()
+                 }
                 val body = mapOf(
                     "username" to username,
                     "password" to password

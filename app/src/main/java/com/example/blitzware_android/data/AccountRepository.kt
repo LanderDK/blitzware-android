@@ -35,6 +35,11 @@ interface AccountRepository {
     suspend fun deleteAccount(account: Account)
 
     /**
+     * Delete all accounts from the data source
+     */
+    suspend fun deleteAccountEntry()
+
+    /**
      * Update account in the data source
      */
     suspend fun updateAccount(account: Account)
@@ -72,6 +77,10 @@ class NetworkAccountRepository(
 
     override suspend fun deleteAccount(account: Account) {
         accountDao.delete(account.asDbAccount())
+    }
+
+    override suspend fun deleteAccountEntry() {
+        accountDao.deleteAll()
     }
 
     override suspend fun updateAccount(account: Account) {

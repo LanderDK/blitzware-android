@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDownward
 import androidx.compose.material.icons.filled.ArrowForward
@@ -89,7 +90,7 @@ fun ResourceItem(name: String, link: String, iconName: String) {
         modifier = Modifier
             .padding(8.dp)
             .background(White)
-            .border(1.dp, Color.Black)
+            .border(1.dp, Color.Black, RoundedCornerShape(15.dp))
     ) {
         Row(
             modifier = Modifier

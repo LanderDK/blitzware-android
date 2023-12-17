@@ -23,9 +23,13 @@ import com.example.blitzware_android.ui.screens.AccountDetailsScreen
 import com.example.blitzware_android.ui.screens.AccountLogsScreen
 import com.example.blitzware_android.ui.screens.AccountMenuScreen
 import com.example.blitzware_android.ui.screens.AppDetailScreen
+import com.example.blitzware_android.ui.screens.AppLogsScreen
 import com.example.blitzware_android.ui.screens.AppsScreen
 import com.example.blitzware_android.ui.screens.CommunityScreen
+import com.example.blitzware_android.ui.screens.FilesScreen
+import com.example.blitzware_android.ui.screens.LicensesScreen
 import com.example.blitzware_android.ui.screens.ResourcesScreen
+import com.example.blitzware_android.ui.screens.UserSubsScreen
 import com.example.blitzware_android.ui.screens.UsersScreen
 
 @Composable
@@ -71,19 +75,24 @@ fun MainBottomNavigation() {
             }
             composable(route = Screens.LicensesScreen.name) {
                 AppDetailBottomNavigation(navController = navController, selectedScreen = selectedScreen)
-                Text(text = "LicensesScreen") //LicensesScreen()
+                LicensesScreen()
             }
             composable(route = Screens.UserSubsScreen.name) {
                 AppDetailBottomNavigation(navController = navController, selectedScreen = selectedScreen)
-                Text(text = "UserSubsScreen") //UserSubsScreen()
+                UserSubsScreen()
             }
             composable(route = Screens.FilesScreen.name) {
                 AppDetailBottomNavigation(navController = navController, selectedScreen = selectedScreen)
-                Text(text = "FilesScreen") //FilesScreen()
+                FilesScreen()
             }
             composable(route = Screens.AppLogsScreen.name) {
                 AppDetailBottomNavigation(navController = navController, selectedScreen = selectedScreen)
-                Text(text = "AppLogsScreen") //AppLogsScreen()
+                AppLogsScreen()
+            }
+
+            composable(route = Screens.AppSettingsScreen.name) {
+                AppDetailBottomNavigation(navController = navController, selectedScreen = selectedScreen)
+                Text(text = "App Settings")
             }
         }
     }

@@ -29,17 +29,17 @@ interface ApplicationRepository {
     fun getSelectedApplicationStream(): dbSelectedApplication
 
     /**
-     * Insert account in the data source
+     * Insert selected application in the data source
      */
     suspend fun insertSelectedApplication(application: dbSelectedApplication)
 
     /**
-     * Delete account from the data source
+     * Delete selected application from the data source
      */
     suspend fun deleteSelectedApplicationEntry()
 
     /**
-     * Update account in the data source
+     * Update selected application in the data source
      */
     suspend fun updateSelectedApplication(application: dbSelectedApplication)
 }
