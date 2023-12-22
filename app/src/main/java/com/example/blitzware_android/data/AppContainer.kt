@@ -15,7 +15,11 @@ import com.example.blitzware_android.network.UserSubApiService
 import retrofit2.Retrofit
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import kotlinx.serialization.json.Json
+import okhttp3.Interceptor
 import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.Response
 
 /**
  * Dependency Injection container at the application level.
@@ -38,7 +42,18 @@ interface AppContainer {
  * Variables are initialized lazily and the same instance is shared across the whole app.
  */
 class DefaultAppContainer(private val context: Context): AppContainer {
-    private val baseUrl = "http://192.168.0.227:9000/api/"
+    private val baseUrl = "https://api.blitzware.xyz/api/"
+
+    class ApiMobileHeaderInterceptor : Interceptor {
+        override fun intercept(chain: Interceptor.Chain): Response {
+            val originalRequest = chain.request()
+            val modifiedRequest: Request = originalRequest.newBuilder()
+                .header("X-Mobile-App", "android-7fbeea4c-bcb8-4e91-9cf5-c87175234dc1")
+                .build()
+            return chain.proceed(modifiedRequest)
+        }
+    }
+
 
     /**
      * Use the Retrofit builder to build a retrofit object using a kotlinx.serialization converter
@@ -46,6 +61,11 @@ class DefaultAppContainer(private val context: Context): AppContainer {
     private val retrofit: Retrofit = Retrofit.Builder()
         .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
         .baseUrl(baseUrl)
+        .client(
+            OkHttpClient().newBuilder()
+                .addInterceptor(ApiMobileHeaderInterceptor())
+                .build()
+        )
         .build()
 
     /**
