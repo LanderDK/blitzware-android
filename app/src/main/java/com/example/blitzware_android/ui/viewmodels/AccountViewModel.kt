@@ -18,6 +18,7 @@ import com.example.blitzware_android.model.toFormattedString
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.json.JSONObject
 import retrofit2.HttpException
 import java.io.IOException
 
@@ -40,6 +41,14 @@ class AccountViewModel(private val accountRepository: AccountRepository) : ViewM
     val isAuthed: Boolean
         get() = _isAuthed.value
 
+    private val _twoFactorRequired = mutableStateOf(false)
+    val twoFactorRequired: Boolean
+        get() = _twoFactorRequired.value
+
+    private val _otpRequired = mutableStateOf(false)
+    val otpRequired: Boolean
+        get() = _otpRequired.value
+
     fun login(username: String, password: String) {
         viewModelScope.launch {
             accountUiState = AccountUiState.Loading
@@ -59,14 +68,28 @@ class AccountViewModel(private val accountRepository: AccountRepository) : ViewM
             } catch (e: IOException) {
                 Log.d("AccountViewModel", "IOException")
                 Log.d("AccountViewModel", e.message.toString())
+                 Log.d("AccountViewModel", e.stackTraceToString())
                  accountUiState = AccountUiState.Error
             } catch (e: HttpException) {
-                Log.d("AccountViewModel", "HttpException")
-                Log.d("AccountViewModel", e.message.toString())
+                 val errorBody = e.response()?.errorBody()?.string()
+                 Log.d("AccountViewModel", "HttpException")
+                 Log.d("AccountViewModel", e.message.toString())
+                 Log.d("AccountViewModel", "Error response: $errorBody")
+                 if (errorBody != null) {
+                     val jsonObject = JSONObject(errorBody)
+                     val code = jsonObject.getString("code")
+                     val message = jsonObject.getString("message")
+                     if (message == "2FA required") {
+                         _twoFactorRequired.value = true
+                     } else if (message == "We need to verify it is you, check your email") {
+                         _otpRequired.value = true
+                     }
+                 }
                  accountUiState = AccountUiState.Error
             } catch (e: Exception) {
                  Log.d("AccountViewModel", "Exception")
                  Log.d("AccountViewModel", e.message.toString())
+                 Log.d("AccountViewModel", e.stackTraceToString())
                  accountUiState = AccountUiState.Error
              }
         }
@@ -121,6 +144,83 @@ class AccountViewModel(private val accountRepository: AccountRepository) : ViewM
             } catch (e: HttpException) {
                 Log.d("AccountViewModel", "HttpException")
                 Log.d("AccountViewModel", e.message.toString())
+                accountUiState = AccountUiState.Error
+            } catch (e: Exception) {
+                Log.d("AccountViewModel", "Exception")
+                Log.d("AccountViewModel", e.message.toString())
+                accountUiState = AccountUiState.Error
+            }
+        }
+    }
+
+    fun verifyLoginOTP(username: String, otp: String) {
+        viewModelScope.launch {
+            accountUiState = AccountUiState.Loading
+            try {
+                withContext(Dispatchers.IO) {
+                    accountRepository.deleteAccountEntry()
+                }
+                val body = mapOf(
+                    "username" to username,
+                    "otp" to otp
+                )
+                val account = accountRepository.verifyLoginOTP(body)
+                _otpRequired.value = false
+                _account.value = account
+                accountUiState = AccountUiState.Success(account)
+                accountRepository.insertAccount(account)
+                _isAuthed.value = true
+            } catch (e: IOException) {
+                Log.d("AccountViewModel", "IOException")
+                Log.d("AccountViewModel", e.message.toString())
+                accountUiState = AccountUiState.Error
+            } catch (e: HttpException) {
+                Log.d("AccountViewModel", "HttpException")
+                Log.d("AccountViewModel", e.message.toString())
+                accountUiState = AccountUiState.Error
+            } catch (e: Exception) {
+                Log.d("AccountViewModel", "Exception")
+                Log.d("AccountViewModel", e.message.toString())
+                accountUiState = AccountUiState.Error
+            }
+        }
+    }
+
+    fun verifyLogin2FA(username: String, twoFactorCode: String) {
+        viewModelScope.launch {
+            accountUiState = AccountUiState.Loading
+            try {
+                withContext(Dispatchers.IO) {
+                    accountRepository.deleteAccountEntry()
+                }
+                val body = mapOf(
+                    "username" to username,
+                    "twoFactorCode" to twoFactorCode
+                )
+                val account = accountRepository.verifyLogin2FA(body)
+                _twoFactorRequired.value = false
+                _account.value = account
+                accountUiState = AccountUiState.Success(account)
+                accountRepository.insertAccount(account)
+                _isAuthed.value = true
+            } catch (e: IOException) {
+                Log.d("AccountViewModel", "IOException")
+                Log.d("AccountViewModel", e.message.toString())
+                accountUiState = AccountUiState.Error
+            } catch (e: HttpException) {
+                val errorBody = e.response()?.errorBody()?.string()
+                Log.d("AccountViewModel", "HttpException")
+                Log.d("AccountViewModel", e.message.toString())
+                Log.d("AccountViewModel", "Error response: $errorBody")
+                if (errorBody != null) {
+                    val jsonObject = JSONObject(errorBody)
+                    val code = jsonObject.getString("code")
+                    val message = jsonObject.getString("message")
+                    if (message == "We need to verify it is you, check your email") {
+                        _twoFactorRequired.value = false
+                        _otpRequired.value = true
+                    }
+                }
                 accountUiState = AccountUiState.Error
             } catch (e: Exception) {
                 Log.d("AccountViewModel", "Exception")

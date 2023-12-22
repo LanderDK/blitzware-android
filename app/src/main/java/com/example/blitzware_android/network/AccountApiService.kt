@@ -27,4 +27,10 @@ interface AccountApiService {
         @Path("id") id: String,
         @Body body: UpdateAccountPicBody
     ): Response<Unit>
+
+    @POST("accounts/verifyOTP")
+    suspend fun verifyLoginOTP(@Body body: Map<String, String>): Account
+
+    @POST("2fa/verify/login")
+    suspend fun verifyLogin2FA(@Body body: Map<String, String>): Account
 }

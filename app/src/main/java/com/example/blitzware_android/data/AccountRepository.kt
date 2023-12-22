@@ -19,6 +19,10 @@ interface AccountRepository {
         body: UpdateAccountPicBody
     )
 
+    suspend fun verifyLoginOTP(body: Map<String, String>): Account
+
+    suspend fun verifyLogin2FA(body: Map<String, String>): Account
+
     /**
      * Retrieve an account (only one will exist) from the given data source.
      */
@@ -65,6 +69,14 @@ class NetworkAccountRepository(
     ) {
         val authorizationHeader = "Bearer $token"
         accountApiService.updateAccountProfilePictureById(authorizationHeader, id, body)
+    }
+
+    override suspend fun verifyLoginOTP(body: Map<String, String>): Account {
+        return accountApiService.verifyLoginOTP(body)
+    }
+
+    override suspend fun verifyLogin2FA(body: Map<String, String>): Account {
+        return accountApiService.verifyLogin2FA(body)
     }
 
     override fun getAccountStream(): Account {

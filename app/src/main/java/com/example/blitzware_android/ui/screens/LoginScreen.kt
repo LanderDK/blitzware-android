@@ -26,6 +26,9 @@ fun LoginScreen(onLoginClick: (String, String) -> Unit, accountViewModel: Accoun
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
 
+    var twoFactorCode by remember { mutableStateOf("") }
+    var otpCode by remember { mutableStateOf("") }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -97,6 +100,78 @@ fun LoginScreen(onLoginClick: (String, String) -> Unit, accountViewModel: Accoun
                 text = message,
                 color = if (result is AccountUiState.Error) Color.Red else Color.Green,
                 modifier = Modifier.padding(16.dp)
+            )
+        }
+
+        if (accountViewModel.twoFactorRequired) {
+            AlertDialog(
+                onDismissRequest = { twoFactorCode = "" },
+                title = { Text("Two-Factor Authentication") },
+                text = {
+                    TextField(
+                        value = twoFactorCode,
+                        onValueChange = { twoFactorCode = it },
+                        label = { Text("6-digit code") },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                },
+                confirmButton = {
+                    Button(
+                        onClick = {
+                            if (twoFactorCode.isNotBlank()) {
+                                accountViewModel.verifyLogin2FA(username, twoFactorCode)
+                                twoFactorCode = ""
+                            }
+                        }
+                    ) {
+                        Text("Login")
+                    }
+                },
+                dismissButton = {
+                    Button(
+                        onClick = {
+                            twoFactorCode = ""
+                        }
+                    ) {
+                        Text("Cancel")
+                    }
+                }
+            )
+        }
+
+        if (accountViewModel.otpRequired) {
+            AlertDialog(
+                onDismissRequest = { otpCode = "" },
+                title = { Text("Action required: check email") },
+                text = {
+                    TextField(
+                        value = otpCode,
+                        onValueChange = { otpCode = it },
+                        label = { Text("4-digit code") },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                },
+                confirmButton = {
+                    Button(
+                        onClick = {
+                            if (otpCode.isNotBlank()) {
+                                accountViewModel.verifyLoginOTP(username, otpCode)
+                                otpCode = ""
+                            }
+                        }
+                    ) {
+                        Text("Login")
+                    }
+                },
+                dismissButton = {
+                    Button(
+                        onClick = {
+                            otpCode = ""
+                        }
+                    ) {
+                        Text("Cancel")
+                    }
+                }
             )
         }
     }
