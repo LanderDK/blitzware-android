@@ -3,6 +3,21 @@ package com.example.blitzware_android.model
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
+/**
+ * License
+ *
+ * @property id
+ * @property license
+ * @property days
+ * @property expiryDate
+ * @property used
+ * @property usedBy
+ * @property enabled
+ * @property userSubId
+ * @property userSubLevel
+ * @property application
+ * @constructor Create empty License
+ */
 @Serializable
 data class License(
     @SerialName(value = "id")
@@ -27,6 +42,13 @@ data class License(
     var application: ApplicationLicense
 )
 
+/**
+ * Application license
+ *
+ * @property id
+ * @property name
+ * @constructor Create empty Application license
+ */
 @Serializable
 data class ApplicationLicense(
     @SerialName(value = "id")
@@ -35,6 +57,16 @@ data class ApplicationLicense(
     val name: String
 )
 
+/**
+ * Create license body
+ *
+ * @property days
+ * @property format
+ * @property amount
+ * @property subscription
+ * @property applicationId
+ * @constructor Create empty Create license body
+ */
 @Serializable
 data class CreateLicenseBody(
     @SerialName(value = "days") val days: Int,
@@ -44,6 +76,16 @@ data class CreateLicenseBody(
     @SerialName(value = "applicationId") val applicationId: String,
 )
 
+/**
+ * Update license body
+ *
+ * @property license
+ * @property days
+ * @property used
+ * @property enabled
+ * @property subscription
+ * @constructor Create empty Update license body
+ */
 @Serializable
 data class UpdateLicenseBody(
     @SerialName(value = "license") val license: String,

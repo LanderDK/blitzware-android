@@ -9,6 +9,11 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 
+/**
+ * Navigation rail
+ *
+ * @param navController
+ */
 @Composable
 fun NavigationRail(navController: NavHostController) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()

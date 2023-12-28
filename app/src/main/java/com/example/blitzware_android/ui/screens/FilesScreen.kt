@@ -40,6 +40,11 @@ import kotlin.math.floor
 import kotlin.math.log
 import kotlin.math.pow
 
+/**
+ * Files screen
+ *
+ * @param fileViewModel
+ */
 @Composable
 fun FilesScreen(fileViewModel: FileViewModel = viewModel(factory = FileViewModel.Factory)) {
     val files by fileViewModel.files.collectAsState()
@@ -87,6 +92,12 @@ fun FilesScreen(fileViewModel: FileViewModel = viewModel(factory = FileViewModel
     }
 }
 
+/**
+ * File row
+ *
+ * @param file
+ * @param fileViewModel
+ */
 @Composable
 fun FileRow(file: File, fileViewModel: FileViewModel) {
     var expanded by remember { mutableStateOf(false) }
@@ -119,6 +130,12 @@ fun FileRow(file: File, fileViewModel: FileViewModel) {
     }
 }
 
+/**
+ * File detail row
+ *
+ * @param title
+ * @param value
+ */
 @Composable
 fun FileDetailRow(title: String, value: String) {
     Row(
@@ -139,6 +156,13 @@ fun FileDetailRow(title: String, value: String) {
     }
 }
 
+/**
+ * Format bytes
+ *
+ * @param bytesString
+ * @param decimals
+ * @return
+ */
 fun formatBytes(bytesString: String, decimals: Int = 2): String? {
     val bytes = bytesString.toDoubleOrNull() ?: return null
 

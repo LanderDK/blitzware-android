@@ -3,6 +3,26 @@ package com.example.blitzware_android.model
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
+/**
+ * Application
+ *
+ * @property id
+ * @property name
+ * @property secret
+ * @property status
+ * @property hwidCheck
+ * @property developerMode
+ * @property integrityCheck
+ * @property freeMode
+ * @property twoFactorAuth
+ * @property programHash
+ * @property version
+ * @property downloadLink
+ * @property adminRoleId
+ * @property adminRoleLevel
+ * @property account
+ * @constructor Create empty Application
+ */
 @Serializable
 data class Application(
     @SerialName(value = "id")
@@ -37,6 +57,13 @@ data class Application(
     val account: AccountOfApp,
 )
 
+/**
+ * Account of app
+ *
+ * @property id
+ * @property name
+ * @constructor Create empty Account of app
+ */
 @Serializable
 data class AccountOfApp(
     @SerialName(value = "id")
@@ -45,6 +72,22 @@ data class AccountOfApp(
     val name: String
 )
 
+/**
+ * Update application body
+ *
+ * @property status
+ * @property hwidCheck
+ * @property developerMode
+ * @property integrityCheck
+ * @property freeMode
+ * @property twoFactorAuth
+ * @property programHash
+ * @property version
+ * @property downloadLink
+ * @property accountId
+ * @property subscription
+ * @constructor Create empty Update application body
+ */
 @Serializable
 data class UpdateApplicationBody(
     @SerialName(value = "status") val status: Int,
@@ -60,6 +103,13 @@ data class UpdateApplicationBody(
     @SerialName(value = "subscription") val subscription: Int?
 )
 
+/**
+ * Create application body
+ *
+ * @property name
+ * @property accountId
+ * @constructor Create empty Create application body
+ */
 @Serializable
 data class CreateApplicationBody(
     @SerialName(value = "name") val name: String,

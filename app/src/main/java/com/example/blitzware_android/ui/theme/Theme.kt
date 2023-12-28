@@ -28,6 +28,14 @@ private val LightColorScheme = lightColorScheme(
     tertiary = Pink40
 )
 
+/**
+ * Blitz ware theme
+ *
+ * @param darkTheme
+ * @param dynamicColor
+ * @param content
+ * @receiver
+ */
 @Composable
 fun BlitzWareTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),

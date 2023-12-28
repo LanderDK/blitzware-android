@@ -29,12 +29,39 @@ import retrofit2.HttpException
 import java.io.IOException
 import java.time.LocalDateTime
 
+/**
+ * User ui state
+ *
+ * @constructor Create empty User ui state
+ */
 sealed interface UserUiState {
+    /**
+     * Success
+     *
+     * @property users
+     * @constructor Create empty Success
+     */
     data class Success(val users: List<User>) : UserUiState
+
+    /**
+     * Error
+     *
+     * @property code
+     * @property message
+     * @constructor Create empty Error
+     */
     data class Error(val code: String, val message: String) : UserUiState
     object Loading : UserUiState
 }
 
+/**
+ * User view model
+ *
+ * @property userRepository
+ * @property applicationRepository
+ * @property accountRepository
+ * @constructor Create empty User view model
+ */
 class UserViewModel(
     private val userRepository: UserRepository,
     private val applicationRepository: ApplicationRepository,
@@ -98,6 +125,14 @@ class UserViewModel(
         }
     }
 
+    /**
+     * Create user from dashboard
+     *
+     * @param name
+     * @param email
+     * @param password
+     * @param subscription
+     */
     fun createUserFromDashboard(
         name: String,
         email: String,
@@ -147,6 +182,18 @@ class UserViewModel(
         }
     }
 
+    /**
+     * Update user by id
+     *
+     * @param id
+     * @param username
+     * @param email
+     * @param expiryDate
+     * @param hwid
+     * @param twoFactorAuth
+     * @param enabled
+     * @param subscription
+     */
     fun updateUserById(
         id: String,
         username: String,
@@ -203,6 +250,11 @@ class UserViewModel(
         }
     }
 
+    /**
+     * Update user by id2
+     *
+     * @param user
+     */
     fun updateUserById2(user: User) {
         viewModelScope.launch {
             userUiState = UserUiState.Loading
@@ -246,6 +298,11 @@ class UserViewModel(
         }
     }
 
+    /**
+     * Delete user by id
+     *
+     * @param user
+     */
     fun deleteUserById(user: User) {
         viewModelScope.launch {
             userUiState = UserUiState.Loading

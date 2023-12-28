@@ -25,12 +25,38 @@ import retrofit2.HttpException
 import java.io.IOException
 import java.time.LocalDateTime
 
+/**
+ * Chat message ui state
+ *
+ * @constructor Create empty Chat message ui state
+ */
 sealed interface ChatMessageUiState {
+    /**
+     * Success
+     *
+     * @property apps
+     * @constructor Create empty Success
+     */
     data class Success(val apps: List<ChatMessage>) : ChatMessageUiState
+
+    /**
+     * Error
+     *
+     * @property code
+     * @property message
+     * @constructor Create empty Error
+     */
     data class Error(val code: String, val message: String) : ChatMessageUiState
     object Loading : ChatMessageUiState
 }
 
+/**
+ * Chat message view model
+ *
+ * @property chatMessageRepository
+ * @property accountRepository
+ * @constructor Create empty Chat message view model
+ */
 class ChatMessageViewModel(
     private val chatMessageRepository: ChatMessageRepository,
     private val accountRepository: AccountRepository
@@ -55,6 +81,11 @@ class ChatMessageViewModel(
         }
     }
 
+    /**
+     * Get chat msgs by chat id
+     *
+     * @param chatId
+     */
     fun getChatMsgsByChatId(chatId: Int) {
         viewModelScope.launch {
             chatMessageUiState = ChatMessageUiState.Loading
@@ -86,6 +117,11 @@ class ChatMessageViewModel(
         }
     }
 
+    /**
+     * Delete chat message by id
+     *
+     * @param chatMsg
+     */
     fun deleteChatMessageById(chatMsg: ChatMessage) {
         viewModelScope.launch {
             try {
@@ -118,6 +154,12 @@ class ChatMessageViewModel(
         }
     }
 
+    /**
+     * Create chat message
+     *
+     * @param msg
+     * @param chatId
+     */
     fun createChatMessage(msg: String, chatId: Int) {
         viewModelScope.launch {
             try {

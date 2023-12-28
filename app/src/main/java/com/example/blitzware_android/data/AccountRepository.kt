@@ -8,51 +8,114 @@ import com.example.blitzware_android.model.AccountData
 import com.example.blitzware_android.model.UpdateAccountPicBody
 import com.example.blitzware_android.network.AccountApiService
 
+/**
+ * Account repository
+ *
+ * @constructor Create empty Account repository
+ */
 interface AccountRepository {
+    /**
+     * Login
+     *
+     * @param body
+     * @return
+     */
     suspend fun login(body: Map<String, String>): Account
 
+    /**
+     * Register
+     *
+     * @param body
+     */
     suspend fun register(body: Map<String, String>)
 
+    /**
+     * Logout
+     *
+     * @param token
+     */
     suspend fun logout(token: String)
 
+    /**
+     * Get account by id
+     *
+     * @param token
+     * @param id
+     * @return
+     */
     suspend fun getAccountById(token: String, id: String): AccountData
 
+    /**
+     * Update account profile picture by id
+     *
+     * @param token
+     * @param id
+     * @param body
+     */
     suspend fun updateAccountProfilePictureById(
         token: String,
         id: String,
         body: UpdateAccountPicBody
     )
 
+    /**
+     * Verify login o t p
+     *
+     * @param body
+     * @return
+     */
     suspend fun verifyLoginOTP(body: Map<String, String>): Account
 
+    /**
+     * Verify login2f a
+     *
+     * @param body
+     * @return
+     */
     suspend fun verifyLogin2FA(body: Map<String, String>): Account
 
     /**
-     * Retrieve an account (only one will exist) from the given data source.
+     * Get account stream
+     *
+     * @return
      */
     fun getAccountStream(): Account
 
     /**
-     * Insert account in the data source
+     * Insert account
+     *
+     * @param account
      */
     suspend fun insertAccount(account: Account)
 
     /**
-     * Delete account from the data source
+     * Delete account
+     *
+     * @param account
      */
     suspend fun deleteAccount(account: Account)
 
     /**
-     * Delete all accounts from the data source
+     * Delete account entry
+     *
      */
     suspend fun deleteAccountEntry()
 
     /**
-     * Update account in the data source
+     * Update account
+     *
+     * @param account
      */
     suspend fun updateAccount(account: Account)
 }
 
+/**
+ * Network account repository
+ *
+ * @property accountDao
+ * @property accountApiService
+ * @constructor Create empty Network account repository
+ */
 class NetworkAccountRepository(
     private val accountDao: AccountDao,
     private val accountApiService: AccountApiService

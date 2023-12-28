@@ -16,6 +16,13 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import com.example.blitzware_android.R
 
+/**
+ * Navigation drawer
+ *
+ * @param selectedDestination
+ * @param modifier
+ * @param navController
+ */
 @Composable
 fun NavigationDrawer(
     selectedDestination: NavDestination?,

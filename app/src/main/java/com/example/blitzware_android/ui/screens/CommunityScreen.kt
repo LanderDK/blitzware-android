@@ -48,6 +48,11 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
+/**
+ * Community screen
+ *
+ * @param chatMessageViewModel
+ */
 @Composable
 fun CommunityScreen(
     chatMessageViewModel: ChatMessageViewModel = viewModel(factory = ChatMessageViewModel.Factory)
@@ -164,6 +169,16 @@ fun CommunityScreen(
     }
 }
 
+/**
+ * Chat msg
+ *
+ * @param username
+ * @param message
+ * @param date
+ * @param onDelete
+ * @param account
+ * @receiver
+ */
 @Composable
 fun ChatMsg(username: String, message: String, date: Date, onDelete: () -> Unit, account: Account) {
     var expanded by remember { mutableStateOf(false) }

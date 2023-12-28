@@ -33,6 +33,12 @@ import com.example.blitzware_android.ui.viewmodels.LogViewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
 
+/**
+ * Account logs screen
+ *
+ * @param logViewModel
+ * @param navController
+ */
 @Composable
 fun AccountLogsScreen(
     logViewModel: LogViewModel = viewModel(factory = LogViewModel.Factory),
@@ -89,6 +95,13 @@ fun AccountLogsScreen(
     }
 }
 
+/**
+ * Log
+ *
+ * @param log
+ * @param onDelete
+ * @receiver
+ */
 @Composable
 fun Log(log: Log, onDelete: () -> Unit) {
     val date = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault()).parse(log.date)

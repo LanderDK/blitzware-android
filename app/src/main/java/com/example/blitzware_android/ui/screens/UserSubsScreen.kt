@@ -37,6 +37,11 @@ import com.example.blitzware_android.model.UserSub
 import com.example.blitzware_android.ui.viewmodels.UserSubUiState
 import com.example.blitzware_android.ui.viewmodels.UserSubViewModel
 
+/**
+ * User subs screen
+ *
+ * @param userSubViewModel
+ */
 @Composable
 fun UserSubsScreen(userSubViewModel: UserSubViewModel = viewModel(factory = UserSubViewModel.Factory)) {
     val userSubs by userSubViewModel.userSubs.collectAsState()
@@ -203,6 +208,14 @@ fun UserSubsScreen(userSubViewModel: UserSubViewModel = viewModel(factory = User
     }
 }
 
+/**
+ * User sub row
+ *
+ * @param userSub
+ * @param userSubViewModel
+ * @param onEditClick
+ * @receiver
+ */
 @Composable
 fun UserSubRow(userSub: UserSub, userSubViewModel: UserSubViewModel, onEditClick: () -> Unit) {
     var expanded by remember { mutableStateOf(false) }
@@ -238,6 +251,12 @@ fun UserSubRow(userSub: UserSub, userSubViewModel: UserSubViewModel, onEditClick
     }
 }
 
+/**
+ * User sub detail row
+ *
+ * @param title
+ * @param value
+ */
 @Composable
 fun UserSubDetailRow(title: String, value: String) {
     Row(

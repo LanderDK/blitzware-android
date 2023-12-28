@@ -32,6 +32,11 @@ import com.example.blitzware_android.ui.viewmodels.AppLogViewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
 
+/**
+ * App logs screen
+ *
+ * @param appLogViewModel
+ */
 @Composable
 fun AppLogsScreen(appLogViewModel: AppLogViewModel = viewModel(factory = AppLogViewModel.Factory)) {
     val appLogs by appLogViewModel.appLogs.collectAsState()
@@ -68,6 +73,12 @@ fun AppLogsScreen(appLogViewModel: AppLogViewModel = viewModel(factory = AppLogV
     }
 }
 
+/**
+ * App log row
+ *
+ * @param appLog
+ * @param appLogViewModel
+ */
 @Composable
 fun AppLogRow(appLog: AppLog, appLogViewModel: AppLogViewModel) {
     var expanded by remember { mutableStateOf(false) }
@@ -100,6 +111,12 @@ fun AppLogRow(appLog: AppLog, appLogViewModel: AppLogViewModel) {
     }
 }
 
+/**
+ * App log detail row
+ *
+ * @param title
+ * @param value
+ */
 @Composable
 fun AppLogDetailRow(title: String, value: String) {
     Row(

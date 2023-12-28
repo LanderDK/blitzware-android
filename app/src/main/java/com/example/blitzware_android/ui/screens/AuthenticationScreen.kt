@@ -24,6 +24,11 @@ import androidx.compose.ui.unit.dp
 import com.example.blitzware_android.ui.viewmodels.AccountUiState
 import com.example.blitzware_android.ui.viewmodels.AccountViewModel
 
+/**
+ * Login screen
+ *
+ * @param accountViewModel
+ */
 @Composable
 fun LoginScreen(accountViewModel: AccountViewModel) {
     var username by remember { mutableStateOf("") }
@@ -222,6 +227,11 @@ fun LoginScreen(accountViewModel: AccountViewModel) {
     }
 }
 
+/**
+ * Register screen
+ *
+ * @param accountViewModel
+ */
 @Composable
 fun RegisterScreen(accountViewModel: AccountViewModel) {
     var username by remember { mutableStateOf("") }

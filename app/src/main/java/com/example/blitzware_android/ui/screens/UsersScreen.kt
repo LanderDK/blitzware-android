@@ -50,6 +50,12 @@ import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.util.Locale
 
+/**
+ * Users screen
+ *
+ * @param userViewModel
+ * @param userSubViewModel
+ */
 @Composable
 fun UsersScreen(
     userViewModel: UserViewModel = viewModel(factory = UserViewModel.Factory),
@@ -311,6 +317,15 @@ fun UsersScreen(
     }
 }
 
+/**
+ * User row
+ *
+ * @param user
+ * @param userSubs
+ * @param userViewModel
+ * @param onEditClick
+ * @receiver
+ */
 @Composable
 fun UserRow(user: User, userSubs: List<UserSub>, userViewModel: UserViewModel, onEditClick: () -> Unit) {
     var expanded by remember { mutableStateOf(false) }
@@ -381,6 +396,12 @@ fun UserRow(user: User, userSubs: List<UserSub>, userViewModel: UserViewModel, o
     }
 }
 
+/**
+ * User detail row
+ *
+ * @param title
+ * @param value
+ */
 @Composable
 fun UserDetailRow(title: String, value: String) {
     Row(

@@ -3,6 +3,17 @@ package com.example.blitzware_android.model
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
+/**
+ * App log
+ *
+ * @property id
+ * @property username
+ * @property date
+ * @property action
+ * @property ip
+ * @property appId
+ * @constructor Create empty App log
+ */
 @Serializable
 data class AppLog(
     @SerialName(value = "id")

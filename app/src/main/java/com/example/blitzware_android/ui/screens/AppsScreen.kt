@@ -41,6 +41,12 @@ import com.example.blitzware_android.navigation.Screens
 import com.example.blitzware_android.ui.viewmodels.ApplicationUiState
 import com.example.blitzware_android.ui.viewmodels.ApplicationViewModel
 
+/**
+ * Apps screen
+ *
+ * @param applicationViewModel
+ * @param navController
+ */
 @Composable
 fun AppsScreen(
     applicationViewModel: ApplicationViewModel = viewModel(factory = ApplicationViewModel.Factory),
@@ -143,6 +149,13 @@ fun AppsScreen(
     }
 }
 
+/**
+ * Application item
+ *
+ * @param application
+ * @param applicationViewModel
+ * @param navController
+ */
 @Composable
 fun ApplicationItem(
     application: Application,

@@ -7,7 +7,23 @@ import com.example.blitzware_android.model.AccountOfApp
 import com.example.blitzware_android.model.Application
 
 /**
- * Entity data class represents a single row in the database.
+ * Db selected application
+ *
+ * @property id
+ * @property name
+ * @property secret
+ * @property version
+ * @property status
+ * @property developerMode
+ * @property twoFactorAuth
+ * @property hwidCheck
+ * @property freeMode
+ * @property integrityCheck
+ * @property programHash
+ * @property downloadLink
+ * @property adminRoleId
+ * @property adminRoleLevel
+ * @constructor Create empty Db selected application
  */
 
 @Entity(tableName = "selected_application")
@@ -29,6 +45,11 @@ data class dbSelectedApplication(
     val adminRoleLevel: Int?,
 )
 
+/**
+ * As db selected application
+ *
+ * @return
+ */
 fun Application.asDbSelectedApplication(): dbSelectedApplication {
     return dbSelectedApplication(
         id = this.id,
@@ -48,6 +69,12 @@ fun Application.asDbSelectedApplication(): dbSelectedApplication {
     )
 }
 
+/**
+ * As application
+ *
+ * @param account
+ * @return
+ */
 fun dbSelectedApplication.asApplication(account: Account): Application {
     return Application(
         id = this.id,

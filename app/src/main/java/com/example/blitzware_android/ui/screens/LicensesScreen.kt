@@ -41,6 +41,12 @@ import com.example.blitzware_android.ui.viewmodels.LicenseUiState
 import com.example.blitzware_android.ui.viewmodels.LicenseViewModel
 import com.example.blitzware_android.ui.viewmodels.UserSubViewModel
 
+/**
+ * Licenses screen
+ *
+ * @param licenseViewModel
+ * @param userSubViewModel
+ */
 @Composable
 fun LicensesScreen(
     licenseViewModel: LicenseViewModel = viewModel(factory = LicenseViewModel.Factory),
@@ -286,6 +292,15 @@ fun LicensesScreen(
     }
 }
 
+/**
+ * License row
+ *
+ * @param license
+ * @param userSubs
+ * @param licenseViewModel
+ * @param onEditClick
+ * @receiver
+ */
 @Composable
 fun LicenseRow(license: License, userSubs: List<UserSub>, licenseViewModel: LicenseViewModel, onEditClick: () -> Unit) {
     var expanded by remember { mutableStateOf(false) }
@@ -345,6 +360,12 @@ fun LicenseRow(license: License, userSubs: List<UserSub>, licenseViewModel: Lice
     }
 }
 
+/**
+ * License detail row
+ *
+ * @param title
+ * @param value
+ */
 @Composable
 fun LicenseDetailRow(title: String, value: String) {
     Row(

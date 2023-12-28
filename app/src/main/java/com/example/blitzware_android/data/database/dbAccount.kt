@@ -6,7 +6,19 @@ import com.example.blitzware_android.model.Account
 import com.example.blitzware_android.model.AccountData
 
 /**
- * Entity data class represents a single row in the database.
+ * Db account
+ *
+ * @property id
+ * @property username
+ * @property email
+ * @property role
+ * @property creationDate
+ * @property profilePicture
+ * @property emailVerified
+ * @property twoFactorAuth
+ * @property enabled
+ * @property token
+ * @constructor Create empty Db account
  */
 
 @Entity(tableName = "accounts")
@@ -24,6 +36,11 @@ data class dbAccount(
     val token: String
 )
 
+/**
+ * As domain account
+ *
+ * @return
+ */
 fun dbAccount.asDomainAccount(): Account {
     return Account(
         account = AccountData(
@@ -41,6 +58,11 @@ fun dbAccount.asDomainAccount(): Account {
     )
 }
 
+/**
+ * As db account
+ *
+ * @return
+ */
 fun Account.asDbAccount(): dbAccount {
     return dbAccount(
         id = this.account.id,

@@ -50,6 +50,12 @@ import com.example.blitzware_android.ui.viewmodels.AccountUiState
 import com.example.blitzware_android.ui.viewmodels.AccountViewModel
 import org.json.JSONObject
 
+/**
+ * Account details screen
+ *
+ * @param accountViewModel
+ * @param navController
+ */
 @Composable
 fun AccountDetailsScreen(
     accountViewModel: AccountViewModel = viewModel(factory = AccountViewModel.Factory),
@@ -162,6 +168,11 @@ fun AccountDetailsScreen(
     }
 }
 
+/**
+ * Profile picture
+ *
+ * @param accountViewModel
+ */
 @Composable
 fun ProfilePicture(accountViewModel: AccountViewModel) {
     val defaultImage: Painter = painterResource(id = R.drawable.avatar)
@@ -186,6 +197,12 @@ fun ProfilePicture(accountViewModel: AccountViewModel) {
     )
 }
 
+/**
+ * Account info item view
+ *
+ * @param icon
+ * @param text
+ */
 @Composable
 fun AccountInfoItemView(icon: ImageVector, text: String) {
     Row(
@@ -200,6 +217,12 @@ fun AccountInfoItemView(icon: ImageVector, text: String) {
     }
 }
 
+/**
+ * Roles icon
+ *
+ * @param accountViewModel
+ * @return
+ */
 @Composable
 fun rolesIcon(accountViewModel: AccountViewModel): ImageVector {
     return when (accountViewModel.account?.account?.roles?.get(0)) {
@@ -212,6 +235,13 @@ fun rolesIcon(accountViewModel: AccountViewModel): ImageVector {
     }
 }
 
+/**
+ * Convert image to data url
+ *
+ * @param imageUri
+ * @param contentResolver
+ * @return
+ */
 @SuppressLint("Recycle")
 fun convertImageToDataUrl(imageUri: Uri, contentResolver: ContentResolver): UpdateAccountPicBody {
     val inputStream = contentResolver.openInputStream(imageUri)

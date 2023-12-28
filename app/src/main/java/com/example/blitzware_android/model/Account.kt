@@ -3,6 +3,13 @@ package com.example.blitzware_android.model
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
+/**
+ * Account
+ *
+ * @property account
+ * @property token
+ * @constructor Create empty Account
+ */
 @Serializable
 data class Account(
     @SerialName(value = "account")
@@ -11,6 +18,20 @@ data class Account(
     val token: String
 )
 
+/**
+ * Account data
+ *
+ * @property id
+ * @property username
+ * @property email
+ * @property roles
+ * @property creationDate
+ * @property profilePicture
+ * @property emailVerified
+ * @property twoFactorAuth
+ * @property enabled
+ * @constructor Create empty Account data
+ */
 @Serializable
 data class AccountData(
     @SerialName(value = "id")
@@ -33,11 +54,26 @@ data class AccountData(
     var enabled: Int
 )
 
+/**
+ * Update account pic body
+ *
+ * @property profilePicture
+ * @constructor Create empty Update account pic body
+ */
 @Serializable
 data class UpdateAccountPicBody(
     @SerialName(value = "profilePicture") val profilePicture: ProfilePicture,
 )
 
+/**
+ * Profile picture
+ *
+ * @property name
+ * @property type
+ * @property size
+ * @property dataURL
+ * @constructor Create empty Profile picture
+ */
 @Serializable
 data class ProfilePicture(
     @SerialName(value = "name") val name: String,
@@ -46,6 +82,11 @@ data class ProfilePicture(
     @SerialName(value = "dataURL") val dataURL: String,
 )
 
+/**
+ * To formatted string
+ *
+ * @return
+ */
 fun UpdateAccountPicBody.toFormattedString(): String {
     return buildString {
         appendLine("{")

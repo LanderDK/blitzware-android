@@ -28,12 +28,38 @@ import org.json.JSONObject
 import retrofit2.HttpException
 import java.io.IOException
 
+/**
+ * Application ui state
+ *
+ * @constructor Create empty Application ui state
+ */
 sealed interface ApplicationUiState {
+    /**
+     * Success
+     *
+     * @property apps
+     * @constructor Create empty Success
+     */
     data class Success(val apps: List<Application>) : ApplicationUiState
+
+    /**
+     * Error
+     *
+     * @property code
+     * @property message
+     * @constructor Create empty Error
+     */
     data class Error(val code: String, val message: String) : ApplicationUiState
     object Loading : ApplicationUiState
 }
 
+/**
+ * Application view model
+ *
+ * @property applicationRepository
+ * @property accountRepository
+ * @constructor Create empty Application view model
+ */
 class ApplicationViewModel(
     private val applicationRepository: ApplicationRepository,
     private val accountRepository: AccountRepository
@@ -94,6 +120,11 @@ class ApplicationViewModel(
         }
     }
 
+    /**
+     * Get application by id
+     *
+     * @param application
+     */
     fun getApplicationById(application: Application) {
         viewModelScope.launch {
             applicationUiState = ApplicationUiState.Loading
@@ -129,6 +160,10 @@ class ApplicationViewModel(
         }
     }
 
+    /**
+     * Get selected application
+     *
+     */
     fun getSelectedApplication() {
         viewModelScope.launch {
             applicationUiState = ApplicationUiState.Loading
@@ -148,6 +183,11 @@ class ApplicationViewModel(
         }
     }
 
+    /**
+     * Update application by id
+     *
+     * @param application
+     */
     fun updateApplicationById(application: Application) {
         viewModelScope.launch {
             applicationUiState = ApplicationUiState.Loading
@@ -197,6 +237,11 @@ class ApplicationViewModel(
         }
     }
 
+    /**
+     * Delete application by id
+     *
+     * @param application
+     */
     fun deleteApplicationById(application: Application) {
         viewModelScope.launch {
             applicationUiState = ApplicationUiState.Loading
@@ -230,6 +275,10 @@ class ApplicationViewModel(
         }
     }
 
+    /**
+     * Delete selected application entry
+     *
+     */
     fun deleteSelectedApplicationEntry() {
         viewModelScope.launch {
             applicationUiState = ApplicationUiState.Loading
@@ -248,6 +297,11 @@ class ApplicationViewModel(
         }
     }
 
+    /**
+     * Create application
+     *
+     * @param name
+     */
     fun createApplication(name: String) {
         viewModelScope.launch {
             try {

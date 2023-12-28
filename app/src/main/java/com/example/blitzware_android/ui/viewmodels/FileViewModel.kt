@@ -26,12 +26,39 @@ import org.json.JSONObject
 import retrofit2.HttpException
 import java.io.IOException
 
+/**
+ * File ui state
+ *
+ * @constructor Create empty File ui state
+ */
 sealed interface FileUiState {
+    /**
+     * Success
+     *
+     * @property files
+     * @constructor Create empty Success
+     */
     data class Success(val files: List<File>) : FileUiState
+
+    /**
+     * Error
+     *
+     * @property code
+     * @property message
+     * @constructor Create empty Error
+     */
     data class Error(val code: String, val message: String) : FileUiState
     object Loading : FileUiState
 }
 
+/**
+ * File view model
+ *
+ * @property fileRepository
+ * @property applicationRepository
+ * @property accountRepository
+ * @constructor Create empty File view model
+ */
 class FileViewModel(
     private val fileRepository: FileRepository,
     private val applicationRepository: ApplicationRepository,
@@ -95,6 +122,11 @@ class FileViewModel(
         }
     }
 
+    /**
+     * Delete file by id
+     *
+     * @param file
+     */
     fun deleteFileById(file: File) {
         viewModelScope.launch {
             fileUiState = FileUiState.Loading

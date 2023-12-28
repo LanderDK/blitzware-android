@@ -3,6 +3,16 @@ package com.example.blitzware_android.model
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
+/**
+ * Chat message
+ *
+ * @property id
+ * @property username
+ * @property message
+ * @property date
+ * @property chatId
+ * @constructor Create empty Chat message
+ */
 @Serializable
 data class ChatMessage(
     @SerialName(value = "id")
@@ -17,6 +27,15 @@ data class ChatMessage(
     val chatId: Int
 )
 
+/**
+ * Create chat message body
+ *
+ * @property username
+ * @property message
+ * @property date
+ * @property chatId
+ * @constructor Create empty Create chat message body
+ */
 @Serializable
 data class CreateChatMessageBody(
     @SerialName(value = "username") val username: String,

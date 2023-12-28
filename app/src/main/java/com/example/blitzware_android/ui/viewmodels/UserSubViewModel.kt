@@ -27,12 +27,39 @@ import org.json.JSONObject
 import retrofit2.HttpException
 import java.io.IOException
 
+/**
+ * User sub ui state
+ *
+ * @constructor Create empty User sub ui state
+ */
 sealed interface UserSubUiState {
+    /**
+     * Success
+     *
+     * @property userSubs
+     * @constructor Create empty Success
+     */
     data class Success(val userSubs: List<UserSub>) : UserSubUiState
+
+    /**
+     * Error
+     *
+     * @property code
+     * @property message
+     * @constructor Create empty Error
+     */
     data class Error(val code: String, val message: String) : UserSubUiState
     object Loading : UserSubUiState
 }
 
+/**
+ * User sub view model
+ *
+ * @property userSubRepository
+ * @property applicationRepository
+ * @property accountRepository
+ * @constructor Create empty User sub view model
+ */
 class UserSubViewModel(
     private val userSubRepository: UserSubRepository,
     private val applicationRepository: ApplicationRepository,
@@ -96,6 +123,12 @@ class UserSubViewModel(
         }
     }
 
+    /**
+     * Create user sub
+     *
+     * @param name
+     * @param level
+     */
     fun createUserSub(
         name: String,
         level: Int
@@ -134,6 +167,13 @@ class UserSubViewModel(
         }
     }
 
+    /**
+     * Update user sub by id
+     *
+     * @param id
+     * @param name
+     * @param level
+     */
     fun updateUserSubById(id: Int, name: String, level: Int) {
         viewModelScope.launch {
             userSubUiState = UserSubUiState.Loading
@@ -171,6 +211,11 @@ class UserSubViewModel(
         }
     }
 
+    /**
+     * Delete user sub by id
+     *
+     * @param userSub
+     */
     fun deleteUserSubById(userSub: UserSub) {
         viewModelScope.launch {
             userSubUiState = UserSubUiState.Loading

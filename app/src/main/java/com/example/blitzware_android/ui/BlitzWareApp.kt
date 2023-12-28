@@ -48,6 +48,11 @@ import com.example.blitzware_android.ui.screens.ResourcesScreen
 import com.example.blitzware_android.ui.screens.UserSubsScreen
 import com.example.blitzware_android.ui.screens.UsersScreen
 
+/**
+ * Blitz ware app
+ *
+ * @param windowSize
+ */
 @Composable
 fun BlitzWareApp(windowSize: WindowWidthSizeClass) {
     val navController: NavHostController = rememberNavController()
@@ -292,6 +297,11 @@ fun BlitzWareApp(windowSize: WindowWidthSizeClass) {
     }
 }
 
+/**
+ * Get main navigation bar
+ *
+ * @param navController
+ */
 @Composable
 fun GetMainNavigationBar(navController: NavHostController) {
     NavigationBar {

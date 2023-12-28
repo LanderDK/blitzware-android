@@ -22,12 +22,37 @@ import org.json.JSONObject
 import retrofit2.HttpException
 import java.io.IOException
 
+/**
+ * Account ui state
+ *
+ * @constructor Create empty Account ui state
+ */
 sealed interface AccountUiState {
+    /**
+     * Success
+     *
+     * @property account
+     * @constructor Create empty Success
+     */
     data class Success(val account: Account) : AccountUiState
+
+    /**
+     * Error
+     *
+     * @property code
+     * @property message
+     * @constructor Create empty Error
+     */
     data class Error(val code: String, val message: String) : AccountUiState
     object Loading : AccountUiState
 }
 
+/**
+ * Account view model
+ *
+ * @property accountRepository
+ * @constructor Create empty Account view model
+ */
 class AccountViewModel(private val accountRepository: AccountRepository) : ViewModel() {
     /** The mutable State that stores the status of the most recent request */
     var accountUiState: AccountUiState by mutableStateOf(AccountUiState.Loading)
@@ -52,6 +77,12 @@ class AccountViewModel(private val accountRepository: AccountRepository) : ViewM
     val otpRequired: Boolean
         get() = _otpRequired.value
 
+    /**
+     * Login
+     *
+     * @param username
+     * @param password
+     */
     fun login(username: String, password: String) {
         viewModelScope.launch {
             accountUiState = AccountUiState.Loading
@@ -96,6 +127,13 @@ class AccountViewModel(private val accountRepository: AccountRepository) : ViewM
         }
     }
 
+    /**
+     * Register
+     *
+     * @param username
+     * @param email
+     * @param password
+     */
     fun register(username: String, email: String, password: String) {
         viewModelScope.launch {
             accountUiState = AccountUiState.Loading
@@ -130,6 +168,10 @@ class AccountViewModel(private val accountRepository: AccountRepository) : ViewM
         }
     }
 
+    /**
+     * Logout
+     *
+     */
     fun logout() {
         viewModelScope.launch {
             accountUiState = AccountUiState.Loading
@@ -162,6 +204,10 @@ class AccountViewModel(private val accountRepository: AccountRepository) : ViewM
         }
     }
 
+    /**
+     * Get account by id
+     *
+     */
     fun getAccountById() {
         viewModelScope.launch {
             accountUiState = AccountUiState.Loading
@@ -198,6 +244,11 @@ class AccountViewModel(private val accountRepository: AccountRepository) : ViewM
         }
     }
 
+    /**
+     * Update account profile picture by id
+     *
+     * @param body
+     */
     fun updateAccountProfilePictureById(body: UpdateAccountPicBody) {
         viewModelScope.launch {
             accountUiState = AccountUiState.Loading
@@ -234,6 +285,12 @@ class AccountViewModel(private val accountRepository: AccountRepository) : ViewM
         }
     }
 
+    /**
+     * Verify login o t p
+     *
+     * @param username
+     * @param otp
+     */
     fun verifyLoginOTP(username: String, otp: String) {
         viewModelScope.launch {
             accountUiState = AccountUiState.Loading
@@ -274,6 +331,12 @@ class AccountViewModel(private val accountRepository: AccountRepository) : ViewM
         }
     }
 
+    /**
+     * Verify login2f a
+     *
+     * @param username
+     * @param twoFactorCode
+     */
     fun verifyLogin2FA(username: String, twoFactorCode: String) {
         viewModelScope.launch {
             accountUiState = AccountUiState.Loading

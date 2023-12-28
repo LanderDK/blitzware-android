@@ -34,6 +34,12 @@ import com.example.blitzware_android.navigation.Screens
 import com.example.blitzware_android.ui.viewmodels.ApplicationUiState
 import com.example.blitzware_android.ui.viewmodels.ApplicationViewModel
 
+/**
+ * App detail screen
+ *
+ * @param navController
+ * @param applicationViewModel
+ */
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun AppDetailScreen(
@@ -136,6 +142,13 @@ fun AppDetailScreen(
     }
 }
 
+/**
+ * Application detail item
+ *
+ * @param title
+ * @param value
+ * @param color
+ */
 @Composable
 fun ApplicationDetailItem(title: String, value: String, color: Color? = null) {
     Row(

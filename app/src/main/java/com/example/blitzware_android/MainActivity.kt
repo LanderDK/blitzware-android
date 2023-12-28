@@ -17,6 +17,11 @@ import com.example.blitzware_android.ui.screens.RegisterScreen
 import com.example.blitzware_android.ui.theme.BlitzWareTheme
 import com.example.blitzware_android.ui.viewmodels.AccountViewModel
 
+/**
+ * Main activity
+ *
+ * @constructor Create empty Main activity
+ */
 class MainActivity : ComponentActivity() {
 
     private lateinit var accountViewModel: AccountViewModel

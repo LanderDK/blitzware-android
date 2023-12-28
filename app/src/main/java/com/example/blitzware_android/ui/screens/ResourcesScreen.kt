@@ -31,6 +31,10 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
+/**
+ * Resources screen
+ *
+ */
 @Composable
 fun ResourcesScreen() {
     Column {
@@ -81,6 +85,13 @@ fun ResourcesScreen() {
     }
 }
 
+/**
+ * Resource item
+ *
+ * @param name
+ * @param link
+ * @param iconName
+ */
 @Composable
 fun ResourceItem(name: String, link: String, iconName: String) {
     val density = LocalDensity.current.density

@@ -10,6 +10,12 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 
+/**
+ * App detail bottom navigation
+ *
+ * @param navController
+ * @param selectedScreen
+ */
 @Composable
 fun AppDetailBottomNavigation(
     navController: NavHostController,
@@ -19,6 +25,12 @@ fun AppDetailBottomNavigation(
         GetAppDetailNavigationBar(navController = navController)
     }
 }
+
+/**
+ * Get app detail navigation bar
+ *
+ * @param navController
+ */
 @Composable
 fun GetAppDetailNavigationBar(navController: NavHostController) {
     NavigationBar {
@@ -48,6 +60,12 @@ fun GetAppDetailNavigationBar(navController: NavHostController) {
     }
 }
 
+/**
+ * Should show custom navigation
+ *
+ * @param screen
+ * @return
+ */
 @Composable
 fun shouldShowCustomNavigation(screen: Screens): Boolean {
     return screen == Screens.AppDetailScreen ||

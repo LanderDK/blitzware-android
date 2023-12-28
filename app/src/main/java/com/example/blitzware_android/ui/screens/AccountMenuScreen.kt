@@ -37,6 +37,11 @@ import androidx.navigation.NavHostController
 import com.example.blitzware_android.MainActivity
 import com.example.blitzware_android.ui.viewmodels.AccountViewModel
 
+/**
+ * Account menu screen
+ *
+ * @param navController
+ */
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun AccountMenuScreen(navController: NavHostController) {
@@ -94,6 +99,14 @@ fun AccountMenuScreen(navController: NavHostController) {
     }
 }
 
+/**
+ * Account menu item
+ *
+ * @param icon
+ * @param text
+ * @param onClick
+ * @receiver
+ */
 @Composable
 fun AccountMenuItem(
     icon: ImageVector,
@@ -111,6 +124,12 @@ fun AccountMenuItem(
     }
 }
 
+/**
+ * Logout button
+ *
+ * @param onClick
+ * @receiver
+ */
 @Composable
 fun LogoutButton(onClick: () -> Unit) {
     Button(
@@ -124,6 +143,14 @@ fun LogoutButton(onClick: () -> Unit) {
     }
 }
 
+/**
+ * Logout alert
+ *
+ * @param onConfirm
+ * @param onDismiss
+ * @receiver
+ * @receiver
+ */
 @Composable
 fun LogoutAlert(onConfirm: () -> Unit, onDismiss: () -> Unit) {
     AlertDialog(
@@ -153,6 +180,11 @@ fun LogoutAlert(onConfirm: () -> Unit, onDismiss: () -> Unit) {
 }
 
 
+/**
+ * Reset app
+ *
+ * @param context
+ */
 fun resetApp(context: Context) {
     val intent = Intent(context, MainActivity::class.java)
     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK

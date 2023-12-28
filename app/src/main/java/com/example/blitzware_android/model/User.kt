@@ -3,6 +3,25 @@ package com.example.blitzware_android.model
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
+/**
+ * User
+ *
+ * @property id
+ * @property username
+ * @property email
+ * @property expiryDate
+ * @property lastLogin
+ * @property lastIP
+ * @property hwid
+ * @property license
+ * @property enabled
+ * @property twoFactorAuth
+ * @property twoFactorAuthSecret
+ * @property userSubId
+ * @property userSubLevel
+ * @property application
+ * @constructor Create empty User
+ */
 @Serializable
 data class User(
     @SerialName(value = "id")
@@ -35,6 +54,13 @@ data class User(
     var application: ApplicationUser
 )
 
+/**
+ * Application user
+ *
+ * @property id
+ * @property name
+ * @constructor Create empty Application user
+ */
 @Serializable
 data class ApplicationUser(
     @SerialName(value = "id")
@@ -43,6 +69,17 @@ data class ApplicationUser(
     val name: String
 )
 
+/**
+ * Create user body
+ *
+ * @property username
+ * @property email
+ * @property password
+ * @property id
+ * @property expiry
+ * @property subscription
+ * @constructor Create empty Create user body
+ */
 @Serializable
 data class CreateUserBody(
     @SerialName(value = "username") val username: String,
@@ -53,6 +90,18 @@ data class CreateUserBody(
     @SerialName(value = "subscription") val subscription: Int,
 )
 
+/**
+ * Update user body
+ *
+ * @property username
+ * @property email
+ * @property expiryDate
+ * @property hwid
+ * @property twoFactorAuth
+ * @property enabled
+ * @property subscription
+ * @constructor Create empty Update user body
+ */
 @Serializable
 data class UpdateUserBody(
     @SerialName(value = "username") val username: String,

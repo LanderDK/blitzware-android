@@ -1,8 +1,7 @@
 package com.example.blitzware_android.data
 
 import android.content.Context
-import com.example.blitzware_android.data.database.AccountDb
-import com.example.blitzware_android.data.database.ApplicationDb
+import com.example.blitzware_android.data.database.BlitzWareDatabase
 import com.example.blitzware_android.network.AccountApiService
 import com.example.blitzware_android.network.AppLogApiService
 import com.example.blitzware_android.network.ApplicationApiService
@@ -22,7 +21,9 @@ import okhttp3.Request
 import okhttp3.Response
 
 /**
- * Dependency Injection container at the application level.
+ * App container
+ *
+ * @constructor Create empty App container
  */
 interface AppContainer {
     val accountRepository: AccountRepository
@@ -37,13 +38,19 @@ interface AppContainer {
 }
 
 /**
- * Implementation for the Dependency Injection container at the application level.
+ * Default app container
  *
- * Variables are initialized lazily and the same instance is shared across the whole app.
+ * @property context
+ * @constructor Create empty Default app container
  */
 class DefaultAppContainer(private val context: Context): AppContainer {
     private val baseUrl = "https://api.blitzware.xyz/api/"
 
+    /**
+     * Api mobile header interceptor
+     *
+     * @constructor Create empty Api mobile header interceptor
+     */
     class ApiMobileHeaderInterceptor : Interceptor {
         override fun intercept(chain: Interceptor.Chain): Response {
             val originalRequest = chain.request()
@@ -80,7 +87,7 @@ class DefaultAppContainer(private val context: Context): AppContainer {
      */
     override val accountRepository: AccountRepository by lazy {
         NetworkAccountRepository(
-            AccountDb.getDatabase(context = context).accountDao(),
+            BlitzWareDatabase.getDatabase(context = context).accountDao(),
             retrofit.create(AccountApiService::class.java)
         )
     }
@@ -90,7 +97,7 @@ class DefaultAppContainer(private val context: Context): AppContainer {
      */
     override val applicationRepository: ApplicationRepository by lazy {
         NetworkApplicationRepository(
-            ApplicationDb.getDatabase(context = context).applicationDao(),
+            BlitzWareDatabase.getDatabase(context = context).applicationDao(),
             retrofit.create(ApplicationApiService::class.java)
         )
     }

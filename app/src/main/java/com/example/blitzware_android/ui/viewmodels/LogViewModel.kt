@@ -22,12 +22,38 @@ import org.json.JSONObject
 import retrofit2.HttpException
 import java.io.IOException
 
+/**
+ * Log ui state
+ *
+ * @constructor Create empty Log ui state
+ */
 sealed interface LogUiState {
+    /**
+     * Success
+     *
+     * @property logs
+     * @constructor Create empty Success
+     */
     data class Success(val logs: List<Log>) : LogUiState
+
+    /**
+     * Error
+     *
+     * @property code
+     * @property message
+     * @constructor Create empty Error
+     */
     data class Error(val code: String, val message: String) : LogUiState
     object Loading : LogUiState
 }
 
+/**
+ * Log view model
+ *
+ * @property logRepository
+ * @property accountRepository
+ * @constructor Create empty Log view model
+ */
 class LogViewModel(
     private val logRepository: LogRepository,
     private val accountRepository: AccountRepository
@@ -84,6 +110,11 @@ class LogViewModel(
         }
     }
 
+    /**
+     * Delete log by id
+     *
+     * @param log
+     */
     fun deleteLogById(log: Log) {
         viewModelScope.launch {
             try {

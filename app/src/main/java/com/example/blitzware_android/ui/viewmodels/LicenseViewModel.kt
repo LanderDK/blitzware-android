@@ -28,12 +28,39 @@ import org.json.JSONObject
 import retrofit2.HttpException
 import java.io.IOException
 
+/**
+ * License ui state
+ *
+ * @constructor Create empty License ui state
+ */
 sealed interface LicenseUiState {
+    /**
+     * Success
+     *
+     * @property licenses
+     * @constructor Create empty Success
+     */
     data class Success(val licenses: List<License>) : LicenseUiState
+
+    /**
+     * Error
+     *
+     * @property code
+     * @property message
+     * @constructor Create empty Error
+     */
     data class Error(val code: String, val message: String) : LicenseUiState
     object Loading : LicenseUiState
 }
 
+/**
+ * License view model
+ *
+ * @property licenseRepository
+ * @property applicationRepository
+ * @property accountRepository
+ * @constructor Create empty License view model
+ */
 class LicenseViewModel(
     private val licenseRepository: LicenseRepository,
     private val applicationRepository: ApplicationRepository,
@@ -97,6 +124,14 @@ class LicenseViewModel(
         }
     }
 
+    /**
+     * Create license
+     *
+     * @param days
+     * @param format
+     * @param amount
+     * @param subscription
+     */
     fun createLicense(
         days: Int,
         format: String,
@@ -143,6 +178,16 @@ class LicenseViewModel(
         }
     }
 
+    /**
+     * Update license by id
+     *
+     * @param id
+     * @param license
+     * @param days
+     * @param used
+     * @param enabled
+     * @param subscription
+     */
     fun updateLicenseById(
         id: String,
         license: String,
@@ -194,6 +239,11 @@ class LicenseViewModel(
         }
     }
 
+    /**
+     * Update license by id2
+     *
+     * @param license
+     */
     fun updateLicenseById2(license: License) {
         viewModelScope.launch {
             licenseUiState = LicenseUiState.Loading
@@ -235,6 +285,11 @@ class LicenseViewModel(
         }
     }
 
+    /**
+     * Delete license by id
+     *
+     * @param license
+     */
     fun deleteLicenseById(license: License) {
         viewModelScope.launch {
             licenseUiState = LicenseUiState.Loading

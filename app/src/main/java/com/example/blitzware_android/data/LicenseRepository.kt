@@ -5,29 +5,67 @@ import com.example.blitzware_android.model.License
 import com.example.blitzware_android.model.UpdateLicenseBody
 import com.example.blitzware_android.network.LicenseApiService
 
+/**
+ * License repository
+ *
+ * @constructor Create empty License repository
+ */
 interface LicenseRepository {
+    /**
+     * Get licenses of application
+     *
+     * @param token
+     * @param applicationId
+     * @return
+     */
     suspend fun getLicensesOfApplication(
         token: String,
         applicationId: String
     ): List<License>
 
+    /**
+     * Create license
+     *
+     * @param token
+     * @param body
+     * @return
+     */
     suspend fun createLicense(
         token: String,
         body: CreateLicenseBody
     ): List<License>
 
+    /**
+     * Update license by id
+     *
+     * @param token
+     * @param id
+     * @param body
+     */
     suspend fun updateLicenseById(
         token: String,
         id: String,
         body: UpdateLicenseBody
     )
 
+    /**
+     * Delete license by id
+     *
+     * @param token
+     * @param id
+     */
     suspend fun deleteLicenseById(
         token: String,
         id: String
     )
 }
 
+/**
+ * Network license repository
+ *
+ * @property licenseApiService
+ * @constructor Create empty Network license repository
+ */
 class NetworkLicenseRepository(
     private val licenseApiService: LicenseApiService
 ) : LicenseRepository {
