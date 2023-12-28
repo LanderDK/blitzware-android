@@ -8,7 +8,9 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Icon
@@ -40,6 +42,8 @@ fun AppDetailScreen(
 ) {
     var application by remember { mutableStateOf(applicationViewModel.application) }
 
+    val scrollState = rememberScrollState()
+
     LaunchedEffect(applicationViewModel) {
         applicationViewModel.getSelectedApplication()
         application = applicationViewModel.application
@@ -49,6 +53,7 @@ fun AppDetailScreen(
         modifier = Modifier
             .fillMaxSize()
             .padding(top = 120.dp)
+            .verticalScroll(state = scrollState)
     ) {
         Row(
             modifier = Modifier

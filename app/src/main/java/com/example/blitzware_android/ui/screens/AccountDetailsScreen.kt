@@ -10,7 +10,9 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AdminPanelSettings
 import androidx.compose.material.icons.filled.ArrowBack
@@ -70,6 +72,8 @@ fun AccountDetailsScreen(
         }
     )
 
+    val scrollState = rememberScrollState()
+
     LaunchedEffect(accountViewModel) {
         accountViewModel.getAccountById()
     }
@@ -78,6 +82,7 @@ fun AccountDetailsScreen(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
+            .verticalScroll(state = scrollState)
     ) {
         Row(
             modifier = Modifier
@@ -108,7 +113,8 @@ fun AccountDetailsScreen(
             }
             is AccountUiState.Success -> {
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     ProfilePicture(accountViewModel = accountViewModel)
