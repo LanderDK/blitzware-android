@@ -22,12 +22,13 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.json.JSONObject
 import retrofit2.HttpException
 import java.io.IOException
 
 sealed interface FileUiState {
     data class Success(val files: List<File>) : FileUiState
-    object Error : FileUiState
+    data class Error(val code: String, val message: String) : FileUiState
     object Loading : FileUiState
 }
 
@@ -75,17 +76,21 @@ class FileViewModel(
                 Log.d("FileViewModel", "IOException")
                 Log.d("FileViewModel", e.message.toString())
                 Log.d("FileViewModel", e.stackTraceToString())
-                fileUiState = FileUiState.Error
+                fileUiState = FileUiState.Error("IOException", e.message.toString())
             } catch (e: HttpException) {
+                val errorBody = e.response()?.errorBody()?.string()
                 Log.d("FileViewModel", "HttpException")
                 Log.d("FileViewModel", e.message.toString())
-                Log.d("FileViewModel", e.stackTraceToString())
-                fileUiState = FileUiState.Error
+                Log.d("FileViewModel", "Error response: $errorBody")
+                val jsonObject = JSONObject(errorBody!!)
+                val code = jsonObject.getString("code")
+                val message = jsonObject.getString("message")
+                fileUiState = FileUiState.Error(code, message)
             } catch (e: Exception) {
                 Log.d("FileViewModel", "Exception")
                 Log.d("FileViewModel", e.message.toString())
                 Log.d("FileViewModel", e.stackTraceToString())
-                fileUiState = FileUiState.Error
+                fileUiState = FileUiState.Error("Exception", e.message.toString())
             }
         }
     }
@@ -104,17 +109,21 @@ class FileViewModel(
                 Log.d("FileViewModel", "IOException")
                 Log.d("FileViewModel", e.message.toString())
                 Log.d("FileViewModel", e.stackTraceToString())
-                fileUiState = FileUiState.Error
+                fileUiState = FileUiState.Error("IOException", e.message.toString())
             } catch (e: HttpException) {
+                val errorBody = e.response()?.errorBody()?.string()
                 Log.d("FileViewModel", "HttpException")
                 Log.d("FileViewModel", e.message.toString())
-                Log.d("FileViewModel", e.stackTraceToString())
-                fileUiState = FileUiState.Error
+                Log.d("FileViewModel", "Error response: $errorBody")
+                val jsonObject = JSONObject(errorBody!!)
+                val code = jsonObject.getString("code")
+                val message = jsonObject.getString("message")
+                fileUiState = FileUiState.Error(code, message)
             } catch (e: Exception) {
                 Log.d("FileViewModel", "Exception")
                 Log.d("FileViewModel", e.message.toString())
                 Log.d("FileViewModel", e.stackTraceToString())
-                fileUiState = FileUiState.Error
+                fileUiState = FileUiState.Error("Exception", e.message.toString())
             }
         }
     }

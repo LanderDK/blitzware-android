@@ -124,7 +124,7 @@ fun AppDetailScreen(
                     )
                 }
                 is ApplicationUiState.Error -> {
-                    Text(text = "Error loading application!")
+                    Text(text = (applicationViewModel.applicationUiState as ApplicationUiState.Error).message)
                 }
             }
         }

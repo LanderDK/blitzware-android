@@ -22,12 +22,13 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.json.JSONObject
 import retrofit2.HttpException
 import java.io.IOException
 
 sealed interface AppLogUiState {
     data class Success(val appLogs: List<AppLog>) : AppLogUiState
-    object Error : AppLogUiState
+    data class Error(val code: String, val message: String) : AppLogUiState
     object Loading : AppLogUiState
 }
 
@@ -75,17 +76,21 @@ class AppLogViewModel(
                 Log.d("AppLogViewModel", "IOException")
                 Log.d("AppLogViewModel", e.message.toString())
                 Log.d("AppLogViewModel", e.stackTraceToString())
-                appLogUiState = AppLogUiState.Error
+                appLogUiState = AppLogUiState.Error("IOException", e.message.toString())
             } catch (e: HttpException) {
+                val errorBody = e.response()?.errorBody()?.string()
                 Log.d("AppLogViewModel", "HttpException")
                 Log.d("AppLogViewModel", e.message.toString())
-                Log.d("AppLogViewModel", e.stackTraceToString())
-                appLogUiState = AppLogUiState.Error
+                Log.d("AppLogViewModel", "Error response: $errorBody")
+                val jsonObject = JSONObject(errorBody!!)
+                val code = jsonObject.getString("code")
+                val message = jsonObject.getString("message")
+                appLogUiState = AppLogUiState.Error(code, message)
             } catch (e: Exception) {
                 Log.d("AppLogViewModel", "Exception")
                 Log.d("AppLogViewModel", e.message.toString())
                 Log.d("AppLogViewModel", e.stackTraceToString())
-                appLogUiState = AppLogUiState.Error
+                appLogUiState = AppLogUiState.Error("Exception", e.message.toString())
             }
         }
     }
@@ -104,17 +109,21 @@ class AppLogViewModel(
                 Log.d("AppLogViewModel", "IOException")
                 Log.d("AppLogViewModel", e.message.toString())
                 Log.d("AppLogViewModel", e.stackTraceToString())
-                appLogUiState = AppLogUiState.Error
+                appLogUiState = AppLogUiState.Error("IOException", e.message.toString())
             } catch (e: HttpException) {
+                val errorBody = e.response()?.errorBody()?.string()
                 Log.d("AppLogViewModel", "HttpException")
                 Log.d("AppLogViewModel", e.message.toString())
-                Log.d("AppLogViewModel", e.stackTraceToString())
-                appLogUiState = AppLogUiState.Error
+                Log.d("AppLogViewModel", "Error response: $errorBody")
+                val jsonObject = JSONObject(errorBody!!)
+                val code = jsonObject.getString("code")
+                val message = jsonObject.getString("message")
+                appLogUiState = AppLogUiState.Error(code, message)
             } catch (e: Exception) {
                 Log.d("AppLogViewModel", "Exception")
                 Log.d("AppLogViewModel", e.message.toString())
                 Log.d("AppLogViewModel", e.stackTraceToString())
-                appLogUiState = AppLogUiState.Error
+                appLogUiState = AppLogUiState.Error("Exception", e.message.toString())
             }
         }
     }

@@ -18,12 +18,13 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.json.JSONObject
 import retrofit2.HttpException
 import java.io.IOException
 
 sealed interface LogUiState {
     data class Success(val logs: List<Log>) : LogUiState
-    object Error : LogUiState
+    data class Error(val code: String, val message: String) : LogUiState
     object Loading : LogUiState
 }
 
@@ -38,9 +39,8 @@ class LogViewModel(
     private val _logs = MutableStateFlow<List<Log>>(emptyList())
     val logs: StateFlow<List<Log>> get() = _logs
 
-    private val _account = mutableStateOf<Account?>(null)
-    val account: Account?
-        get() = _account.value
+    private val _account = MutableStateFlow<Account?>(null)
+    val account: StateFlow<Account?> get() = _account
 
     init {
         viewModelScope.launch {
@@ -56,23 +56,30 @@ class LogViewModel(
         viewModelScope.launch {
             logUiState = LogUiState.Loading
             try {
-                val token = account?.token ?: throw Exception("Token is null")
-                val username = account?.account?.username ?: throw Exception("Username is null")
+                val token = account.value?.token ?: throw Exception("Token is null")
+                val username = account.value?.account?.username ?: throw Exception("Username is null")
                 val logs = logRepository.getLogsByUsername(token, username)
                 _logs.value = logs
                 logUiState = LogUiState.Success(logs)
             } catch (e: IOException) {
                 android.util.Log.d("LogViewModel", "IOException")
                 android.util.Log.d("LogViewModel", e.message.toString())
-                logUiState = LogUiState.Error
+                android.util.Log.d("LogViewModel", e.stackTraceToString())
+                logUiState = LogUiState.Error("IOException", e.message.toString())
             } catch (e: HttpException) {
+                val errorBody = e.response()?.errorBody()?.string()
                 android.util.Log.d("LogViewModel", "HttpException")
                 android.util.Log.d("LogViewModel", e.message.toString())
-                logUiState = LogUiState.Error
+                android.util.Log.d("LogViewModel", "Error response: $errorBody")
+                val jsonObject = JSONObject(errorBody!!)
+                val code = jsonObject.getString("code")
+                val message = jsonObject.getString("message")
+                logUiState = LogUiState.Error(code, message)
             } catch (e: Exception) {
                 android.util.Log.d("LogViewModel", "Exception")
                 android.util.Log.d("LogViewModel", e.message.toString())
-                logUiState = LogUiState.Error
+                android.util.Log.d("LogViewModel", e.stackTraceToString())
+                logUiState = LogUiState.Error("Exception", e.message.toString())
             }
         }
     }
@@ -80,7 +87,7 @@ class LogViewModel(
     fun deleteLogById(log: Log) {
         viewModelScope.launch {
             try {
-                val token = account?.token ?: throw Exception("Token is null")
+                val token = account.value?.token ?: throw Exception("Token is null")
                 logRepository.deleteLogById(token, log.id)
                 val logs = _logs.value.toMutableList()
                 logs.remove(log)
@@ -89,15 +96,22 @@ class LogViewModel(
             } catch (e: IOException) {
                 android.util.Log.d("LogViewModel", "IOException")
                 android.util.Log.d("LogViewModel", e.message.toString())
-                logUiState = LogUiState.Error
+                android.util.Log.d("LogViewModel", e.stackTraceToString())
+                logUiState = LogUiState.Error("IOException", e.message.toString())
             } catch (e: HttpException) {
+                val errorBody = e.response()?.errorBody()?.string()
                 android.util.Log.d("LogViewModel", "HttpException")
                 android.util.Log.d("LogViewModel", e.message.toString())
-                logUiState = LogUiState.Error
+                android.util.Log.d("LogViewModel", "Error response: $errorBody")
+                val jsonObject = JSONObject(errorBody!!)
+                val code = jsonObject.getString("code")
+                val message = jsonObject.getString("message")
+                logUiState = LogUiState.Error(code, message)
             } catch (e: Exception) {
                 android.util.Log.d("LogViewModel", "Exception")
                 android.util.Log.d("LogViewModel", e.message.toString())
-                logUiState = LogUiState.Error
+                android.util.Log.d("LogViewModel", e.stackTraceToString())
+                logUiState = LogUiState.Error("Exception", e.message.toString())
             }
         }
     }

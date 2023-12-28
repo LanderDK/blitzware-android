@@ -11,6 +11,10 @@ import com.example.blitzware_android.network.AccountApiService
 interface AccountRepository {
     suspend fun login(body: Map<String, String>): Account
 
+    suspend fun register(body: Map<String, String>)
+
+    suspend fun logout(token: String)
+
     suspend fun getAccountById(token: String, id: String): AccountData
 
     suspend fun updateAccountProfilePictureById(
@@ -54,7 +58,16 @@ class NetworkAccountRepository(
     private val accountApiService: AccountApiService
 ) : AccountRepository {
     override suspend fun login(body: Map<String, String>): Account {
-        return accountApiService.login(body = body)
+        return accountApiService.login(body)
+    }
+
+    override suspend fun register(body: Map<String, String>) {
+        accountApiService.register(body)
+    }
+
+    override suspend fun logout(token: String) {
+        val authorizationHeader = "Bearer $token"
+        accountApiService.logout(authorizationHeader)
     }
 
     override suspend fun getAccountById(token: String, id: String): AccountData {

@@ -94,7 +94,7 @@ fun UserSubsScreen(userSubViewModel: UserSubViewModel = viewModel(factory = User
                 }
             }
             is UserSubUiState.Error -> {
-                Text(text = "Error loading subscriptions!")
+                Text(text = (userSubViewModel.userSubUiState as UserSubUiState.Error).message)
             }
         }
         if (isAddDialogVisible) {

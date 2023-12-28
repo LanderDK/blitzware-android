@@ -32,12 +32,15 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.blitzware_android.MainActivity
+import com.example.blitzware_android.ui.viewmodels.AccountViewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun AccountMenuScreen(navController: NavHostController) {
+    val accountViewModel: AccountViewModel = viewModel(factory = AccountViewModel.Factory)
     var showingLogoutAlert by remember { mutableStateOf(false) }
     val context = LocalContext.current
 
@@ -81,6 +84,7 @@ fun AccountMenuScreen(navController: NavHostController) {
         LogoutAlert(
             onConfirm = {
                 showingLogoutAlert = false
+                accountViewModel.logout()
                 resetApp(context = context)
             },
             onDismiss = {

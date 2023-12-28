@@ -53,6 +53,7 @@ fun CommunityScreen(
     chatMessageViewModel: ChatMessageViewModel = viewModel(factory = ChatMessageViewModel.Factory)
 ) {
     val chatMsgs by chatMessageViewModel.chatMsgs.collectAsState()
+    val account by chatMessageViewModel.account.collectAsState()
     var msg by remember { mutableStateOf("") }
     var showAlert by remember { mutableStateOf(false) }
 
@@ -102,12 +103,12 @@ fun CommunityScreen(
                             val date = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault()).parse(chatMsg.date)
                             ChatMsg(username = chatMsg.username, message = chatMsg.message, date = date!!, onDelete = {
                                 chatMessageViewModel.deleteChatMessageById(chatMsg)
-                            }, account = chatMessageViewModel.account ?: throw Exception("Account is null"))
+                            }, account = account ?: throw Exception("Account is null"))
                         }
                     }
                 }
                 is ChatMessageUiState.Error -> {
-                    Text(text = "Error loading messages!")
+                    Text(text = (chatMessageViewModel.chatMessageUiState as ChatMessageUiState.Error).message)
                 }
             }
         }
@@ -118,7 +119,7 @@ fun CommunityScreen(
                 .padding(16.dp)
                 .fillMaxWidth(),
             placeholder = {
-                Text("Type here, ${chatMessageViewModel.account?.account?.username}...")
+                Text("Type here, ${account?.account?.username}...")
             },
             singleLine = true,
             keyboardOptions = KeyboardOptions.Default.copy(

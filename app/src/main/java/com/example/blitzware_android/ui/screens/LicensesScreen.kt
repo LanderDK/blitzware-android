@@ -120,7 +120,7 @@ fun LicensesScreen(
                 }
             }
             is LicenseUiState.Error -> {
-                Text(text = "Error loading licenses!")
+                Text(text = (licenseViewModel.licenseUiState as LicenseUiState.Error).message)
             }
         }
 

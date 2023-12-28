@@ -76,21 +76,19 @@ fun FilesScreen(fileViewModel: FileViewModel = viewModel(factory = FileViewModel
             is FileUiState.Success -> {
                 LazyColumn {
                     items(files) { file ->
-                        FileRow(file = file, fileViewModel = fileViewModel) {
-
-                        }
+                        FileRow(file = file, fileViewModel = fileViewModel)
                     }
                 }
             }
             is FileUiState.Error -> {
-                Text(text = "Error loading subscriptions!")
+                Text(text = (fileViewModel.fileUiState as FileUiState.Error).message)
             }
         }
     }
 }
 
 @Composable
-fun FileRow(file: File, fileViewModel: FileViewModel, onEditClick: () -> Unit) {
+fun FileRow(file: File, fileViewModel: FileViewModel) {
     var expanded by remember { mutableStateOf(false) }
     val createdOn = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault()).parse(file.createdOn)
 

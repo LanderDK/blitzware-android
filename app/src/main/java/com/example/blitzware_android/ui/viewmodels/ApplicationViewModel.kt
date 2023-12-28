@@ -24,12 +24,13 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.json.JSONObject
 import retrofit2.HttpException
 import java.io.IOException
 
 sealed interface ApplicationUiState {
     data class Success(val apps: List<Application>) : ApplicationUiState
-    object Error : ApplicationUiState
+    data class Error(val code: String, val message: String) : ApplicationUiState
     object Loading : ApplicationUiState
 }
 
@@ -48,9 +49,8 @@ class ApplicationViewModel(
     private val _application = MutableStateFlow<Application?>(null)
     val application: StateFlow<Application?> get() = _application
 
-    private val _account = mutableStateOf<Account?>(null)
-    val account: Account?
-        get() = _account.value
+    private val _account = MutableStateFlow<Account?>(null)
+    val account: StateFlow<Account?> get() = _account
 
     init {
         viewModelScope.launch {
@@ -66,8 +66,8 @@ class ApplicationViewModel(
         viewModelScope.launch {
             applicationUiState = ApplicationUiState.Loading
             try {
-                val token = account?.token ?: throw Exception("Token is null")
-                val accountId = account?.account?.id ?: throw Exception("Account id is null")
+                val token = account.value?.token ?: throw Exception("Token is null")
+                val accountId = account.value?.account?.id ?: throw Exception("Account id is null")
                 val apps = applicationRepository.getApplicationsOfAccount(token, accountId)
                 _applications.value = apps
                 applicationUiState = ApplicationUiState.Success(apps)
@@ -75,17 +75,21 @@ class ApplicationViewModel(
                 Log.d("ApplicationViewModel", "IOException")
                 Log.d("ApplicationViewModel", e.message.toString())
                 Log.d("ApplicationViewModel", e.stackTraceToString())
-                applicationUiState = ApplicationUiState.Error
+                applicationUiState = ApplicationUiState.Error("IOException", e.message.toString())
             } catch (e: HttpException) {
+                val errorBody = e.response()?.errorBody()?.string()
                 Log.d("ApplicationViewModel", "HttpException")
                 Log.d("ApplicationViewModel", e.message.toString())
-                Log.d("ApplicationViewModel", e.stackTraceToString())
-                applicationUiState = ApplicationUiState.Error
+                Log.d("ApplicationViewModel", "Error response: $errorBody")
+                val jsonObject = JSONObject(errorBody!!)
+                val code = jsonObject.getString("code")
+                val message = jsonObject.getString("message")
+                applicationUiState = ApplicationUiState.Error(code, message)
             } catch (e: Exception) {
                 Log.d("ApplicationViewModel", "Exception")
                 Log.d("ApplicationViewModel", e.message.toString())
                 Log.d("ApplicationViewModel", e.stackTraceToString())
-                applicationUiState = ApplicationUiState.Error
+                applicationUiState = ApplicationUiState.Error("Exception", e.message.toString())
             }
         }
     }
@@ -94,7 +98,7 @@ class ApplicationViewModel(
         viewModelScope.launch {
             applicationUiState = ApplicationUiState.Loading
             try {
-                val token = account?.token ?: throw Exception("Token is null")
+                val token = account.value?.token ?: throw Exception("Token is null")
                 val app = applicationRepository.getApplicationById(
                     token,
                     application.id
@@ -106,17 +110,21 @@ class ApplicationViewModel(
                 Log.d("ApplicationViewModel", "IOException")
                 Log.d("ApplicationViewModel", e.message.toString())
                 Log.d("ApplicationViewModel", e.stackTraceToString())
-                applicationUiState = ApplicationUiState.Error
+                applicationUiState = ApplicationUiState.Error("IOException", e.message.toString())
             } catch (e: HttpException) {
+                val errorBody = e.response()?.errorBody()?.string()
                 Log.d("ApplicationViewModel", "HttpException")
                 Log.d("ApplicationViewModel", e.message.toString())
-                Log.d("ApplicationViewModel", e.stackTraceToString())
-                applicationUiState = ApplicationUiState.Error
+                Log.d("ApplicationViewModel", "Error response: $errorBody")
+                val jsonObject = JSONObject(errorBody!!)
+                val code = jsonObject.getString("code")
+                val message = jsonObject.getString("message")
+                applicationUiState = ApplicationUiState.Error(code, message)
             } catch (e: Exception) {
                 Log.d("ApplicationViewModel", "Exception")
                 Log.d("ApplicationViewModel", e.message.toString())
                 Log.d("ApplicationViewModel", e.stackTraceToString())
-                applicationUiState = ApplicationUiState.Error
+                applicationUiState = ApplicationUiState.Error("Exception", e.message.toString())
             }
         }
     }
@@ -129,13 +137,13 @@ class ApplicationViewModel(
                 val app = withContext(Dispatchers.IO) {
                     applicationRepository.getSelectedApplicationStream()
                 }
-                _application.value = app.asApplication(account!!)
+                _application.value = app.asApplication(account.value!!)
                 applicationUiState = ApplicationUiState.Success(_applications.value)
             } catch (e: Exception) {
                 Log.d("ApplicationViewModel", "Exception")
                 Log.d("ApplicationViewModel", e.message.toString())
                 Log.d("ApplicationViewModel", e.stackTraceToString())
-                applicationUiState = ApplicationUiState.Error
+                applicationUiState = ApplicationUiState.Error("Exception", e.message.toString())
             }
         }
     }
@@ -157,7 +165,7 @@ class ApplicationViewModel(
                     accountId = requireNotNull(application.account.id),
                     subscription = application.adminRoleId
                 )
-                val token = account?.token ?: throw Exception("Token is null")
+                val token = account.value?.token ?: throw Exception("Token is null")
                 applicationRepository.updateApplicationById(
                     token, application.id, body
                 )
@@ -170,17 +178,21 @@ class ApplicationViewModel(
                 Log.d("ApplicationViewModel", "IOException")
                 Log.d("ApplicationViewModel", e.message.toString())
                 Log.d("ApplicationViewModel", e.stackTraceToString())
-                applicationUiState = ApplicationUiState.Error
+                applicationUiState = ApplicationUiState.Error("IOException", e.message.toString())
             } catch (e: HttpException) {
+                val errorBody = e.response()?.errorBody()?.string()
                 Log.d("ApplicationViewModel", "HttpException")
                 Log.d("ApplicationViewModel", e.message.toString())
-                Log.d("ApplicationViewModel", e.stackTraceToString())
-                applicationUiState = ApplicationUiState.Error
+                Log.d("ApplicationViewModel", "Error response: $errorBody")
+                val jsonObject = JSONObject(errorBody!!)
+                val code = jsonObject.getString("code")
+                val message = jsonObject.getString("message")
+                applicationUiState = ApplicationUiState.Error(code, message)
             } catch (e: Exception) {
                 Log.d("ApplicationViewModel", "Exception")
                 Log.d("ApplicationViewModel", e.message.toString())
                 Log.d("ApplicationViewModel", e.stackTraceToString())
-                applicationUiState = ApplicationUiState.Error
+                applicationUiState = ApplicationUiState.Error("Exception", e.message.toString())
             }
         }
     }
@@ -189,7 +201,7 @@ class ApplicationViewModel(
         viewModelScope.launch {
             applicationUiState = ApplicationUiState.Loading
             try {
-                val token = account?.token ?: throw Exception("Token is null")
+                val token = account.value?.token ?: throw Exception("Token is null")
                 applicationRepository.deleteApplicationById(token, application.id)
                 val apps = _applications.value.toMutableList()
                 apps.remove(application)
@@ -199,17 +211,21 @@ class ApplicationViewModel(
                 Log.d("ApplicationViewModel", "IOException")
                 Log.d("ApplicationViewModel", e.message.toString())
                 Log.d("ApplicationViewModel", e.stackTraceToString())
-                applicationUiState = ApplicationUiState.Error
+                applicationUiState = ApplicationUiState.Error("IOException", e.message.toString())
             } catch (e: HttpException) {
+                val errorBody = e.response()?.errorBody()?.string()
                 Log.d("ApplicationViewModel", "HttpException")
                 Log.d("ApplicationViewModel", e.message.toString())
-                Log.d("ApplicationViewModel", e.stackTraceToString())
-                applicationUiState = ApplicationUiState.Error
+                Log.d("ApplicationViewModel", "Error response: $errorBody")
+                val jsonObject = JSONObject(errorBody!!)
+                val code = jsonObject.getString("code")
+                val message = jsonObject.getString("message")
+                applicationUiState = ApplicationUiState.Error(code, message)
             } catch (e: Exception) {
                 Log.d("ApplicationViewModel", "Exception")
                 Log.d("ApplicationViewModel", e.message.toString())
                 Log.d("ApplicationViewModel", e.stackTraceToString())
-                applicationUiState = ApplicationUiState.Error
+                applicationUiState = ApplicationUiState.Error("Exception", e.message.toString())
             }
         }
     }
@@ -227,7 +243,7 @@ class ApplicationViewModel(
                 Log.d("ApplicationViewModel", "Exception")
                 Log.d("ApplicationViewModel", e.message.toString())
                 Log.d("ApplicationViewModel", e.stackTraceToString())
-                applicationUiState = ApplicationUiState.Error
+                applicationUiState = ApplicationUiState.Error("Exception", e.message.toString())
             }
         }
     }
@@ -235,8 +251,8 @@ class ApplicationViewModel(
     fun createApplication(name: String) {
         viewModelScope.launch {
             try {
-                val token = account?.token ?: throw Exception("Token is null")
-                val accountId = account?.account?.id ?: throw Exception("Account id is null")
+                val token = account.value?.token ?: throw Exception("Token is null")
+                val accountId = account.value?.account?.id ?: throw Exception("Account id is null")
                 val body = CreateApplicationBody(
                     name = name,
                     accountId = accountId
@@ -250,17 +266,21 @@ class ApplicationViewModel(
                 Log.d("ApplicationViewModel", "IOException")
                 Log.d("ApplicationViewModel", e.message.toString())
                 Log.d("ApplicationViewModel", e.stackTraceToString())
-                applicationUiState = ApplicationUiState.Error
+                applicationUiState = ApplicationUiState.Error("IOException", e.message.toString())
             } catch (e: HttpException) {
+                val errorBody = e.response()?.errorBody()?.string()
                 Log.d("ApplicationViewModel", "HttpException")
                 Log.d("ApplicationViewModel", e.message.toString())
-                Log.d("ApplicationViewModel", e.stackTraceToString())
-                applicationUiState = ApplicationUiState.Error
+                Log.d("ApplicationViewModel", "Error response: $errorBody")
+                val jsonObject = JSONObject(errorBody!!)
+                val code = jsonObject.getString("code")
+                val message = jsonObject.getString("message")
+                applicationUiState = ApplicationUiState.Error(code, message)
             } catch (e: Exception) {
                 Log.d("ApplicationViewModel", "Exception")
                 Log.d("ApplicationViewModel", e.message.toString())
                 Log.d("ApplicationViewModel", e.stackTraceToString())
-                applicationUiState = ApplicationUiState.Error
+                applicationUiState = ApplicationUiState.Error("Exception", e.message.toString())
             }
         }
     }

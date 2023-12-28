@@ -83,7 +83,7 @@ fun AccountLogsScreen(
                 }
             }
             is LogUiState.Error -> {
-                Text(text = "Error loading logs!")
+                Text(text = (logViewModel.logUiState as LogUiState.Error).message)
             }
         }
     }

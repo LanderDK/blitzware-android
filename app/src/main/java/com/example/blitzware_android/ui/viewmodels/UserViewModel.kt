@@ -24,13 +24,14 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.json.JSONObject
 import retrofit2.HttpException
 import java.io.IOException
 import java.time.LocalDateTime
 
 sealed interface UserUiState {
     data class Success(val users: List<User>) : UserUiState
-    object Error : UserUiState
+    data class Error(val code: String, val message: String) : UserUiState
     object Loading : UserUiState
 }
 
@@ -78,17 +79,21 @@ class UserViewModel(
                 Log.d("UserViewModel", "IOException")
                 Log.d("UserViewModel", e.message.toString())
                 Log.d("UserViewModel", e.stackTraceToString())
-                userUiState = UserUiState.Error
+                userUiState = UserUiState.Error("IOException", e.message.toString())
             } catch (e: HttpException) {
+                val errorBody = e.response()?.errorBody()?.string()
                 Log.d("UserViewModel", "HttpException")
                 Log.d("UserViewModel", e.message.toString())
-                Log.d("UserViewModel", e.stackTraceToString())
-                userUiState = UserUiState.Error
+                Log.d("UserViewModel", "Error response: $errorBody")
+                val jsonObject = JSONObject(errorBody!!)
+                val code = jsonObject.getString("code")
+                val message = jsonObject.getString("message")
+                userUiState = UserUiState.Error(code, message)
             } catch (e: Exception) {
                 Log.d("UserViewModel", "Exception")
                 Log.d("UserViewModel", e.message.toString())
                 Log.d("UserViewModel", e.stackTraceToString())
-                userUiState = UserUiState.Error
+                userUiState = UserUiState.Error("Exception", e.message.toString())
             }
         }
     }
@@ -123,17 +128,21 @@ class UserViewModel(
                 Log.d("UserViewModel", "IOException")
                 Log.d("UserViewModel", e.message.toString())
                 Log.d("UserViewModel", e.stackTraceToString())
-                userUiState = UserUiState.Error
+                userUiState = UserUiState.Error("IOException", e.message.toString())
             } catch (e: HttpException) {
+                val errorBody = e.response()?.errorBody()?.string()
                 Log.d("UserViewModel", "HttpException")
                 Log.d("UserViewModel", e.message.toString())
-                Log.d("UserViewModel", e.stackTraceToString())
-                userUiState = UserUiState.Error
+                Log.d("UserViewModel", "Error response: $errorBody")
+                val jsonObject = JSONObject(errorBody!!)
+                val code = jsonObject.getString("code")
+                val message = jsonObject.getString("message")
+                userUiState = UserUiState.Error(code, message)
             } catch (e: Exception) {
                 Log.d("UserViewModel", "Exception")
                 Log.d("UserViewModel", e.message.toString())
                 Log.d("UserViewModel", e.stackTraceToString())
-                userUiState = UserUiState.Error
+                userUiState = UserUiState.Error("Exception", e.message.toString())
             }
         }
     }
@@ -175,17 +184,21 @@ class UserViewModel(
                 Log.d("UserViewModel", "IOException")
                 Log.d("UserViewModel", e.message.toString())
                 Log.d("UserViewModel", e.stackTraceToString())
-                userUiState = UserUiState.Error
+                userUiState = UserUiState.Error("IOException", e.message.toString())
             } catch (e: HttpException) {
+                val errorBody = e.response()?.errorBody()?.string()
                 Log.d("UserViewModel", "HttpException")
                 Log.d("UserViewModel", e.message.toString())
-                Log.d("UserViewModel", e.stackTraceToString())
-                userUiState = UserUiState.Error
+                Log.d("UserViewModel", "Error response: $errorBody")
+                val jsonObject = JSONObject(errorBody!!)
+                val code = jsonObject.getString("code")
+                val message = jsonObject.getString("message")
+                userUiState = UserUiState.Error(code, message)
             } catch (e: Exception) {
                 Log.d("UserViewModel", "Exception")
                 Log.d("UserViewModel", e.message.toString())
                 Log.d("UserViewModel", e.stackTraceToString())
-                userUiState = UserUiState.Error
+                userUiState = UserUiState.Error("Exception", e.message.toString())
             }
         }
     }
@@ -214,17 +227,21 @@ class UserViewModel(
                 Log.d("UserViewModel", "IOException")
                 Log.d("UserViewModel", e.message.toString())
                 Log.d("UserViewModel", e.stackTraceToString())
-                userUiState = UserUiState.Error
+                userUiState = UserUiState.Error("IOException", e.message.toString())
             } catch (e: HttpException) {
+                val errorBody = e.response()?.errorBody()?.string()
                 Log.d("UserViewModel", "HttpException")
                 Log.d("UserViewModel", e.message.toString())
-                Log.d("UserViewModel", e.stackTraceToString())
-                userUiState = UserUiState.Error
+                Log.d("UserViewModel", "Error response: $errorBody")
+                val jsonObject = JSONObject(errorBody!!)
+                val code = jsonObject.getString("code")
+                val message = jsonObject.getString("message")
+                userUiState = UserUiState.Error(code, message)
             } catch (e: Exception) {
                 Log.d("UserViewModel", "Exception")
                 Log.d("UserViewModel", e.message.toString())
                 Log.d("UserViewModel", e.stackTraceToString())
-                userUiState = UserUiState.Error
+                userUiState = UserUiState.Error("Exception", e.message.toString())
             }
         }
     }
@@ -243,17 +260,21 @@ class UserViewModel(
                 Log.d("UserViewModel", "IOException")
                 Log.d("UserViewModel", e.message.toString())
                 Log.d("UserViewModel", e.stackTraceToString())
-                userUiState = UserUiState.Error
+                userUiState = UserUiState.Error("IOException", e.message.toString())
             } catch (e: HttpException) {
+                val errorBody = e.response()?.errorBody()?.string()
                 Log.d("UserViewModel", "HttpException")
                 Log.d("UserViewModel", e.message.toString())
-                Log.d("UserViewModel", e.stackTraceToString())
-                userUiState = UserUiState.Error
+                Log.d("UserViewModel", "Error response: $errorBody")
+                val jsonObject = JSONObject(errorBody!!)
+                val code = jsonObject.getString("code")
+                val message = jsonObject.getString("message")
+                userUiState = UserUiState.Error(code, message)
             } catch (e: Exception) {
                 Log.d("UserViewModel", "Exception")
                 Log.d("UserViewModel", e.message.toString())
                 Log.d("UserViewModel", e.stackTraceToString())
-                userUiState = UserUiState.Error
+                userUiState = UserUiState.Error("Exception", e.message.toString())
             }
         }
     }

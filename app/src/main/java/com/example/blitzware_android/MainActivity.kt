@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.blitzware_android.navigation.MainBottomNavigation
 import com.example.blitzware_android.ui.viewmodels.AccountViewModel
 import com.example.blitzware_android.ui.screens.LoginScreen
+import com.example.blitzware_android.ui.screens.RegisterScreen
 import com.example.blitzware_android.ui.theme.BlitzWareTheme
 
 class MainActivity : ComponentActivity() {
@@ -33,12 +34,11 @@ class MainActivity : ComponentActivity() {
                     if (accountViewModel.isAuthed) {
                         MainBottomNavigation()
                     } else {
-                        LoginScreen(
-                            onLoginClick = { username, password ->
-                                accountViewModel.login(username, password)
-                            },
-                            accountViewModel = accountViewModel
-                        )
+                        if (accountViewModel.registerScreen.value) {
+                            RegisterScreen(accountViewModel = accountViewModel)
+                        } else {
+                            LoginScreen(accountViewModel = accountViewModel)
+                        }
                     }
                 }
             }

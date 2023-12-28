@@ -20,13 +20,14 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.json.JSONObject
 import retrofit2.HttpException
 import java.io.IOException
 import java.time.LocalDateTime
 
 sealed interface ChatMessageUiState {
     data class Success(val apps: List<ChatMessage>) : ChatMessageUiState
-    object Error : ChatMessageUiState
+    data class Error(val code: String, val message: String) : ChatMessageUiState
     object Loading : ChatMessageUiState
 }
 
@@ -41,9 +42,8 @@ class ChatMessageViewModel(
     private val _chatMsgs = MutableStateFlow<List<ChatMessage>>(emptyList())
     val chatMsgs: StateFlow<List<ChatMessage>> get() = _chatMsgs
 
-    private val _account = mutableStateOf<Account?>(null)
-    val account: Account?
-        get() = _account.value
+    private val _account = MutableStateFlow<Account?>(null)
+    val account: StateFlow<Account?> get() = _account
 
     init {
         viewModelScope.launch {
@@ -59,22 +59,29 @@ class ChatMessageViewModel(
         viewModelScope.launch {
             chatMessageUiState = ChatMessageUiState.Loading
             try {
-                val token = account?.token ?: throw Exception("Token is null")
+                val token = account.value?.token ?: throw Exception("Token is null")
                 val chatMsgs = chatMessageRepository.getChatMsgsByChatId(token, chatId)
                 _chatMsgs.value = chatMsgs
                 chatMessageUiState = ChatMessageUiState.Success(chatMsgs)
             } catch (e: IOException) {
                 Log.d("ChatMessageViewModel", "IOException")
                 Log.d("ChatMessageViewModel", e.message.toString())
-                chatMessageUiState = ChatMessageUiState.Error
+                Log.d("ChatMessageViewModel", e.stackTraceToString())
+                chatMessageUiState = ChatMessageUiState.Error("IOException", e.message.toString())
             } catch (e: HttpException) {
+                val errorBody = e.response()?.errorBody()?.string()
                 Log.d("ChatMessageViewModel", "HttpException")
                 Log.d("ChatMessageViewModel", e.message.toString())
-                chatMessageUiState = ChatMessageUiState.Error
+                Log.d("ChatMessageViewModel", "Error response: $errorBody")
+                val jsonObject = JSONObject(errorBody!!)
+                val code = jsonObject.getString("code")
+                val message = jsonObject.getString("message")
+                chatMessageUiState = ChatMessageUiState.Error(code, message)
             } catch (e: Exception) {
                 Log.d("ChatMessageViewModel", "Exception")
                 Log.d("ChatMessageViewModel", e.message.toString())
-                chatMessageUiState = ChatMessageUiState.Error
+                Log.d("ChatMessageViewModel", e.stackTraceToString())
+                chatMessageUiState = ChatMessageUiState.Error("Exception", e.message.toString())
             }
         }
     }
@@ -82,7 +89,7 @@ class ChatMessageViewModel(
     fun deleteChatMessageById(chatMsg: ChatMessage) {
         viewModelScope.launch {
             try {
-                val token = account?.token ?: throw Exception("Token is null")
+                val token = account.value?.token ?: throw Exception("Token is null")
                 chatMessageRepository.deleteChatMessageById(token, chatMsg.id)
                 val chatMsgs = _chatMsgs.value.toMutableList()
                 chatMsgs.remove(chatMsg)
@@ -91,15 +98,22 @@ class ChatMessageViewModel(
             } catch (e: IOException) {
                 Log.d("ChatMessageViewModel", "IOException")
                 Log.d("ChatMessageViewModel", e.message.toString())
-                chatMessageUiState = ChatMessageUiState.Error
+                Log.d("ChatMessageViewModel", e.stackTraceToString())
+                chatMessageUiState = ChatMessageUiState.Error("IOException", e.message.toString())
             } catch (e: HttpException) {
+                val errorBody = e.response()?.errorBody()?.string()
                 Log.d("ChatMessageViewModel", "HttpException")
                 Log.d("ChatMessageViewModel", e.message.toString())
-                chatMessageUiState = ChatMessageUiState.Error
+                Log.d("ChatMessageViewModel", "Error response: $errorBody")
+                val jsonObject = JSONObject(errorBody!!)
+                val code = jsonObject.getString("code")
+                val message = jsonObject.getString("message")
+                chatMessageUiState = ChatMessageUiState.Error(code, message)
             } catch (e: Exception) {
                 Log.d("ChatMessageViewModel", "Exception")
                 Log.d("ChatMessageViewModel", e.message.toString())
-                chatMessageUiState = ChatMessageUiState.Error
+                Log.d("ChatMessageViewModel", e.stackTraceToString())
+                chatMessageUiState = ChatMessageUiState.Error("Exception", e.message.toString())
             }
         }
     }
@@ -107,11 +121,11 @@ class ChatMessageViewModel(
     fun createChatMessage(msg: String, chatId: Int) {
         viewModelScope.launch {
             try {
-                val token = account?.token ?: throw Exception("Token is null")
+                val token = account.value?.token ?: throw Exception("Token is null")
                 val currentDateTime = LocalDateTime.now()
                 val currentDateTimeString = currentDateTime.toString()
                 val body = CreateChatMessageBody(
-                    username = account?.account?.username ?: throw Exception("Username is null"),
+                    username = account.value?.account?.username ?: throw Exception("Username is null"),
                     message = msg,
                     date = currentDateTimeString,
                     chatId = chatId
@@ -124,15 +138,22 @@ class ChatMessageViewModel(
             } catch (e: IOException) {
                 Log.d("ChatMessageViewModel", "IOException")
                 Log.d("ChatMessageViewModel", e.message.toString())
-                chatMessageUiState = ChatMessageUiState.Error
+                Log.d("ChatMessageViewModel", e.stackTraceToString())
+                chatMessageUiState = ChatMessageUiState.Error("IOException", e.message.toString())
             } catch (e: HttpException) {
+                val errorBody = e.response()?.errorBody()?.string()
                 Log.d("ChatMessageViewModel", "HttpException")
                 Log.d("ChatMessageViewModel", e.message.toString())
-                chatMessageUiState = ChatMessageUiState.Error
+                Log.d("ChatMessageViewModel", "Error response: $errorBody")
+                val jsonObject = JSONObject(errorBody!!)
+                val code = jsonObject.getString("code")
+                val message = jsonObject.getString("message")
+                chatMessageUiState = ChatMessageUiState.Error(code, message)
             } catch (e: Exception) {
                 Log.d("ChatMessageViewModel", "Exception")
                 Log.d("ChatMessageViewModel", e.message.toString())
-                chatMessageUiState = ChatMessageUiState.Error
+                Log.d("ChatMessageViewModel", e.stackTraceToString())
+                chatMessageUiState = ChatMessageUiState.Error("Exception", e.message.toString())
             }
         }
     }

@@ -150,7 +150,7 @@ fun AccountDetailsScreen(
                 AccountInfoItemView(icon = rolesIcon(accountViewModel), text = accountViewModel.account?.account?.roles?.get(0) ?: "")
             }
             is AccountUiState.Error -> {
-                Text(text = "Error loading account!")
+                Text(text = (accountViewModel.accountUiState as AccountUiState.Error).message)
             }
         }
     }

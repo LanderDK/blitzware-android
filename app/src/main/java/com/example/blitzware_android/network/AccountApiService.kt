@@ -3,7 +3,6 @@ package com.example.blitzware_android.network
 import com.example.blitzware_android.model.Account
 import com.example.blitzware_android.model.AccountData
 import com.example.blitzware_android.model.UpdateAccountPicBody
-import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
@@ -14,6 +13,12 @@ import retrofit2.http.Path
 interface AccountApiService {
     @POST("accounts/login")
     suspend fun login(@Body body: Map<String, String>): Account
+
+    @POST("accounts/register")
+    suspend fun register(@Body body: Map<String, String>)
+
+    @POST("accounts/logout")
+    suspend fun logout(@Header("Authorization") authorizationHeader: String)
 
     @GET("accounts/{id}")
     suspend fun getAccountById(
@@ -26,7 +31,7 @@ interface AccountApiService {
         @Header("Authorization") authorizationHeader: String,
         @Path("id") id: String,
         @Body body: UpdateAccountPicBody
-    ): Response<Unit>
+    )
 
     @POST("accounts/verifyOTP")
     suspend fun verifyLoginOTP(@Body body: Map<String, String>): Account

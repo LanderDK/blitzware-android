@@ -47,6 +47,7 @@ fun AppsScreen(
     navController: NavHostController
 ) {
     val applications by applicationViewModel.applications.collectAsState()
+    val account by applicationViewModel.account.collectAsState()
     var isDialogVisible by remember { mutableStateOf(false) }
     var newAppName by remember { mutableStateOf("") }
 
@@ -59,7 +60,7 @@ fun AppsScreen(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "Welcome back, ${applicationViewModel.account?.account?.username}!",
+                text = "Welcome back, ${account?.account?.username}!",
                 fontSize = 20.sp,
                 modifier = Modifier.padding(8.dp)
             )
@@ -96,7 +97,7 @@ fun AppsScreen(
                     }
                 }
                 is ApplicationUiState.Error -> {
-                    Text(text = "Error loading applications!")
+                    Text(text = (applicationViewModel.applicationUiState as ApplicationUiState.Error).message)
                 }
             }
             if (isDialogVisible) {

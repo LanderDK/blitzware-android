@@ -23,12 +23,13 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.json.JSONObject
 import retrofit2.HttpException
 import java.io.IOException
 
 sealed interface UserSubUiState {
     data class Success(val userSubs: List<UserSub>) : UserSubUiState
-    object Error : UserSubUiState
+    data class Error(val code: String, val message: String) : UserSubUiState
     object Loading : UserSubUiState
 }
 
@@ -76,17 +77,21 @@ class UserSubViewModel(
                 Log.d("UserSubViewModel", "IOException")
                 Log.d("UserSubViewModel", e.message.toString())
                 Log.d("UserSubViewModel", e.stackTraceToString())
-                userSubUiState = UserSubUiState.Error
+                userSubUiState = UserSubUiState.Error("IOException", e.message.toString())
             } catch (e: HttpException) {
+                val errorBody = e.response()?.errorBody()?.string()
                 Log.d("UserSubViewModel", "HttpException")
                 Log.d("UserSubViewModel", e.message.toString())
-                Log.d("UserSubViewModel", e.stackTraceToString())
-                userSubUiState = UserSubUiState.Error
+                Log.d("UserSubViewModel", "Error response: $errorBody")
+                val jsonObject = JSONObject(errorBody!!)
+                val code = jsonObject.getString("code")
+                val message = jsonObject.getString("message")
+                userSubUiState = UserSubUiState.Error(code, message)
             } catch (e: Exception) {
                 Log.d("UserSubViewModel", "Exception")
                 Log.d("UserSubViewModel", e.message.toString())
                 Log.d("UserSubViewModel", e.stackTraceToString())
-                userSubUiState = UserSubUiState.Error
+                userSubUiState = UserSubUiState.Error("Exception", e.message.toString())
             }
         }
     }
@@ -110,17 +115,21 @@ class UserSubViewModel(
                 Log.d("UserSubViewModel", "IOException")
                 Log.d("UserSubViewModel", e.message.toString())
                 Log.d("UserSubViewModel", e.stackTraceToString())
-                userSubUiState = UserSubUiState.Error
+                userSubUiState = UserSubUiState.Error("IOException", e.message.toString())
             } catch (e: HttpException) {
+                val errorBody = e.response()?.errorBody()?.string()
                 Log.d("UserSubViewModel", "HttpException")
                 Log.d("UserSubViewModel", e.message.toString())
-                Log.d("UserSubViewModel", e.stackTraceToString())
-                userSubUiState = UserSubUiState.Error
+                Log.d("UserSubViewModel", "Error response: $errorBody")
+                val jsonObject = JSONObject(errorBody!!)
+                val code = jsonObject.getString("code")
+                val message = jsonObject.getString("message")
+                userSubUiState = UserSubUiState.Error(code, message)
             } catch (e: Exception) {
                 Log.d("UserSubViewModel", "Exception")
                 Log.d("UserSubViewModel", e.message.toString())
                 Log.d("UserSubViewModel", e.stackTraceToString())
-                userSubUiState = UserSubUiState.Error
+                userSubUiState = UserSubUiState.Error("Exception", e.message.toString())
             }
         }
     }
@@ -143,17 +152,21 @@ class UserSubViewModel(
                 Log.d("UserSubViewModel", "IOException")
                 Log.d("UserSubViewModel", e.message.toString())
                 Log.d("UserSubViewModel", e.stackTraceToString())
-                userSubUiState = UserSubUiState.Error
+                userSubUiState = UserSubUiState.Error("IOException", e.message.toString())
             } catch (e: HttpException) {
+                val errorBody = e.response()?.errorBody()?.string()
                 Log.d("UserSubViewModel", "HttpException")
                 Log.d("UserSubViewModel", e.message.toString())
-                Log.d("UserSubViewModel", e.stackTraceToString())
-                userSubUiState = UserSubUiState.Error
+                Log.d("UserSubViewModel", "Error response: $errorBody")
+                val jsonObject = JSONObject(errorBody!!)
+                val code = jsonObject.getString("code")
+                val message = jsonObject.getString("message")
+                userSubUiState = UserSubUiState.Error(code, message)
             } catch (e: Exception) {
                 Log.d("UserSubViewModel", "Exception")
                 Log.d("UserSubViewModel", e.message.toString())
                 Log.d("UserSubViewModel", e.stackTraceToString())
-                userSubUiState = UserSubUiState.Error
+                userSubUiState = UserSubUiState.Error("Exception", e.message.toString())
             }
         }
     }
@@ -172,17 +185,21 @@ class UserSubViewModel(
                 Log.d("UserSubViewModel", "IOException")
                 Log.d("UserSubViewModel", e.message.toString())
                 Log.d("UserSubViewModel", e.stackTraceToString())
-                userSubUiState = UserSubUiState.Error
+                userSubUiState = UserSubUiState.Error("IOException", e.message.toString())
             } catch (e: HttpException) {
+                val errorBody = e.response()?.errorBody()?.string()
                 Log.d("UserSubViewModel", "HttpException")
                 Log.d("UserSubViewModel", e.message.toString())
-                Log.d("UserSubViewModel", e.stackTraceToString())
-                userSubUiState = UserSubUiState.Error
+                Log.d("UserSubViewModel", "Error response: $errorBody")
+                val jsonObject = JSONObject(errorBody!!)
+                val code = jsonObject.getString("code")
+                val message = jsonObject.getString("message")
+                userSubUiState = UserSubUiState.Error(code, message)
             } catch (e: Exception) {
                 Log.d("UserSubViewModel", "Exception")
                 Log.d("UserSubViewModel", e.message.toString())
                 Log.d("UserSubViewModel", e.stackTraceToString())
-                userSubUiState = UserSubUiState.Error
+                userSubUiState = UserSubUiState.Error("Exception", e.message.toString())
             }
         }
     }

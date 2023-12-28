@@ -57,21 +57,19 @@ fun AppLogsScreen(appLogViewModel: AppLogViewModel = viewModel(factory = AppLogV
             is AppLogUiState.Success -> {
                 LazyColumn {
                     items(appLogs) { appLog ->
-                        AppLogRow(appLog = appLog, appLogViewModel = appLogViewModel) {
-
-                        }
+                        AppLogRow(appLog = appLog, appLogViewModel = appLogViewModel)
                     }
                 }
             }
             is AppLogUiState.Error -> {
-                Text(text = "Error loading application logs!")
+                Text(text = (appLogViewModel.appLogUiState as AppLogUiState.Error).message)
             }
         }
     }
 }
 
 @Composable
-fun AppLogRow(appLog: AppLog, appLogViewModel: AppLogViewModel, onEditClick: () -> Unit) {
+fun AppLogRow(appLog: AppLog, appLogViewModel: AppLogViewModel) {
     var expanded by remember { mutableStateOf(false) }
     val date = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault()).parse(appLog.date)
 

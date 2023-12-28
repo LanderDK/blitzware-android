@@ -127,7 +127,7 @@ fun UsersScreen(
                 }
             }
             is UserUiState.Error -> {
-                Text(text = "Error loading users!")
+                Text(text = (userViewModel.userUiState as UserUiState.Error).message)
             }
         }
 

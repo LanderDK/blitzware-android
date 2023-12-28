@@ -24,12 +24,13 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.json.JSONObject
 import retrofit2.HttpException
 import java.io.IOException
 
 sealed interface LicenseUiState {
     data class Success(val licenses: List<License>) : LicenseUiState
-    object Error : LicenseUiState
+    data class Error(val code: String, val message: String) : LicenseUiState
     object Loading : LicenseUiState
 }
 
@@ -77,17 +78,21 @@ class LicenseViewModel(
                 Log.d("LicenseViewModel", "IOException")
                 Log.d("LicenseViewModel", e.message.toString())
                 Log.d("LicenseViewModel", e.stackTraceToString())
-                licenseUiState = LicenseUiState.Error
+                licenseUiState = LicenseUiState.Error("IOException", e.message.toString())
             } catch (e: HttpException) {
+                val errorBody = e.response()?.errorBody()?.string()
                 Log.d("LicenseViewModel", "HttpException")
                 Log.d("LicenseViewModel", e.message.toString())
-                Log.d("LicenseViewModel", e.stackTraceToString())
-                licenseUiState = LicenseUiState.Error
+                Log.d("LicenseViewModel", "Error response: $errorBody")
+                val jsonObject = JSONObject(errorBody!!)
+                val code = jsonObject.getString("code")
+                val message = jsonObject.getString("message")
+                licenseUiState = LicenseUiState.Error(code, message)
             } catch (e: Exception) {
                 Log.d("LicenseViewModel", "Exception")
                 Log.d("LicenseViewModel", e.message.toString())
                 Log.d("LicenseViewModel", e.stackTraceToString())
-                licenseUiState = LicenseUiState.Error
+                licenseUiState = LicenseUiState.Error("Exception", e.message.toString())
             }
         }
     }
@@ -119,17 +124,21 @@ class LicenseViewModel(
                 Log.d("LicenseViewModel", "IOException")
                 Log.d("LicenseViewModel", e.message.toString())
                 Log.d("LicenseViewModel", e.stackTraceToString())
-                licenseUiState = LicenseUiState.Error
+                licenseUiState = LicenseUiState.Error("IOException", e.message.toString())
             } catch (e: HttpException) {
+                val errorBody = e.response()?.errorBody()?.string()
                 Log.d("LicenseViewModel", "HttpException")
                 Log.d("LicenseViewModel", e.message.toString())
-                Log.d("LicenseViewModel", e.stackTraceToString())
-                licenseUiState = LicenseUiState.Error
+                Log.d("LicenseViewModel", "Error response: $errorBody")
+                val jsonObject = JSONObject(errorBody!!)
+                val code = jsonObject.getString("code")
+                val message = jsonObject.getString("message")
+                licenseUiState = LicenseUiState.Error(code, message)
             } catch (e: Exception) {
                 Log.d("LicenseViewModel", "Exception")
                 Log.d("LicenseViewModel", e.message.toString())
                 Log.d("LicenseViewModel", e.stackTraceToString())
-                licenseUiState = LicenseUiState.Error
+                licenseUiState = LicenseUiState.Error("Exception", e.message.toString())
             }
         }
     }
@@ -166,17 +175,21 @@ class LicenseViewModel(
                 Log.d("LicenseViewModel", "IOException")
                 Log.d("LicenseViewModel", e.message.toString())
                 Log.d("LicenseViewModel", e.stackTraceToString())
-                licenseUiState = LicenseUiState.Error
+                licenseUiState = LicenseUiState.Error("IOException", e.message.toString())
             } catch (e: HttpException) {
+                val errorBody = e.response()?.errorBody()?.string()
                 Log.d("LicenseViewModel", "HttpException")
                 Log.d("LicenseViewModel", e.message.toString())
-                Log.d("LicenseViewModel", e.stackTraceToString())
-                licenseUiState = LicenseUiState.Error
+                Log.d("LicenseViewModel", "Error response: $errorBody")
+                val jsonObject = JSONObject(errorBody!!)
+                val code = jsonObject.getString("code")
+                val message = jsonObject.getString("message")
+                licenseUiState = LicenseUiState.Error(code, message)
             } catch (e: Exception) {
                 Log.d("LicenseViewModel", "Exception")
                 Log.d("LicenseViewModel", e.message.toString())
                 Log.d("LicenseViewModel", e.stackTraceToString())
-                licenseUiState = LicenseUiState.Error
+                licenseUiState = LicenseUiState.Error("Exception", e.message.toString())
             }
         }
     }
@@ -203,17 +216,21 @@ class LicenseViewModel(
                 Log.d("LicenseViewModel", "IOException")
                 Log.d("LicenseViewModel", e.message.toString())
                 Log.d("LicenseViewModel", e.stackTraceToString())
-                licenseUiState = LicenseUiState.Error
+                licenseUiState = LicenseUiState.Error("IOException", e.message.toString())
             } catch (e: HttpException) {
+                val errorBody = e.response()?.errorBody()?.string()
                 Log.d("LicenseViewModel", "HttpException")
                 Log.d("LicenseViewModel", e.message.toString())
-                Log.d("LicenseViewModel", e.stackTraceToString())
-                licenseUiState = LicenseUiState.Error
+                Log.d("LicenseViewModel", "Error response: $errorBody")
+                val jsonObject = JSONObject(errorBody!!)
+                val code = jsonObject.getString("code")
+                val message = jsonObject.getString("message")
+                licenseUiState = LicenseUiState.Error(code, message)
             } catch (e: Exception) {
                 Log.d("LicenseViewModel", "Exception")
                 Log.d("LicenseViewModel", e.message.toString())
                 Log.d("LicenseViewModel", e.stackTraceToString())
-                licenseUiState = LicenseUiState.Error
+                licenseUiState = LicenseUiState.Error("Exception", e.message.toString())
             }
         }
     }
@@ -232,17 +249,21 @@ class LicenseViewModel(
                 Log.d("LicenseViewModel", "IOException")
                 Log.d("LicenseViewModel", e.message.toString())
                 Log.d("LicenseViewModel", e.stackTraceToString())
-                licenseUiState = LicenseUiState.Error
+                licenseUiState = LicenseUiState.Error("IOException", e.message.toString())
             } catch (e: HttpException) {
+                val errorBody = e.response()?.errorBody()?.string()
                 Log.d("LicenseViewModel", "HttpException")
                 Log.d("LicenseViewModel", e.message.toString())
-                Log.d("LicenseViewModel", e.stackTraceToString())
-                licenseUiState = LicenseUiState.Error
+                Log.d("LicenseViewModel", "Error response: $errorBody")
+                val jsonObject = JSONObject(errorBody!!)
+                val code = jsonObject.getString("code")
+                val message = jsonObject.getString("message")
+                licenseUiState = LicenseUiState.Error(code, message)
             } catch (e: Exception) {
                 Log.d("LicenseViewModel", "Exception")
                 Log.d("LicenseViewModel", e.message.toString())
                 Log.d("LicenseViewModel", e.stackTraceToString())
-                licenseUiState = LicenseUiState.Error
+                licenseUiState = LicenseUiState.Error("Exception", e.message.toString())
             }
         }
     }

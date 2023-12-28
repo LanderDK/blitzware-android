@@ -24,7 +24,7 @@ import java.io.IOException
 
 sealed interface AccountUiState {
     data class Success(val account: Account) : AccountUiState
-    object Error : AccountUiState
+    data class Error(val code: String, val message: String) : AccountUiState
     object Loading : AccountUiState
 }
 
@@ -38,6 +38,9 @@ class AccountViewModel(private val accountRepository: AccountRepository) : ViewM
         get() = _account.value
 
     private val _isAuthed = mutableStateOf(false)
+
+    val registerScreen = mutableStateOf(false)
+
     val isAuthed: Boolean
         get() = _isAuthed.value
 
@@ -69,29 +72,93 @@ class AccountViewModel(private val accountRepository: AccountRepository) : ViewM
                 Log.d("AccountViewModel", "IOException")
                 Log.d("AccountViewModel", e.message.toString())
                  Log.d("AccountViewModel", e.stackTraceToString())
-                 accountUiState = AccountUiState.Error
+                 accountUiState = AccountUiState.Error("IOException", e.message.toString())
             } catch (e: HttpException) {
                  val errorBody = e.response()?.errorBody()?.string()
                  Log.d("AccountViewModel", "HttpException")
                  Log.d("AccountViewModel", e.message.toString())
                  Log.d("AccountViewModel", "Error response: $errorBody")
-                 if (errorBody != null) {
-                     val jsonObject = JSONObject(errorBody)
-                     val code = jsonObject.getString("code")
-                     val message = jsonObject.getString("message")
-                     if (message == "2FA required") {
-                         _twoFactorRequired.value = true
-                     } else if (message == "We need to verify it is you, check your email") {
-                         _otpRequired.value = true
-                     }
+                 val jsonObject = JSONObject(errorBody!!)
+                 val code = jsonObject.getString("code")
+                 val message = jsonObject.getString("message")
+                 if (message == "2FA required") {
+                     _twoFactorRequired.value = true
+                 } else if (message == "We need to verify it is you, check your email") {
+                     _otpRequired.value = true
                  }
-                 accountUiState = AccountUiState.Error
+                 accountUiState = AccountUiState.Error(code, message)
             } catch (e: Exception) {
                  Log.d("AccountViewModel", "Exception")
                  Log.d("AccountViewModel", e.message.toString())
                  Log.d("AccountViewModel", e.stackTraceToString())
-                 accountUiState = AccountUiState.Error
+                 accountUiState = AccountUiState.Error("Exception", e.message.toString())
              }
+        }
+    }
+
+    fun register(username: String, email: String, password: String) {
+        viewModelScope.launch {
+            accountUiState = AccountUiState.Loading
+            try {
+                val body = mapOf(
+                    "username" to username,
+                    "email" to email,
+                    "password" to password,
+                    "recaptchaValue" to "N/A"
+                )
+                accountRepository.register(body)
+            } catch (e: IOException) {
+                Log.d("AccountViewModel", "IOException")
+                Log.d("AccountViewModel", e.message.toString())
+                Log.d("AccountViewModel", e.stackTraceToString())
+                accountUiState = AccountUiState.Error("IOException", e.message.toString())
+            } catch (e: HttpException) {
+                val errorBody = e.response()?.errorBody()?.string()
+                Log.d("AccountViewModel", "HttpException")
+                Log.d("AccountViewModel", e.message.toString())
+                Log.d("AccountViewModel", "Error response: $errorBody")
+                val jsonObject = JSONObject(errorBody!!)
+                val code = jsonObject.getString("code")
+                val message = jsonObject.getString("message")
+                accountUiState = AccountUiState.Error(code, message)
+            } catch (e: Exception) {
+                Log.d("AccountViewModel", "Exception")
+                Log.d("AccountViewModel", e.message.toString())
+                Log.d("AccountViewModel", e.stackTraceToString())
+                accountUiState = AccountUiState.Error("Exception", e.message.toString())
+            }
+        }
+    }
+
+    fun logout() {
+        viewModelScope.launch {
+            accountUiState = AccountUiState.Loading
+            try {
+                withContext(Dispatchers.IO) {
+                    _account.value = accountRepository.getAccountStream()
+                }
+                val token = account?.token ?: throw Exception("Token is null")
+                accountRepository.logout(token)
+            } catch (e: IOException) {
+                Log.d("AccountViewModel", "IOException")
+                Log.d("AccountViewModel", e.message.toString())
+                Log.d("AccountViewModel", e.stackTraceToString())
+                accountUiState = AccountUiState.Error("IOException", e.message.toString())
+            } catch (e: HttpException) {
+                val errorBody = e.response()?.errorBody()?.string()
+                Log.d("AccountViewModel", "HttpException")
+                Log.d("AccountViewModel", e.message.toString())
+                Log.d("AccountViewModel", "Error response: $errorBody")
+                val jsonObject = JSONObject(errorBody!!)
+                val code = jsonObject.getString("code")
+                val message = jsonObject.getString("message")
+                accountUiState = AccountUiState.Error(code, message)
+            } catch (e: Exception) {
+                Log.d("AccountViewModel", "Exception")
+                Log.d("AccountViewModel", e.message.toString())
+                Log.d("AccountViewModel", e.stackTraceToString())
+                accountUiState = AccountUiState.Error("Exception", e.message.toString())
+            }
         }
     }
 
@@ -111,15 +178,22 @@ class AccountViewModel(private val accountRepository: AccountRepository) : ViewM
             } catch (e: IOException) {
                 Log.d("AccountViewModel", "IOException")
                 Log.d("AccountViewModel", e.message.toString())
-                accountUiState = AccountUiState.Error
+                Log.d("AccountViewModel", e.stackTraceToString())
+                accountUiState = AccountUiState.Error("IOException", e.message.toString())
             } catch (e: HttpException) {
+                val errorBody = e.response()?.errorBody()?.string()
                 Log.d("AccountViewModel", "HttpException")
                 Log.d("AccountViewModel", e.message.toString())
-                accountUiState = AccountUiState.Error
+                Log.d("AccountViewModel", "Error response: $errorBody")
+                val jsonObject = JSONObject(errorBody!!)
+                val code = jsonObject.getString("code")
+                val message = jsonObject.getString("message")
+                accountUiState = AccountUiState.Error(code, message)
             } catch (e: Exception) {
                 Log.d("AccountViewModel", "Exception")
                 Log.d("AccountViewModel", e.message.toString())
-                accountUiState = AccountUiState.Error
+                Log.d("AccountViewModel", e.stackTraceToString())
+                accountUiState = AccountUiState.Error("Exception", e.message.toString())
             }
         }
     }
@@ -140,15 +214,22 @@ class AccountViewModel(private val accountRepository: AccountRepository) : ViewM
             } catch (e: IOException) {
                 Log.d("AccountViewModel", "IOException")
                 Log.d("AccountViewModel", e.message.toString())
-                accountUiState = AccountUiState.Error
+                Log.d("AccountViewModel", e.stackTraceToString())
+                accountUiState = AccountUiState.Error("IOException", e.message.toString())
             } catch (e: HttpException) {
+                val errorBody = e.response()?.errorBody()?.string()
                 Log.d("AccountViewModel", "HttpException")
                 Log.d("AccountViewModel", e.message.toString())
-                accountUiState = AccountUiState.Error
+                Log.d("AccountViewModel", "Error response: $errorBody")
+                val jsonObject = JSONObject(errorBody!!)
+                val code = jsonObject.getString("code")
+                val message = jsonObject.getString("message")
+                accountUiState = AccountUiState.Error(code, message)
             } catch (e: Exception) {
                 Log.d("AccountViewModel", "Exception")
                 Log.d("AccountViewModel", e.message.toString())
-                accountUiState = AccountUiState.Error
+                Log.d("AccountViewModel", e.stackTraceToString())
+                accountUiState = AccountUiState.Error("Exception", e.message.toString())
             }
         }
     }
@@ -173,15 +254,22 @@ class AccountViewModel(private val accountRepository: AccountRepository) : ViewM
             } catch (e: IOException) {
                 Log.d("AccountViewModel", "IOException")
                 Log.d("AccountViewModel", e.message.toString())
-                accountUiState = AccountUiState.Error
+                Log.d("AccountViewModel", e.stackTraceToString())
+                accountUiState = AccountUiState.Error("IOException", e.message.toString())
             } catch (e: HttpException) {
+                val errorBody = e.response()?.errorBody()?.string()
                 Log.d("AccountViewModel", "HttpException")
                 Log.d("AccountViewModel", e.message.toString())
-                accountUiState = AccountUiState.Error
+                Log.d("AccountViewModel", "Error response: $errorBody")
+                val jsonObject = JSONObject(errorBody!!)
+                val code = jsonObject.getString("code")
+                val message = jsonObject.getString("message")
+                accountUiState = AccountUiState.Error(code, message)
             } catch (e: Exception) {
                 Log.d("AccountViewModel", "Exception")
                 Log.d("AccountViewModel", e.message.toString())
-                accountUiState = AccountUiState.Error
+                Log.d("AccountViewModel", e.stackTraceToString())
+                accountUiState = AccountUiState.Error("Exception", e.message.toString())
             }
         }
     }
@@ -206,26 +294,26 @@ class AccountViewModel(private val accountRepository: AccountRepository) : ViewM
             } catch (e: IOException) {
                 Log.d("AccountViewModel", "IOException")
                 Log.d("AccountViewModel", e.message.toString())
-                accountUiState = AccountUiState.Error
+                Log.d("AccountViewModel", e.stackTraceToString())
+                accountUiState = AccountUiState.Error("IOException", e.message.toString())
             } catch (e: HttpException) {
                 val errorBody = e.response()?.errorBody()?.string()
                 Log.d("AccountViewModel", "HttpException")
                 Log.d("AccountViewModel", e.message.toString())
                 Log.d("AccountViewModel", "Error response: $errorBody")
-                if (errorBody != null) {
-                    val jsonObject = JSONObject(errorBody)
-                    val code = jsonObject.getString("code")
-                    val message = jsonObject.getString("message")
-                    if (message == "We need to verify it is you, check your email") {
-                        _twoFactorRequired.value = false
-                        _otpRequired.value = true
-                    }
+                val jsonObject = JSONObject(errorBody!!)
+                val code = jsonObject.getString("code")
+                val message = jsonObject.getString("message")
+                if (message == "We need to verify it is you, check your email") {
+                    _twoFactorRequired.value = false
+                    _otpRequired.value = true
                 }
-                accountUiState = AccountUiState.Error
+                accountUiState = AccountUiState.Error(code, message)
             } catch (e: Exception) {
                 Log.d("AccountViewModel", "Exception")
                 Log.d("AccountViewModel", e.message.toString())
-                accountUiState = AccountUiState.Error
+                Log.d("AccountViewModel", e.stackTraceToString())
+                accountUiState = AccountUiState.Error("Exception", e.message.toString())
             }
         }
     }
