@@ -9,6 +9,7 @@ import com.example.blitzware_android.network.ChatMessageApiService
 import com.example.blitzware_android.network.FileApiService
 import com.example.blitzware_android.network.LicenseApiService
 import com.example.blitzware_android.network.LogApiService
+import com.example.blitzware_android.network.NetworkConnectionInterceptor
 import com.example.blitzware_android.network.UserApiService
 import com.example.blitzware_android.network.UserSubApiService
 import retrofit2.Retrofit
@@ -45,6 +46,7 @@ interface AppContainer {
  */
 class DefaultAppContainer(private val context: Context): AppContainer {
     private val baseUrl = "https://api.blitzware.xyz/api/"
+    private val networkCheck = NetworkConnectionInterceptor(context)
 
     /**
      * Api mobile header interceptor
@@ -70,6 +72,7 @@ class DefaultAppContainer(private val context: Context): AppContainer {
         .baseUrl(baseUrl)
         .client(
             OkHttpClient().newBuilder()
+                .addInterceptor(networkCheck)
                 .addInterceptor(ApiMobileHeaderInterceptor())
                 .build()
         )

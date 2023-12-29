@@ -44,7 +44,7 @@ fun AppLogsScreen(appLogViewModel: AppLogViewModel = viewModel(factory = AppLogV
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(top = 120.dp)
+            .padding(top = 75.dp)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,

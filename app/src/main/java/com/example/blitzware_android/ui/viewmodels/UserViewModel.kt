@@ -87,7 +87,14 @@ class UserViewModel(
                 applicationRepository.getSelectedApplicationStream()
             }
             _account.value = account
-            _application.value = application.asApplication(_account.value!!)
+            try {
+                _application.value = application.asApplication(_account.value!!)
+            } catch (e: Exception) {
+                Log.d("UserViewModel", "Exception")
+                Log.d("UserViewModel", e.message.toString())
+                Log.d("UserViewModel", e.stackTraceToString())
+                userUiState = UserUiState.Error("Exception", e.message.toString())
+            }
             getUsersOfApplication()
         }
     }

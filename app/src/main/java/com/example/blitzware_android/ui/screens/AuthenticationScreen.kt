@@ -17,12 +17,18 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import com.example.blitzware_android.R
 import com.example.blitzware_android.ui.viewmodels.AccountUiState
 import com.example.blitzware_android.ui.viewmodels.AccountViewModel
+import androidx.compose.foundation.Image
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 
 /**
  * Login screen
@@ -40,6 +46,8 @@ fun LoginScreen(accountViewModel: AccountViewModel) {
 
     val scrollState = rememberScrollState()
 
+    val logoImage = painterResource(R.drawable.orangebwlogonobg512)
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -48,6 +56,11 @@ fun LoginScreen(accountViewModel: AccountViewModel) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
+        Image(
+            painter = logoImage,
+            contentDescription = null,
+            contentScale = ContentScale.Crop
+        )
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -61,7 +74,7 @@ fun LoginScreen(accountViewModel: AccountViewModel) {
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = "Login to BlitzWare",
+                text = stringResource(R.string.login_title_text),
                 style = MaterialTheme.typography.titleLarge
             )
         }
@@ -72,11 +85,11 @@ fun LoginScreen(accountViewModel: AccountViewModel) {
                 .padding(bottom = 25.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(text = "New here?")
+            Text(text = stringResource(R.string.login_sub_title_text_1))
             Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = "Create an account",
-                color = Color(255, 94, 0),
+                text = stringResource(R.string.login_sub_title_text_2),
+                color = colorResource(R.color.main_orange),
                 modifier = Modifier.clickable {
                     accountViewModel.registerScreen.value = true
                 }
@@ -136,7 +149,7 @@ fun LoginScreen(accountViewModel: AccountViewModel) {
         ) {
             Icon(imageVector = Icons.Default.Send, contentDescription = null)
             Spacer(modifier = Modifier.width(8.dp))
-            Text("Login")
+            Text(stringResource(R.string.login_button_text))
         }
 
         accountViewModel.accountUiState.let { result ->
@@ -174,7 +187,7 @@ fun LoginScreen(accountViewModel: AccountViewModel) {
                             }
                         }
                     ) {
-                        Text("Login")
+                        Text(stringResource(R.string.login_button_text))
                     }
                 },
                 dismissButton = {
@@ -183,7 +196,7 @@ fun LoginScreen(accountViewModel: AccountViewModel) {
                             twoFactorCode = ""
                         }
                     ) {
-                        Text("Cancel")
+                        Text(stringResource(R.string.cancel_button_text))
                     }
                 }
             )
@@ -210,7 +223,7 @@ fun LoginScreen(accountViewModel: AccountViewModel) {
                             }
                         }
                     ) {
-                        Text("Login")
+                        Text(stringResource(R.string.login_button_text))
                     }
                 },
                 dismissButton = {
@@ -219,7 +232,7 @@ fun LoginScreen(accountViewModel: AccountViewModel) {
                             otpCode = ""
                         }
                     ) {
-                        Text("Cancel")
+                        Text(stringResource(R.string.cancel_button_text))
                     }
                 }
             )
@@ -242,6 +255,8 @@ fun RegisterScreen(accountViewModel: AccountViewModel) {
 
     val scrollState = rememberScrollState()
 
+    val logoImage = painterResource(R.drawable.orangebwlogonobg512)
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -250,6 +265,11 @@ fun RegisterScreen(accountViewModel: AccountViewModel) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
+        Image(
+            painter = logoImage,
+            contentDescription = null,
+            contentScale = ContentScale.Crop
+        )
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -263,7 +283,7 @@ fun RegisterScreen(accountViewModel: AccountViewModel) {
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = "Create an account",
+                text = stringResource(R.string.register_title_text),
                 style = MaterialTheme.typography.titleLarge
             )
         }
@@ -274,11 +294,11 @@ fun RegisterScreen(accountViewModel: AccountViewModel) {
                 .padding(bottom = 25.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(text = "Already have an account?")
+            Text(text = stringResource(R.string.register_sub_title_text_1))
             Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = "Sign in here",
-                color = Color(255, 94, 0),
+                text = stringResource(R.string.register_sub_title_text_2),
+                color = colorResource(R.color.main_orange),
                 modifier = Modifier.clickable {
                     accountViewModel.registerScreen.value = false
                 }
@@ -386,7 +406,7 @@ fun RegisterScreen(accountViewModel: AccountViewModel) {
         ) {
             Icon(imageVector = Icons.Default.Send, contentDescription = null)
             Spacer(modifier = Modifier.width(8.dp))
-            Text("Register")
+            Text(stringResource(R.string.register_button_text))
         }
 
         accountViewModel.accountUiState.let { result ->

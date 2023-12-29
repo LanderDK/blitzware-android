@@ -86,7 +86,14 @@ class LicenseViewModel(
                 applicationRepository.getSelectedApplicationStream()
             }
             _account.value = account
-            _application.value = application.asApplication(_account.value!!)
+            try {
+                _application.value = application.asApplication(_account.value!!)
+            } catch (e: Exception) {
+                Log.d("LicenseViewModel", "Exception")
+                Log.d("LicenseViewModel", e.message.toString())
+                Log.d("LicenseViewModel", e.stackTraceToString())
+                licenseUiState = LicenseUiState.Error("Exception", e.message.toString())
+            }
             getLicensesOfApplication()
         }
     }

@@ -30,11 +30,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.blitzware_android.MainActivity
+import com.example.blitzware_android.R
 import com.example.blitzware_android.ui.viewmodels.AccountViewModel
 
 /**
@@ -57,7 +59,7 @@ fun AccountMenuScreen(navController: NavHostController) {
                     .padding(16.dp)
             ) {
                 Text(
-                    text = "Account Settings",
+                    text = stringResource(R.string.account_menu_title),
                     fontSize = 20.sp,
                 )
                 AccountMenuItem(
@@ -173,7 +175,7 @@ fun LogoutAlert(onConfirm: () -> Unit, onDismiss: () -> Unit) {
                     onDismiss()
                 }
             ) {
-                Text("Cancel")
+                Text(stringResource(R.string.cancel_button_text))
             }
         }
     )

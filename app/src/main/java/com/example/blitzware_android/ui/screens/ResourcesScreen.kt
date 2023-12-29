@@ -26,10 +26,12 @@ import androidx.compose.ui.graphics.Color.Companion.Gray
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.blitzware_android.R
 
 /**
  * Resources screen
@@ -39,7 +41,7 @@ import androidx.compose.ui.unit.sp
 fun ResourcesScreen() {
     Column {
         Text(
-            text = "Available Resources",
+            text = stringResource(R.string.resources_title),
             fontSize = 20.sp,
             modifier = Modifier.padding(8.dp)
         )
@@ -142,7 +144,7 @@ fun ResourceItem(name: String, link: String, iconName: String) {
                         "arrow.down.to.line" -> Icons.Default.ArrowDownward
                         else -> Icons.Default.Link
                     },
-                    contentDescription = null,
+                    contentDescription = "Button to open link",
                     tint = Color(253, 126, 20)
                 )
             }

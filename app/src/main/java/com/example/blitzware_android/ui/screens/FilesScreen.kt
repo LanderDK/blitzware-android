@@ -52,7 +52,7 @@ fun FilesScreen(fileViewModel: FileViewModel = viewModel(factory = FileViewModel
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(top = 120.dp)
+            .padding(top = 75.dp)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,

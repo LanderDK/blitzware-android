@@ -31,10 +31,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.blitzware_android.R
 import com.example.blitzware_android.model.License
 import com.example.blitzware_android.model.UserSub
 import com.example.blitzware_android.ui.viewmodels.LicenseUiState
@@ -62,12 +64,12 @@ fun LicensesScreen(
     var newLicensePrefix by remember { mutableStateOf("") }
     var newLicenseAmount by remember { mutableStateOf("") }
     var subscription by remember { mutableIntStateOf(0) }
-    val options = listOf(
+/*    val options = listOf(
         "XXXXXXXXXXXXXXXXXXXX",
         "PREFIX-XXXXXXXXXXXXXXXXXXXX",
         "XXXXX-XXXXX-XXXXX-XXXXX",
         "PREFIX-XXXXX-XXXXX-XXXXX-XXXXX"
-    )
+    )*/
 
     var updateLicenseId by remember { mutableStateOf("") }
     var updateLicenseLicense by remember { mutableStateOf("") }
@@ -79,7 +81,7 @@ fun LicensesScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(top = 120.dp)
+            .padding(top = 75.dp)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -174,7 +176,7 @@ fun LicensesScreen(
                             }
                         }
                     ) {
-                        Text("Create")
+                        Text(stringResource(R.string.create_button_text))
                     }
                 },
                 dismissButton = {
@@ -188,7 +190,7 @@ fun LicensesScreen(
                             subscription = 0
                         }
                     ) {
-                        Text("Cancel")
+                        Text(stringResource(R.string.cancel_button_text))
                     }
                 }
             )
@@ -269,7 +271,7 @@ fun LicensesScreen(
                             }
                         }
                     ) {
-                        Text("Update")
+                        Text(stringResource(R.string.update_button_text))
                     }
                 },
                 dismissButton = {
@@ -284,7 +286,7 @@ fun LicensesScreen(
                             updateLicenseSubscription = -1
                         }
                     ) {
-                        Text("Cancel")
+                        Text(stringResource(R.string.cancel_button_text))
                     }
                 }
             )

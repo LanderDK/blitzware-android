@@ -23,10 +23,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import com.example.blitzware_android.R
 import com.example.blitzware_android.model.Log
 import com.example.blitzware_android.ui.viewmodels.LogUiState
 import com.example.blitzware_android.ui.viewmodels.LogViewModel
@@ -66,7 +68,7 @@ fun AccountLogsScreen(
                 }
             )
             Text(
-                text = "Account Logs",
+                text = stringResource(R.string.account_logs_title),
                 fontSize = 20.sp,
                 modifier = Modifier.padding(8.dp)
             )

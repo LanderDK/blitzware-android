@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.NavigationRail
 import androidx.compose.material3.PermanentDrawerSheet
 import androidx.compose.material3.PermanentNavigationDrawer
@@ -18,9 +19,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -54,9 +55,11 @@ import com.example.blitzware_android.ui.screens.UsersScreen
  * @param windowSize
  */
 @Composable
-fun BlitzWareApp(windowSize: WindowWidthSizeClass) {
-    val navController: NavHostController = rememberNavController()
-    var selectedScreen by remember { mutableStateOf(Screens.AppDetailScreen) }
+fun BlitzWareApp(
+    windowSize: WindowWidthSizeClass,
+    navController: NavHostController = rememberNavController()
+) {
+    val selectedScreen by remember { mutableStateOf(Screens.AppDetailScreen) }
 
     val navigationType: NavigationType = when (windowSize) {
         WindowWidthSizeClass.Compact -> {
@@ -210,7 +213,7 @@ fun BlitzWareApp(windowSize: WindowWidthSizeClass) {
             // Navigation Rail UI
             Row {
                 AnimatedVisibility(visible = true) {
-                    NavigationRail() {
+                    NavigationRail {
                         com.example.blitzware_android.navigation.NavigationRail(navController = navController)
                     }
                 }
@@ -325,7 +328,10 @@ fun GetMainNavigationBar(navController: NavHostController) {
                 },
                 label = {
                     Text(text = navItem.label)
-                }
+                },
+                colors = NavigationBarItemDefaults.colors(
+                    indicatorColor = colorResource(R.color.light_orange)
+                )
             )
         }
     }

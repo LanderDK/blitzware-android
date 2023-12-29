@@ -40,6 +40,4 @@ fun NavigationRail(navController: NavHostController) {
             },
         )
     }
-
-
 }

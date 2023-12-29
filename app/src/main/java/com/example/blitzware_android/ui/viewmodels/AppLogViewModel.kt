@@ -84,7 +84,14 @@ class AppLogViewModel(
                 applicationRepository.getSelectedApplicationStream()
             }
             _account.value = account
-            _application.value = application.asApplication(_account.value!!)
+            try {
+                _application.value = application.asApplication(_account.value!!)
+            } catch (e: Exception) {
+                Log.d("AppLogViewModel", "Exception")
+                Log.d("AppLogViewModel", e.message.toString())
+                Log.d("AppLogViewModel", e.stackTraceToString())
+                appLogUiState = AppLogUiState.Error("Exception", e.message.toString())
+            }
             getAppLogsOfApplication()
         }
     }

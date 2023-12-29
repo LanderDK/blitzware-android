@@ -37,10 +37,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.blitzware_android.R
 import com.example.blitzware_android.model.Account
 import com.example.blitzware_android.ui.viewmodels.ChatMessageUiState
 import com.example.blitzware_android.ui.viewmodels.ChatMessageViewModel
@@ -71,7 +74,7 @@ fun CommunityScreen(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "Community General Chat",
+                text = stringResource(R.string.community_title),
                 fontSize = 20.sp,
                 modifier = Modifier.padding(8.dp)
             )
@@ -82,8 +85,8 @@ fun CommunityScreen(
                 content = {
                     Icon(
                         imageVector = Icons.Default.Refresh,
-                        contentDescription = null,
-                        tint = Color(25, 118, 210)
+                        contentDescription = "Refresh",
+                        tint = colorResource(R.color.blue)
                     )
                 }
             )

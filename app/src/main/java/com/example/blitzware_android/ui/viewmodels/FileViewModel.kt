@@ -84,7 +84,15 @@ class FileViewModel(
                 applicationRepository.getSelectedApplicationStream()
             }
             _account.value = account
-            _application.value = application.asApplication(_account.value!!)
+            try {
+                _application.value = application.asApplication(_account.value!!)
+                getFilesOfApplication()
+            } catch (e: Exception) {
+                Log.d("FileViewModel", "Exception")
+                Log.d("FileViewModel", e.message.toString())
+                Log.d("FileViewModel", e.stackTraceToString())
+                fileUiState = FileUiState.Error("Exception", e.message.toString())
+            }
             getFilesOfApplication()
         }
     }

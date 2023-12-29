@@ -85,7 +85,14 @@ class UserSubViewModel(
                 applicationRepository.getSelectedApplicationStream()
             }
             _account.value = account
-            _application.value = application.asApplication(_account.value!!)
+            try {
+                _application.value = application.asApplication(_account.value!!)
+            } catch (e: Exception) {
+                Log.d("UserSubViewModel", "Exception")
+                Log.d("UserSubViewModel", e.message.toString())
+                Log.d("UserSubViewModel", e.stackTraceToString())
+                userSubUiState = UserSubUiState.Error("Exception", e.message.toString())
+            }
             getUserSubsOfApplication()
         }
     }

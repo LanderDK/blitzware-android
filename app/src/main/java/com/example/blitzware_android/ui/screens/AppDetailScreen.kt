@@ -58,7 +58,7 @@ fun AppDetailScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(top = 120.dp)
+            .padding(top = 75.dp)
             .verticalScroll(state = scrollState)
     ) {
         Row(

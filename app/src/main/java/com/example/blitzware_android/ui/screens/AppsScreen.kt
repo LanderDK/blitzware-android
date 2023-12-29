@@ -31,11 +31,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import com.example.blitzware_android.R
 import com.example.blitzware_android.model.Application
 import com.example.blitzware_android.navigation.Screens
 import com.example.blitzware_android.ui.viewmodels.ApplicationUiState
@@ -130,7 +132,7 @@ fun AppsScreen(
                                 }
                             }
                         ) {
-                            Text("Create")
+                            Text(stringResource(R.string.create_button_text))
                         }
                     },
                     dismissButton = {
@@ -140,7 +142,7 @@ fun AppsScreen(
                                 newAppName = ""
                             }
                         ) {
-                            Text("Cancel")
+                            Text(stringResource(R.string.cancel_button_text))
                         }
                     }
                 )
