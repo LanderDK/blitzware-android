@@ -1,8 +1,5 @@
 <resources>
     <string name="app_name">blitzware-android</string>
-    <string name="loading_failed">Failed to load</string>
-    <string name="retry">Retry</string>
-    <string name="loading">Loading</string>
     <string name="create_button_text">Create</string>
     <string name="update_button_text">Update</string>
     <string name="cancel_button_text">Cancel</string>
