@@ -16,14 +16,15 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.blitzware_android.R
 
+
 /**
- * App detail bottom navigation
+ * App detail top navigation
  *
  * @param navController
  * @param selectedScreen
  */
 @Composable
-fun AppDetailBottomNavigation(
+fun AppDetailTopNavigation(
     navController: NavHostController,
     selectedScreen: Screens
 ) {

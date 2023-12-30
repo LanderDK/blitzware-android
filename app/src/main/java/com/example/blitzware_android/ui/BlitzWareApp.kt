@@ -31,7 +31,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.blitzware_android.R
-import com.example.blitzware_android.navigation.AppDetailBottomNavigation
+import com.example.blitzware_android.navigation.AppDetailTopNavigation
 import com.example.blitzware_android.navigation.NavigationDrawer
 import com.example.blitzware_android.navigation.NavigationType
 import com.example.blitzware_android.navigation.Screens
@@ -53,6 +53,7 @@ import com.example.blitzware_android.ui.screens.UsersScreen
  * Blitz ware app
  *
  * @param windowSize
+ * @param navController
  */
 @Composable
 fun BlitzWareApp(
@@ -115,32 +116,32 @@ fun BlitzWareApp(
                             AccountDetailsScreen(navController = navController)
                         }
                         composable(route = Screens.AppDetailScreen.name) {
-                            AppDetailBottomNavigation(navController = navController, selectedScreen = selectedScreen)
+                            AppDetailTopNavigation(navController = navController, selectedScreen = selectedScreen)
                             AppDetailScreen(navController = navController)
                         }
                         composable(route = Screens.UsersScreen.name) {
-                            AppDetailBottomNavigation(navController = navController, selectedScreen = selectedScreen)
+                            AppDetailTopNavigation(navController = navController, selectedScreen = selectedScreen)
                             UsersScreen()
                         }
                         composable(route = Screens.LicensesScreen.name) {
-                            AppDetailBottomNavigation(navController = navController, selectedScreen = selectedScreen)
+                            AppDetailTopNavigation(navController = navController, selectedScreen = selectedScreen)
                             LicensesScreen()
                         }
                         composable(route = Screens.UserSubsScreen.name) {
-                            AppDetailBottomNavigation(navController = navController, selectedScreen = selectedScreen)
+                            AppDetailTopNavigation(navController = navController, selectedScreen = selectedScreen)
                             UserSubsScreen()
                         }
                         composable(route = Screens.FilesScreen.name) {
-                            AppDetailBottomNavigation(navController = navController, selectedScreen = selectedScreen)
+                            AppDetailTopNavigation(navController = navController, selectedScreen = selectedScreen)
                             FilesScreen()
                         }
                         composable(route = Screens.AppLogsScreen.name) {
-                            AppDetailBottomNavigation(navController = navController, selectedScreen = selectedScreen)
+                            AppDetailTopNavigation(navController = navController, selectedScreen = selectedScreen)
                             AppLogsScreen()
                         }
 
                         composable(route = Screens.AppSettingsScreen.name) {
-                            AppDetailBottomNavigation(navController = navController, selectedScreen = selectedScreen)
+                            AppDetailTopNavigation(navController = navController, selectedScreen = selectedScreen)
                             Text(text = "App Settings")
                         }
                     }
@@ -178,32 +179,32 @@ fun BlitzWareApp(
                         AccountDetailsScreen(navController = navController)
                     }
                     composable(route = Screens.AppDetailScreen.name) {
-                        AppDetailBottomNavigation(navController = navController, selectedScreen = selectedScreen)
+                        AppDetailTopNavigation(navController = navController, selectedScreen = selectedScreen)
                         AppDetailScreen(navController = navController)
                     }
                     composable(route = Screens.UsersScreen.name) {
-                        AppDetailBottomNavigation(navController = navController, selectedScreen = selectedScreen)
+                        AppDetailTopNavigation(navController = navController, selectedScreen = selectedScreen)
                         UsersScreen()
                     }
                     composable(route = Screens.LicensesScreen.name) {
-                        AppDetailBottomNavigation(navController = navController, selectedScreen = selectedScreen)
+                        AppDetailTopNavigation(navController = navController, selectedScreen = selectedScreen)
                         LicensesScreen()
                     }
                     composable(route = Screens.UserSubsScreen.name) {
-                        AppDetailBottomNavigation(navController = navController, selectedScreen = selectedScreen)
+                        AppDetailTopNavigation(navController = navController, selectedScreen = selectedScreen)
                         UserSubsScreen()
                     }
                     composable(route = Screens.FilesScreen.name) {
-                        AppDetailBottomNavigation(navController = navController, selectedScreen = selectedScreen)
+                        AppDetailTopNavigation(navController = navController, selectedScreen = selectedScreen)
                         FilesScreen()
                     }
                     composable(route = Screens.AppLogsScreen.name) {
-                        AppDetailBottomNavigation(navController = navController, selectedScreen = selectedScreen)
+                        AppDetailTopNavigation(navController = navController, selectedScreen = selectedScreen)
                         AppLogsScreen()
                     }
 
                     composable(route = Screens.AppSettingsScreen.name) {
-                        AppDetailBottomNavigation(navController = navController, selectedScreen = selectedScreen)
+                        AppDetailTopNavigation(navController = navController, selectedScreen = selectedScreen)
                         Text(text = "App Settings")
                     }
                 }
@@ -244,42 +245,42 @@ fun BlitzWareApp(
                             AccountDetailsScreen(navController = navController)
                         }
                         composable(route = Screens.AppDetailScreen.name) {
-                            AppDetailBottomNavigation(
+                            AppDetailTopNavigation(
                                 navController = navController,
                                 selectedScreen = selectedScreen
                             )
                             AppDetailScreen(navController = navController)
                         }
                         composable(route = Screens.UsersScreen.name) {
-                            AppDetailBottomNavigation(
+                            AppDetailTopNavigation(
                                 navController = navController,
                                 selectedScreen = selectedScreen
                             )
                             UsersScreen()
                         }
                         composable(route = Screens.LicensesScreen.name) {
-                            AppDetailBottomNavigation(
+                            AppDetailTopNavigation(
                                 navController = navController,
                                 selectedScreen = selectedScreen
                             )
                             LicensesScreen()
                         }
                         composable(route = Screens.UserSubsScreen.name) {
-                            AppDetailBottomNavigation(
+                            AppDetailTopNavigation(
                                 navController = navController,
                                 selectedScreen = selectedScreen
                             )
                             UserSubsScreen()
                         }
                         composable(route = Screens.FilesScreen.name) {
-                            AppDetailBottomNavigation(
+                            AppDetailTopNavigation(
                                 navController = navController,
                                 selectedScreen = selectedScreen
                             )
                             FilesScreen()
                         }
                         composable(route = Screens.AppLogsScreen.name) {
-                            AppDetailBottomNavigation(
+                            AppDetailTopNavigation(
                                 navController = navController,
                                 selectedScreen = selectedScreen
                             )
@@ -287,7 +288,7 @@ fun BlitzWareApp(
                         }
 
                         composable(route = Screens.AppSettingsScreen.name) {
-                            AppDetailBottomNavigation(
+                            AppDetailTopNavigation(
                                 navController = navController,
                                 selectedScreen = selectedScreen
                             )
