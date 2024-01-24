@@ -67,7 +67,7 @@ interface ApplicationRepository {
      *
      * @return
      */
-    fun getSelectedApplicationStream(): dbSelectedApplication
+    suspend fun getSelectedApplicationStream(): dbSelectedApplication
 
     /**
      * Insert selected application
@@ -133,7 +133,7 @@ class NetworkApplicationRepository(
         return applicationApiService.createApplication(authorizationHeader, body)
     }
 
-    override fun getSelectedApplicationStream(): dbSelectedApplication {
+    override suspend fun getSelectedApplicationStream(): dbSelectedApplication {
         return applicationDao.getSelectedApplication()
     }
 

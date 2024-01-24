@@ -43,5 +43,5 @@ interface ApplicationDao {
      * @return
      */
     @Query("SELECT * from selected_application LIMIT 1")
-    fun getSelectedApplication(): dbSelectedApplication
+    suspend fun getSelectedApplication(): dbSelectedApplication
 }
