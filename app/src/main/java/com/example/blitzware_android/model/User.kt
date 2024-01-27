@@ -75,7 +75,7 @@ data class ApplicationUser(
  * @property username
  * @property email
  * @property password
- * @property id
+ * @property applicationId
  * @property expiry
  * @property subscription
  * @constructor Create empty Create user body
@@ -85,7 +85,7 @@ data class CreateUserBody(
     @SerialName(value = "username") val username: String,
     @SerialName(value = "email") val email: String,
     @SerialName(value = "password") val password: String,
-    @SerialName(value = "id") val id: String,
+    @SerialName(value = "applicationId") val applicationId: String,
     @SerialName(value = "expiry") val expiry: String,
     @SerialName(value = "subscription") val subscription: Int,
 )

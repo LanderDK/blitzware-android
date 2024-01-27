@@ -159,7 +159,7 @@ class UserViewModel(
                     password = password,
                     expiry = expiryDateString,
                     subscription = subscription,
-                    id = applicationId
+                    applicationId = applicationId
                 )
                 val user = userRepository.createUserFromDashboard(token, body)
                 val users = _users.value.toMutableList()
