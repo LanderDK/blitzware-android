@@ -51,5 +51,5 @@ interface AccountDao {
      * @return
      */
     @Query("SELECT * from accounts LIMIT 1")
-    fun getAccount(): dbAccount
+    suspend fun getAccount(): dbAccount
 }

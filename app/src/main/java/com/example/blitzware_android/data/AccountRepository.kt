@@ -7,6 +7,7 @@ import com.example.blitzware_android.model.Account
 import com.example.blitzware_android.model.AccountData
 import com.example.blitzware_android.model.UpdateAccountPicBody
 import com.example.blitzware_android.network.AccountApiService
+import retrofit2.Response
 
 /**
  * Account repository
@@ -56,7 +57,7 @@ interface AccountRepository {
         token: String,
         id: String,
         body: UpdateAccountPicBody
-    )
+    ): Response<Unit>
 
     /**
      * Verify login o t p
@@ -79,7 +80,7 @@ interface AccountRepository {
      *
      * @return
      */
-    fun getAccountStream(): Account
+    suspend fun getAccountStream(): Account
 
     /**
      * Insert account
@@ -142,10 +143,11 @@ class NetworkAccountRepository(
         token: String,
         id: String,
         body: UpdateAccountPicBody
-    ) {
+    ): Response<Unit> {
         val authorizationHeader = "Bearer $token"
-        accountApiService.updateAccountProfilePictureById(authorizationHeader, id, body)
+        return accountApiService.updateAccountProfilePictureById(authorizationHeader, id, body)
     }
+
 
     override suspend fun verifyLoginOTP(body: Map<String, String>): Account {
         return accountApiService.verifyLoginOTP(body)
@@ -155,7 +157,7 @@ class NetworkAccountRepository(
         return accountApiService.verifyLogin2FA(body)
     }
 
-    override fun getAccountStream(): Account {
+    override suspend fun getAccountStream(): Account {
         return accountDao.getAccount().asDomainAccount()
     }
 

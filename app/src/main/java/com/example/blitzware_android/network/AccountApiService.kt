@@ -3,6 +3,7 @@ package com.example.blitzware_android.network
 import com.example.blitzware_android.model.Account
 import com.example.blitzware_android.model.AccountData
 import com.example.blitzware_android.model.UpdateAccountPicBody
+import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
@@ -66,7 +67,7 @@ interface AccountApiService {
         @Header("Authorization") authorizationHeader: String,
         @Path("id") id: String,
         @Body body: UpdateAccountPicBody
-    )
+    ): Response<Unit>
 
     /**
      * Verify login o t p
